@@ -14,7 +14,7 @@ namespace sgl
 {
 	class BatchRenderer {
 	private:
-		static constexpr std::size_t MaxSprites = 4000;
+		static constexpr std::size_t MaxSprites = 500;
 		static constexpr std::size_t VertexSize = sizeof(VertexData);
 		static constexpr std::size_t SpriteSize = (4 * VertexSize);
 		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;
@@ -24,7 +24,7 @@ namespace sgl
 		VertexBuffer vertexBuffer;
 		IndexBuffer* indexBuffer;
 		VertexBufferLayout layout;
-		VertexData* vertexDataBuffer;
+		std::vector<VertexData> vertexDataBuffer;
 		Shader shader;
 		glm::vec2 screenSize;
 		Camera2D camera;
@@ -48,43 +48,50 @@ namespace sgl
 		{
 			shader.Bind();
 			vertexBuffer.Bind();
-			vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+			//vertexBuffer.BindAttrib(layout); // Instead of Vertex Arrays.
+			/*
+				This function isn't supported in GLES2 but should be used otherwise
+
+				vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+			*/
+			vertexDataBuffer.clear();
 		}
 
 		void Submit(Renderable2D& renderable)
 		{
-			for (const VertexData& i : renderable) {
-				vertexDataBuffer->vertexCoord = i.vertexCoord;
-				vertexDataBuffer->color = i.color;
-				vertexDataBuffer++;
-			}
+			for (const VertexData& i : renderable)
+				vertexDataBuffer.emplace_back(i);
 			indexCount += 6;
 		}
 
 		void DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 		{
-			vertexDataBuffer->vertexCoord = p0;
-			vertexDataBuffer->color = color;
-			vertexDataBuffer++;
 
-			vertexDataBuffer->vertexCoord = p1;
-			vertexDataBuffer->color = color;
-			vertexDataBuffer++;
-
-			vertexDataBuffer->vertexCoord = p2;
-			vertexDataBuffer->color = color;
-			vertexDataBuffer++;
-
-			vertexDataBuffer->vertexCoord = p3;
-			vertexDataBuffer->color = color;
-			vertexDataBuffer++;
+			vertexDataBuffer.emplace_back(VertexData{ p0, color });
+			vertexDataBuffer.emplace_back(VertexData{ p1, color });
+			vertexDataBuffer.emplace_back(VertexData{ p2, color });
+			vertexDataBuffer.emplace_back(VertexData{ p3, color });
 
 			indexCount += 6;
 		}
 
+		void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1))
+		{
+			const glm::vec3 v1 = glm::vec3(pos, 1);
+			const glm::vec3 v2 = glm::vec3(pos.x + size.x, pos.y, 1);
+			const glm::vec3 v3 = glm::vec3(pos.x + size.x, pos.y + size.y, 1);
+			const glm::vec3 v4 = glm::vec3(pos.x, pos.y + size.y, 1);
+			DrawQuad(v1, v2, v3, v4, color);
+		}
+
 		void End()
 		{
-			glUnmapBuffer(GL_ARRAY_BUFFER);
+			/*
+				Used after call to glMapBuffer.
+
+				glUnmapBuffer(GL_ARRAY_BUFFER);
+			*/
+			glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * sizeof(VertexData), (void*)(vertexDataBuffer.data()));
 			vertexBuffer.Unbind();
 		}
 
@@ -109,10 +116,12 @@ namespace sgl
 
 		void Init()
 		{
-			vertexBuffer.Init_DynamicDraw(BufferSize);  // allocate memory in gpu
+			vertexDataBuffer.reserve(BufferSize);
+			vertexBuffer.Init_DynamicDraw(BufferSize * sizeof(VertexData));  // allocate memory in gpu
 			layout.Push<float>(3); // position
 			layout.Push<float>(4); // color
 			vertexArray.AddBuffer(vertexBuffer, layout);
+			//vertexBuffer.BindAttrib(layout); // Instead of Vertex Arrays.
 			vertexBuffer.Unbind();
 
 			unsigned int indices[IndicesCount];

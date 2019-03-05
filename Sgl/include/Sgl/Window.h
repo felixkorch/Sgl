@@ -22,7 +22,7 @@ namespace sgl
 	public:
 
 		Window(unsigned int width, unsigned int height, const char* title)
-			: windowWidth(width), windowHeight(height), title(title), vSyncOn(true)
+			: windowWidth(width), windowHeight(height), title(title)
 		{
 			InitWindow();
 		}
@@ -81,6 +81,7 @@ namespace sgl
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 			SetVSync(true);
 
 			window = glfwCreateWindow(windowWidth, windowHeight, title, nullptr, nullptr);
@@ -98,6 +99,13 @@ namespace sgl
 
 				switch (action) {
 				case GLFW_PRESS: {
+
+					/* Fullscreen (Alt-Enter) */
+					/*if (key == GLFW_KEY_ENTER && Input::IsKeyPressed(GLFW_KEY_LEFT_ALT)) {
+						auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+						glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
+					}*/
+
 					KeyPressedEvent e(key, 0);
 					win.eventCallbackFn(e);
 					break;
@@ -114,7 +122,7 @@ namespace sgl
 				}
 				}
 
-				sgl::input::keys[key] = action != GLFW_RELEASE; // Temporary key pressed -polling solution
+				Input::GetKeys()[key] = action != GLFW_RELEASE; // Temporary key pressed -polling solution
 			});
 
 			glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
@@ -143,7 +151,7 @@ namespace sgl
 			#ifndef USE_EMSCRIPTEN
 			status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 			#endif
-			SGLASSERT(status, "Failed to initialize Glad.");
+			SglAssert(status, "Failed to initialize Glad.");
 
 			return 1;
 		}

@@ -3,6 +3,7 @@
 #include <functional>
 
 extern sgl::Application* sgl::CreateApplication();
+/*
 #ifdef USE_EMSCRIPTEN
 
 static void CallMain(void* fp)
@@ -11,20 +12,20 @@ static void CallMain(void* fp)
 	(*fn)();
 }
 
-#endif
+#endif*/
 
 
 int main()
 {
 	auto app = sgl::CreateApplication();
-	#ifdef USE_EMSCRIPTEN
+	/*#ifdef USE_EMSCRIPTEN
 	std::function<void()> mainLoop = [&]() {
 		app->Run();
 	};
 	emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);
-	#else
+	#else*/
 	app->Run();
-	#endif
+	//#endif
 	delete app;
 	return 0;
 }

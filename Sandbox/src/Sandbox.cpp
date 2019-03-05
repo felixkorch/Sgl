@@ -1,10 +1,8 @@
 #include "Sgl/Entrypoint.h"
-#include "Sgl/Sgl.h"
-
-#include <iostream>
+#include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
-#define Shader(x) x ".gles.shader"
+#define Shader(x) x ".gles3.shader"
 #else
 #define Shader(x) x ".shader"
 #endif
@@ -20,24 +18,15 @@ public:
 		: Layer("GameLayer")
 	{
 		Shader shader("res/shaders/" Shader("2D"));
-		renderer = new BatchRenderer(1280, 720, shader);
+		renderer = new BatchRenderer(800, 600, shader);
 
 		/* r1 */
-		glm::vec4 color(0.7, 0.3, 0.2, 1.0);
-		VertexData v1{ glm::vec3(0, 0, 0), color };
-		VertexData v2{ glm::vec3(250, 0, 0), color };
-		VertexData v3{ glm::vec3(250, 250, 0), color };
-		VertexData v4{ glm::vec3(0, 250, 0), color };
+		const glm::vec4 color(0.7, 0.3, 0.2, 1.0);
+		r1 = Renderable2D::CreateRectangle(glm::vec2(50, 50), glm::vec2(0, 0), color);
 
 		/* r2 */
-		glm::vec4 color2(0.6, 0.2, 0.15, 1.0);
-		VertexData z1{ glm::vec3(500, 500, 0), color2 };
-		VertexData z2{ glm::vec3(700, 500, 0), color2 };
-		VertexData z3{ glm::vec3(700, 700, 0), color2 };
-		VertexData z4{ glm::vec3(500, 700, 0), color2 };
-
-		r1 = Renderable2D(v1, v2, v3, v4);
-		r2 = Renderable2D(z1, z2, z2, z4);
+		const glm::vec4 color2(0.6, 0.2, 0.15, 1.0);
+		r2 = Renderable2D::CreateRectangle(glm::vec2(50, 50), glm::vec2(200, 100), color2);
 	}
 
 	void OnUpdate() override
@@ -47,20 +36,23 @@ public:
 		renderer->Submit(r1);
 		renderer->Submit(r2);
 
-		if (input::IsKeyPressed(GLFW_KEY_RIGHT)) {
+		if (Input::IsKeyPressed(GLFW_KEY_RIGHT)) {
 			r1.TranslateX(1);
 		}
-		else if (input::IsKeyPressed(GLFW_KEY_LEFT)) {
+		else if (Input::IsKeyPressed(GLFW_KEY_LEFT)) {
 			r1.TranslateX(-1);
 		}
-		else if (input::IsKeyPressed(GLFW_KEY_UP)) {
+		else if (Input::IsKeyPressed(GLFW_KEY_UP)) {
 			r1.TranslateY(1);
 		}
-		else if (input::IsKeyPressed(GLFW_KEY_DOWN)) {
+		else if (Input::IsKeyPressed(GLFW_KEY_DOWN)) {
 			r1.TranslateY(-1);
 		}
-		else if (input::IsKeyPressed(GLFW_KEY_A)) {
+		else if (Input::IsKeyPressed(GLFW_KEY_A)) {
 			renderer->MoveCamera(glm::vec2(-1, 0));
+		}
+		else if (Input::IsKeyPressed(GLFW_KEY_D)) {
+			renderer->MoveCamera(glm::vec2(1, 0));
 		}
 
 		renderer->End();
@@ -90,7 +82,7 @@ class Sandbox : public Application {
 public:
 
 	Sandbox()
-		: Application(1280, 720, "Sandbox")
+		: Application(800, 600, "Sandbox")
 	{
 		PushLayer(new ExampleLayer());
 	}

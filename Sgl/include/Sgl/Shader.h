@@ -106,7 +106,7 @@ namespace sgl
 
 			int location = glGetUniformLocation(m_RendererID, name.c_str());
 			if (location == -1)
-				std::cout << "Uniform " << name << " doesnt exist!" << std::endl;
+				SglError("Uniform {} doesn't exist!", name);
 
 			m_UniformLocationCache[name] = location;
 			return location;
@@ -115,7 +115,7 @@ namespace sgl
 		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 		{
 			if (vertexShader.empty() || fragmentShader.empty())
-				std::cout << "VERTEX OR FRAGMENT SHADER EMPTY" << std::endl;
+				SglError("Vertex or Fragment shader empty.");
 
 			unsigned int program = glCreateProgram();
 			unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
@@ -160,7 +160,7 @@ namespace sgl
 			std::ifstream stream(filepath);
 
 			if (!stream.good()) {
-				std::cout << "SHADER NOT FOUND, PATH GIVEN: " << filepath << std::endl;
+				SglError("Shader not found, path given: {}", filepath);
 			}
 
 			enum class ShaderType {

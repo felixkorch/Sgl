@@ -3,9 +3,20 @@
 #include "Sgl/Window.h"
 #include "Sgl/Events/Event.h"
 #include "Sgl/Events/ApplicationEvent.h"
+#include "Sgl/Log.h"
 
 namespace sgl
 {
+
+	#ifdef USE_EMSCRIPTEN
+
+	static void CallMain(void* fp)
+	{
+		std::function<void()>* fn = (std::function<void()>*) fp;
+		(*fn)();
+	}
+	#endif
+
 	class Application {
 	protected:
 		Window* window;
@@ -16,6 +27,8 @@ namespace sgl
 		{
 			window = Window::Create(width, height, title);
 			window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+			Log::Init();
+			SglInfo("Sucessfully initialized the app!");
 		}
 
 		virtual ~Application();
@@ -50,13 +63,23 @@ namespace sgl
 
 		void Run()
 		{
+
+			#ifdef USE_EMSCRIPTEN
+			std::function<void()> mainLoop = [&]() {
+				#else
 			while (running) {
+				#endif
 				window->Clear();
 				for (Layer* l : layerstack) {
 					l->OnUpdate();
 				}
 				window->Update();
-			}
+				#ifdef USE_EMSCRIPTEN
+			};
+			emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);
+			#else
+		}
+			#endif
 		}
 	};
 
