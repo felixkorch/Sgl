@@ -1,0 +1,1 @@
+em++ Sandbox/src/Sandbox.cpp Sgl/glad/glad.c Sgl/stb_image/stb_image.cpp -D"USE_EMSCRIPTEN" -I"Sgl/include" -I"C:/local/include" -I"system/include/GLFW" -s USE_GLFW=3 -s USE_WEBGL2=1 -s FETCH=1 -s FULL_ES3=1 --memory-init-file 0 --embed-file res -lglfw -lGL -std=c++11 -O3 -o emscripten/index.html
