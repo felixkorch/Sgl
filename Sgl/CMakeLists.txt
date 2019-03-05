@@ -1,7 +1,7 @@
 project(Sgl)
 
 set(sources
-    src/Sgl.cpp
+    src/Sgl.cpp glad/glad.c stb_image/stb_image.cpp
 )
 
 add_library(${PROJECT_NAME} ${sources})
