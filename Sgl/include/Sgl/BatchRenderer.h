@@ -91,7 +91,7 @@ namespace sgl
 
 				glUnmapBuffer(GL_ARRAY_BUFFER);
 			*/
-			glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * sizeof(VertexData), (void*)(vertexDataBuffer.data()));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, 100 * sizeof(VertexData), (void*)(vertexDataBuffer.data()));
 			vertexBuffer.Unbind();
 		}
 

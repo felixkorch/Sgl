@@ -74,29 +74,29 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>C:\local\include;C:\dev\VS\sgl\Sgl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\VS\sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\local\include;C:\dev\sgl\Sgl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\Sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>C:\local\include;C:\dev\VS\sgl\Sgl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\VS\sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\local\include;C:\dev\sgl\Sgl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\Sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>C:\local\include;C:\dev\VS\sgl\Sgl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\VS\sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\local\include;C:\dev\sgl\Sgl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\Sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>C:\local\include;C:\dev\VS\sgl\Sgl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\VS\sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\local\include;C:\dev\sgl\Sgl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\Sgl\bin\x64\Debug\Sgl;C:\local\lib\glfw-3.2.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
