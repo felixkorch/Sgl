@@ -4,9 +4,20 @@ set(sources
     src/Sandbox.cpp
 )
 
+find_package(glfw3 REQUIRED)
+find_package(Threads REQUIRED)
+
 add_executable(${PROJECT_NAME} ${sources})
 
+<<<<<<< HEAD
 target_link_libraries(${PROJECT_NAME} Sgl GLFW)
+=======
+if(UNIX AND NOT APPLE)
+	target_link_libraries(${PROJECT_NAME} Sgl GL glfw3 X11 Xrandr Xi Xxf86vm Xinerama Xcursor dl Threads::Threads)
+else()
+	target_link_libraries(${PROJECT_NAME} Sgl GL glfw3 Threads::Threads)
+endif()
+>>>>>>> 457e37b2627800b0e762c02a47a86621e8bcfc9a
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${PROJECT_NAME}
