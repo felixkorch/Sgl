@@ -14,7 +14,7 @@ namespace sgl
 {
 	class BatchRenderer {
 	private:
-		static constexpr std::size_t MaxSprites = 500;
+		static constexpr std::size_t MaxSprites = 5000;
 		static constexpr std::size_t VertexSize = sizeof(VertexData);
 		static constexpr std::size_t SpriteSize = (4 * VertexSize);
 		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;
@@ -91,7 +91,7 @@ namespace sgl
 
 				glUnmapBuffer(GL_ARRAY_BUFFER);
 			*/
-			glBufferSubData(GL_ARRAY_BUFFER, 0, 100 * sizeof(VertexData), (void*)(vertexDataBuffer.data()));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, BufferSize, (void*)(vertexDataBuffer.data()));
 			vertexBuffer.Unbind();
 		}
 
@@ -117,7 +117,7 @@ namespace sgl
 		void Init()
 		{
 			vertexDataBuffer.reserve(BufferSize);
-			vertexBuffer.Init_DynamicDraw(BufferSize * sizeof(VertexData));  // allocate memory in gpu
+			vertexBuffer.Init_DynamicDraw(BufferSize);  // allocate memory in gpu
 			layout.Push<float>(3); // position
 			layout.Push<float>(4); // color
 			vertexArray.AddBuffer(vertexBuffer, layout);
