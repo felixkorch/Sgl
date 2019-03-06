@@ -1,7 +1,7 @@
 project(Sgl)
 
 set(sources
-    src/Sgl.cpp libs/glad/glad.c libs/stb_image/stb_image.cpp
+    src/Sgl.cpp libs/Glad/src/glad.c libs/stb_image/stb_image.cpp
 )
 
 add_library(${PROJECT_NAME} ${sources})
@@ -9,6 +9,9 @@ target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libs>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libs/spdlog/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libs/Glad/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libs/glm>
             
 )
 
