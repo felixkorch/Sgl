@@ -6,6 +6,5 @@ if(!MSVC)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
 endif()
 
-add_subdirectory(Sgl/libs/GLFW)
 add_subdirectory(Sgl)
 add_subdirectory(Sandbox)
