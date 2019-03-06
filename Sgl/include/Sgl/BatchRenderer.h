@@ -51,7 +51,6 @@ namespace sgl
 			//vertexBuffer.BindAttrib(layout); // Instead of Vertex Arrays.
 			/*
 				This function isn't supported in GLES2 but should be used otherwise
-
 				vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 			*/
 			vertexDataBuffer.clear();
@@ -88,7 +87,6 @@ namespace sgl
 		{
 			/*
 				Used after call to glMapBuffer.
-
 				glUnmapBuffer(GL_ARRAY_BUFFER);
 			*/
 			glBufferSubData(GL_ARRAY_BUFFER, 0, BufferSize, (void*)(vertexDataBuffer.data()));

@@ -18,86 +18,86 @@ namespace sgl
 
 	class Mesh {
 	private:
-		unsigned int nVertices;
-		glm::vec3 m_Pos;
-		VertexArray m_VA;
-		VertexBuffer m_VB;
-		VertexBufferLayout m_Layout;
-		IndexBuffer* m_IB;
-		unsigned int m_IndexCount;
-		Material m_Material;
+		unsigned int vertexCount;
+		glm::vec3 pos;
+		VertexArray vertexArray;
+		VertexBuffer vertexBuffer;
+		VertexBufferLayout layout;
+		IndexBuffer* indexBuffer;
+		unsigned int indexCount;
+		Material material;
 	public:
 
 		Mesh(const std::string& filePath, const Material& material)
-			: m_Material(material)
+			: material(material)
 		{
 			objl::Loader loader;
 			if (!loader.LoadFile(filePath))
 				printf("Could'nt find obj file");
 
-			m_IndexCount = loader.LoadedIndices.size();
+			indexCount = loader.LoadedIndices.size();
 
-			m_VB.Init_StaticDraw(loader.LoadedVertices.data(), loader.LoadedVertices.size() * sizeof(objl::Vertex));
-			m_Layout.Push<float>(3);
-			m_Layout.Push<float>(3);
-			m_Layout.Push<float>(2);
-			m_VA.AddBuffer(m_VB, m_Layout);
-			m_IB = new IndexBuffer(loader.LoadedIndices.data(), loader.LoadedIndices.size());
+			vertexBuffer.Init_StaticDraw(loader.LoadedVertices.data(), loader.LoadedVertices.size() * sizeof(objl::Vertex));
+			layout.Push<float>(3);
+			layout.Push<float>(3);
+			layout.Push<float>(2);
+			vertexArray.AddBuffer(vertexBuffer, layout);
+			indexBuffer = new IndexBuffer(loader.LoadedIndices.data(), loader.LoadedIndices.size());
 
-			m_VB.Unbind();
-			m_VA.Unbind();
+			vertexBuffer.Unbind();
+			vertexArray.Unbind();
 		}
 
 		Mesh(Vertex* vertices, unsigned int nVertices, unsigned int* indices, unsigned int indexCount, const Material& material)
-			: nVertices(nVertices), m_IndexCount(indexCount), m_Material(material)
+			: vertexCount(nVertices), indexCount(indexCount), material(material)
 		{
-			m_VB.Init_StaticDraw(vertices, nVertices * sizeof(Vertex));
-			m_Layout.Push<float>(3); // position
-			m_Layout.Push<float>(3); // normal
-			m_Layout.Push<float>(2); // texture
-			m_VA.AddBuffer(m_VB, m_Layout);
-			m_IB = new IndexBuffer(indices, indexCount);
+			vertexBuffer.Init_StaticDraw(vertices, nVertices * sizeof(Vertex));
+			layout.Push<float>(3); // position
+			layout.Push<float>(3); // normal
+			layout.Push<float>(2); // texture
+			vertexArray.AddBuffer(vertexBuffer, layout);
+			indexBuffer = new IndexBuffer(indices, indexCount);
 
-			m_VB.Unbind();
-			m_VA.Unbind();
+			vertexBuffer.Unbind();
+			vertexArray.Unbind();
 		}
 
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
-			: m_IndexCount(indices.size()), m_Material(material)
+			: indexCount(indices.size()), material(material)
 		{
-			m_VB.Init_StaticDraw(vertices.data(), vertices.size() * sizeof(Vertex));
-			m_Layout.Push<float>(3); // position
-			m_Layout.Push<float>(3); // normal
-			m_Layout.Push<float>(2); // texture
-			m_VA.AddBuffer(m_VB, m_Layout);
-			m_IB = new IndexBuffer(indices.data(), indices.size());
+			vertexBuffer.Init_StaticDraw(vertices.data(), vertices.size() * sizeof(Vertex));
+			layout.Push<float>(3); // position
+			layout.Push<float>(3); // normal
+			layout.Push<float>(2); // texture
+			vertexArray.AddBuffer(vertexBuffer, layout);
+			indexBuffer = new IndexBuffer(indices.data(), indices.size());
 
-			m_VB.Unbind();
-			m_VA.Unbind();
+			vertexBuffer.Unbind();
+			vertexArray.Unbind();
 		}
 
 		~Mesh()
 		{
-			delete m_IB;
+			delete indexBuffer;
 		}
 
 		Material& getMaterial()
 		{
-			return m_Material;
+			return material;
 		}
 
 		void draw()
 		{
-			m_Material.Bind();
-			m_VB.Bind();
-			m_VA.Bind();
-			m_IB->Bind();
+			material.Bind();
+			vertexBuffer.Bind();
+			vertexArray.Bind();
+			indexBuffer->Bind();
 
-			glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 
-			m_IB->Unbind();
-			m_VB.Unbind();
-			m_VA.Unbind();
+			indexBuffer->Unbind();
+			vertexBuffer.Unbind();
+			vertexArray.Unbind();
 		}
 	};
 }

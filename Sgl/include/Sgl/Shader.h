@@ -34,26 +34,26 @@ namespace sgl
 
 	class Shader {
 	private:
-		unsigned int m_RendererID;
-		std::string m_FilePath;
-		std::unordered_map<std::string, int> m_UniformLocationCache;
+		unsigned int rendererID;
+		std::string filePath;
+		std::unordered_map<std::string, int> uniformLocationCache;
 	public:
 
 		Shader(const std::string& filepath)
-			: m_FilePath(filepath), m_RendererID(0)
+			: filePath(filepath), rendererID(0)
 		{
 			ShaderProgramSource source = ParseShader(filepath);
-			m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+			rendererID = CreateShader(source.VertexSource, source.FragmentSource);
 		}
 
 		~Shader()
 		{
-			glDeleteProgram(m_RendererID);
+			glDeleteProgram(rendererID);
 		}
 
 		void Bind() const
 		{
-			glUseProgram(m_RendererID);
+			glUseProgram(rendererID);
 		}
 
 		void Unbind() const
@@ -101,14 +101,14 @@ namespace sgl
 
 		int GetUniformLocation(const std::string& name)
 		{
-			if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
-				return m_UniformLocationCache[name];
+			if (uniformLocationCache.find(name) != uniformLocationCache.end())
+				return uniformLocationCache[name];
 
-			int location = glGetUniformLocation(m_RendererID, name.c_str());
+			int location = glGetUniformLocation(rendererID, name.c_str());
 			if (location == -1)
 				SglError("Uniform {} doesn't exist!", name);
 
-			m_UniformLocationCache[name] = location;
+			uniformLocationCache[name] = location;
 			return location;
 		}
 
@@ -147,7 +147,7 @@ namespace sgl
 				glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 				char* message = (char*)alloca(length * sizeof(char));
 				glGetShaderInfoLog(id, length, &length, message);
-				std::cout << message << type << std::endl;
+				SglWarn("{}, {}", message, type);
 				glDeleteShader(id);
 				return 0;
 			}
@@ -193,7 +193,6 @@ namespace sgl
 			Bind();
 
 			for (auto u : declarations) {
-
 				switch (u.type) {
 				case UniformType::Int:
 					SetUniform1i(u.name, *(int*)(data + u.offset));
@@ -207,7 +206,6 @@ namespace sgl
 				default:
 					break;
 				}
-
 			}
 		}
 	};
