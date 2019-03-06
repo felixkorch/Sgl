@@ -5,25 +5,25 @@ namespace sgl
 {
 	class IndexBuffer {
 	private:
-		unsigned int m_RendererID;
-		unsigned int m_Count;
+		unsigned int rendererID;
+		unsigned int count;
 	public:
 		IndexBuffer(const unsigned int* data, unsigned int count)
-			:m_Count(count)
+			:count(count)
 		{
-			glGenBuffers(1, &m_RendererID);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+			glGenBuffers(1, &rendererID);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 		}
 
 		~IndexBuffer()
 		{
-			glDeleteBuffers(1, &m_RendererID);
+			glDeleteBuffers(1, &rendererID);
 		}
 
 		void Bind() const
 		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
 		}
 
 		void Unbind() const

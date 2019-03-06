@@ -6,17 +6,17 @@ class VertexBufferLayout;
 
 class VertexArray {
 private:
-	unsigned int m_RendererID;
+	unsigned int rendererID;
 public:
 
 	VertexArray()
 	{
-		glGenVertexArrays(1, &m_RendererID);
+		glGenVertexArrays(1, &rendererID);
 	}
 
 	~VertexArray()
 	{
-		glDeleteVertexArrays(1, &m_RendererID);
+		glDeleteVertexArrays(1, &rendererID);
 	}
 
 	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
@@ -35,7 +35,7 @@ public:
 
 	void Bind() const
 	{
-		glBindVertexArray(m_RendererID);
+		glBindVertexArray(rendererID);
 	}
 
 	void Unbind() const

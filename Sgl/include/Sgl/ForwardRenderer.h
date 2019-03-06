@@ -7,46 +7,46 @@ namespace sgl
 {
 	class ForwardRenderer {
 	private:
-		VertexUniforms* m_VertexUniformBuffer;
-		FragmentUniforms* m_FragmentUniformBuffer;
-		std::vector<Model> m_ModelQueue;
+		VertexUniforms* vertexUniformBuffer;
+		FragmentUniforms* fragmentUniformBuffer;
+		std::vector<Model> modelQueue;
 
 	public:
 
 		ForwardRenderer()
 		{
-			m_ModelQueue.reserve(100);
-			m_VertexUniformBuffer = new VertexUniforms;
-			m_FragmentUniformBuffer = new FragmentUniforms;
+			modelQueue.reserve(100);
+			vertexUniformBuffer = new VertexUniforms;
+			fragmentUniformBuffer = new FragmentUniforms;
 		}
 
 		~ForwardRenderer()
 		{
-			delete m_VertexUniformBuffer;
-			delete m_FragmentUniformBuffer;
+			delete vertexUniformBuffer;
+			delete fragmentUniformBuffer;
 		}
 
 		void Begin(const Camera& camera)
 		{
-			m_VertexUniformBuffer->view = camera.getView();
+			vertexUniformBuffer->view = camera.getView();
 		}
 
 		void Submit(const Model& model)
 		{
-			m_ModelQueue.push_back(model);
+			modelQueue.push_back(model);
 		}
 
 		void SubmitLight(const Light& lightProps, const glm::vec3& pos)
 		{
-			m_FragmentUniformBuffer->lightProps = lightProps;
-			m_FragmentUniformBuffer->lightPos   = pos;
+			fragmentUniformBuffer->lightProps = lightProps;
+			fragmentUniformBuffer->lightPos   = pos;
 		}
 
 
 		void Render()
 		{
-			for (Model& m : m_ModelQueue) {
-				m_VertexUniformBuffer->model = m.getModelMatrix();
+			for (Model& m : modelQueue) {
+				vertexUniformBuffer->model = m.getModelMatrix();
 				const auto& mesh = m.getMesh();
 				SetUniforms(mesh->getMaterial().GetShader());
 				mesh->getMaterial().BindUniforms();
@@ -56,12 +56,12 @@ namespace sgl
 
 		void Clear()
 		{
-			m_ModelQueue.clear();
+			modelQueue.clear();
 		}
 
 		void SetUniforms(Shader& shader)
 		{
-			shader.SetSystemUniforms(m_VertexUniformBuffer, m_FragmentUniformBuffer);
+			shader.SetSystemUniforms(vertexUniformBuffer, fragmentUniformBuffer);
 		}
 	};
 }

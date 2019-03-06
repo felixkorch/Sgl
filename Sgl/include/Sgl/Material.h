@@ -12,8 +12,8 @@ namespace sgl
 		static constexpr auto UniformMaxCount = 20;
 		static constexpr auto UniformMaxSize  = 300;
 
-		std::vector<Texture> m_Textures;
-		std::vector<UniformDeclaration> m_UniformDeclarations;
+		std::vector<Texture> textures;
+		std::vector<UniformDeclaration> uniformDeclarations;
 		Shader m_Shader;
 		char* m_UniformData;
 		unsigned int m_CurrentOffset;
@@ -23,7 +23,7 @@ namespace sgl
 		Material(const Shader& shader)
 			: m_Shader(shader), m_CurrentOffset(0), m_UniformData(new char[UniformMaxSize])
 		{
-			m_UniformDeclarations.reserve(UniformMaxCount);
+			uniformDeclarations.reserve(UniformMaxCount);
 		}
 
 		~Material()
@@ -35,27 +35,27 @@ namespace sgl
 		{
 			m_Shader.Bind();
 
-			for (unsigned int i = 0; i < m_Textures.size(); i++) {
-				m_Textures[i].Bind(i);
+			for (unsigned int i = 0; i < textures.size(); i++) {
+				textures[i].Bind(i);
 				m_Shader.SetUniform1i("u_Slot", i);
 			}
 		}
 
 		void Unbind() const
 		{
-			for (const Texture& tex : m_Textures) {
+			for (const Texture& tex : textures) {
 				tex.Unbind();
 			}
 		}
 
 		void SetTexture(const Texture& texture)
 		{
-			m_Textures.push_back(texture);
+			textures.push_back(texture);
 		}
 
 		void BindUniforms()
 		{
-			m_Shader.SetUniformData(m_UniformDeclarations, m_UniformData);
+			m_Shader.SetUniformData(uniformDeclarations, m_UniformData);
 		}
 
 		template <class T>
@@ -71,7 +71,7 @@ namespace sgl
 				ud = { m_CurrentOffset, UniformType::Float, name };
 
 			*((T*)(m_UniformData + m_CurrentOffset)) = val;
-			m_UniformDeclarations.push_back(ud);
+			uniformDeclarations.push_back(ud);
 			m_CurrentOffset += sizeof(T);
 		}
 

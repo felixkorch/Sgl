@@ -3,27 +3,27 @@
 
 class VertexBuffer {
 private:
-	unsigned int m_RendererID;
+	unsigned int rendererID;
 public:
 	VertexBuffer()
 	{
-		glGenBuffers(1, &m_RendererID);
+		glGenBuffers(1, &rendererID);
 }
 
 	~VertexBuffer()
 	{
-		glDeleteBuffers(1, &m_RendererID);
+		glDeleteBuffers(1, &rendererID);
 	}
 
 	void Init_StaticDraw(const void* data, std::size_t size) const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 
 	void Init_DynamicDraw(std::size_t bufferSize) const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
 	}
 
@@ -41,7 +41,7 @@ public:
 
 	void Bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, rendererID);
 	}
 
 	void Unbind() const
