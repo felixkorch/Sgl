@@ -1,13 +1,15 @@
 project(Sgl)
 
 set(sources
-    src/Sgl.cpp glad/glad.c stb_image/stb_image.cpp
+    src/Sgl.cpp libs/glad/glad.c libs/stb_image/stb_image.cpp
 )
 
 add_library(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libs>
+            
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
