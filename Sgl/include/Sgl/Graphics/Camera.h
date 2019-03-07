@@ -20,11 +20,11 @@ namespace sgl
 			up = glm::vec3(0.0f, 1.0f, 0.0f);
 		}
 
-		glm::mat4 getView() const
+		glm::mat4 GetView() const
 		{
-			return perspective * glm::lookAt(position, position + glm::vec3(0.0f, -0.5f, 1.0f), up);
+			return perspective * glm::lookAt(position, position + glm::vec3(0, -0.5, 1), up);
 		}
 
-		glm::vec3& getPosition() { return position; };
+		glm::vec3& GetPosition() { return position; };
 	};
 }

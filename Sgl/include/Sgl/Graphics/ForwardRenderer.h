@@ -17,7 +17,7 @@ namespace sgl
 
 		void Begin(const Camera& camera);
 		void Submit(const Model& model);
-		void SubmitLight(const Light& lightProps, const glm::vec3& pos);
+		void SubmitLight(const Light& light);
 		void Render();
 		void Clear();
 		void SetUniforms(Shader& shader);

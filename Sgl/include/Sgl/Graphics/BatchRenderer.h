@@ -12,7 +12,7 @@ namespace sgl
 {
 	class BatchRenderer {
 	private:
-		static constexpr std::size_t MaxSprites = 5000;
+		static constexpr std::size_t MaxSprites = 100;
 		static constexpr std::size_t VertexSize = sizeof(VertexData);
 		static constexpr std::size_t SpriteSize = (4 * VertexSize);
 		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;

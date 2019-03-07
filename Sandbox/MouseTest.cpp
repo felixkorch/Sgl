@@ -1,3 +1,4 @@
+/*
 #include "Sgl/Entrypoint.h"
 #include "Sgl/Sgl2D.h"
 
@@ -74,4 +75,4 @@ public:
 sgl::Application* sgl::CreateApplication()
 {
 	return new Sandbox;
-}
+}*/

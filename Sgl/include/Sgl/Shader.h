@@ -14,8 +14,7 @@ namespace sgl
 
 	struct FragmentUniforms {
 		glm::vec3 cameraPos;
-		glm::vec3 lightPos;
-		Light lightProps;
+		Light light;
 	};
 
 	struct ShaderProgramSource {

@@ -84,10 +84,12 @@ namespace sgl
 		vertexArray.Bind();
 		indexBuffer->Bind();
 
-		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 
 		indexBuffer->Unbind();
+		vertexBuffer.Unbind();
 		vertexArray.Unbind();
+
 		indexCount = 0;
 	}
 

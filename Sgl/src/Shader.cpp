@@ -53,10 +53,10 @@ namespace sgl
 		SetUniformMat4f("u_Model", vUniforms->model);
 		SetUniformMat4f("u_Proj", vUniforms->view * vUniforms->model);
 		SetUniform3f("u_CameraPos", fUniforms->cameraPos);
-		SetUniform3f("u_LightPos", fUniforms->lightPos);
-		SetUniform3f("u_Light.ambient", fUniforms->lightProps.ambient);
-		SetUniform3f("u_Light.diffuse", fUniforms->lightProps.diffuse);
-		SetUniform3f("u_Light.specular", fUniforms->lightProps.specular);
+		SetUniform3f("u_Light.position", fUniforms->light.position);
+		SetUniform3f("u_Light.ambient", fUniforms->light.ambient);
+		SetUniform3f("u_Light.diffuse", fUniforms->light.diffuse);
+		SetUniform3f("u_Light.specular", fUniforms->light.specular);
 	}
 
 	void Shader::SetUniform1f(const std::string& name, float v0)

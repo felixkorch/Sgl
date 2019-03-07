@@ -28,14 +28,20 @@ namespace sgl
 		void SetTexture(const Texture& texture);
 		void BindUniforms();
 
-		void SetLightingData(const Light& lightProperties, float shininess);
+		void SetLightingData(const LightingData& data);
 
 		Shader& GetShader()
 		{
 			return m_Shader;
 		}
 
-		template <class T>
+		template <typename T>
+		void AddUniform(const std::string& name, const T& val)
+		{
+			std::cout << "Type not supported" << std::endl;
+		}
+
+		/*template <class T>
 		void AddUniform(const std::string& name, T val)
 		{
 			UniformDeclaration ud;
@@ -47,9 +53,9 @@ namespace sgl
 			else if (std::is_same<T, float>::value)
 				ud = { m_CurrentOffset, UniformType::Float, name };
 
-			*((T*)(m_UniformData + m_CurrentOffset)) = val;
+			*(T*)(m_UniformData + m_CurrentOffset) = val;
 			uniformDeclarations.push_back(ud);
 			m_CurrentOffset += sizeof(T);
-		}
+		}*/
 	};
 }

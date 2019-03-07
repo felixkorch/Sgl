@@ -5,8 +5,8 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 textCoord;
 
-out vec3 f_Position;
 out vec3 f_Normal;
+out vec3 f_Position;
 out vec2 f_TextCoord;
 
 uniform mat4 u_Proj;
@@ -32,6 +32,8 @@ struct Material {
 };
 
 struct Light {
+	vec3 position;
+
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -47,7 +49,6 @@ uniform vec3 u_CameraPos;
 uniform Light u_Light;
 uniform Material u_Material;
 uniform sampler2D u_Slot;
-uniform vec3 u_LightPos;
 
 void main() {
 
@@ -55,7 +56,7 @@ void main() {
 	//----------------------------------------------------- ambient
 
 	vec3 unitNormal = normalize(f_Normal);
-	vec3 lightDir = normalize(u_LightPos - f_Position);
+	vec3 lightDir = normalize(u_Light.position - f_Position);
 
 	float diff = max(dot(unitNormal, lightDir), 0.0);
 	vec3 diffuse = u_Light.diffuse * (diff * u_Material.diffuse);

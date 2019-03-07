@@ -17,7 +17,7 @@ namespace sgl
 
 	void ForwardRenderer::Begin(const Camera& camera)
 	{
-		vertexUniformBuffer->view = camera.getView();
+		vertexUniformBuffer->view = camera.GetView();
 	}
 
 	void ForwardRenderer::Submit(const Model& model)
@@ -25,10 +25,9 @@ namespace sgl
 		modelQueue.push_back(model);
 	}
 
-	void ForwardRenderer::SubmitLight(const Light& lightProps, const glm::vec3& pos)
+	void ForwardRenderer::SubmitLight(const Light& light)
 	{
-		fragmentUniformBuffer->lightProps = lightProps;
-		fragmentUniformBuffer->lightPos = pos;
+		fragmentUniformBuffer->light = light; // Only 1 light supported
 	}
 
 
@@ -36,7 +35,7 @@ namespace sgl
 	{
 		for (Model& m : modelQueue) {
 			vertexUniformBuffer->model = m.GetModelMatrix();
-			const auto& mesh = m.GetMesh();
+			const std::shared_ptr<Mesh>& mesh = m.GetMesh();
 			SetUniforms(mesh->GetMaterial().GetShader());
 			mesh->GetMaterial().BindUniforms();
 			mesh->Draw();
