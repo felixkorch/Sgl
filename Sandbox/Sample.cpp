@@ -1,6 +1,4 @@
-/*
 #include "Sgl/Entrypoint.h"
-#include "Sgl/Sgl2D.h"
 #include "Sgl/Graphics/ForwardRenderer.h"
 #include "Sgl/Graphics/Camera.h"
 #include "Sgl/Graphics/Material.h"
@@ -9,6 +7,7 @@
 #include "Sgl/Graphics/Model.h"
 #include "Sgl/Graphics/Texture.h"
 #include "Sgl/Input.h"
+#include "Sgl/Events/KeyCodes.h"
 
 #include "snake3d.h"
 
@@ -180,4 +179,4 @@ public:
 sgl::Application* sgl::CreateApplication()
 {
 	return new Sandbox;
-}*/
+}

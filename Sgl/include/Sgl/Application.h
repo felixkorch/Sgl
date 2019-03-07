@@ -2,8 +2,6 @@
 #include "Sgl/LayerStack.h"
 #include "Sgl/Window.h"
 #include "Sgl/Events/Event.h"
-#include "Sgl/Events/ApplicationEvent.h"
-#include "Sgl/Log.h"
 
 namespace sgl
 {

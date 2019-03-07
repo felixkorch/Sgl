@@ -1,4 +1,3 @@
-/*
 #include "Snake3D.h"
 #define TILE_SIZE 0.36f
 
@@ -30,4 +29,4 @@ void Snake3D::update()
 void Snake3D::setDir(const glm::vec3& dir)
 {
 	m_Dir = dir;
-}*/
+}

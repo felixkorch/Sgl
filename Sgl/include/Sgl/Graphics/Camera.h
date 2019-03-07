@@ -1,5 +1,4 @@
 #pragma once
-#include "Sgl/Common.h"
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
 

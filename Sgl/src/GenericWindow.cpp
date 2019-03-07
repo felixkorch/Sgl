@@ -1,4 +1,4 @@
-#include "Sgl/Window.h"
+#include "Sgl/GenericWindow.h"
 #include "Sgl/Common.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/ApplicationEvent.h"
@@ -10,36 +10,41 @@
 
 namespace sgl
 {
-	Window::Window(unsigned int width, unsigned int height, const char* title)
+	GenericWindow::GenericWindow(unsigned int width, unsigned int height, const char* title)
 		: windowWidth(width), windowHeight(height), title(title)
 	{
 		InitWindow();
 	}
 
-	Window::~Window()
+	GenericWindow::~GenericWindow()
 	{
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 
-	bool Window::IsClosed() const
+	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
+	{
+		return new GenericWindow(width, height, title);
+	}
+
+	bool GenericWindow::IsClosed() const
 	{
 		return glfwWindowShouldClose(window);
 	}
 
-	void Window::Clear() const
+	void GenericWindow::Clear() const
 	{
 		glClearColor(0.1, 0.1, 0.1, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Window::Update() const
+	void GenericWindow::Update() const
 	{
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	void Window::SetVSync(bool enabled)
+	void GenericWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -49,18 +54,13 @@ namespace sgl
 		vSyncOn = enabled;
 	}
 
-	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
-	{
-		return new Window(width, height, title);
-	}
-
-	void Window::SetEventCallback(EventCallbackFn fn)
+	void GenericWindow::SetEventCallback(EventCallbackFn fn)
 	{
 		eventCallbackFn = fn;
 	}
 
 
-	int Window::InitWindow()
+	int GenericWindow::InitWindow()
 	{
 		if (!glfwInit())
 			return -1;
@@ -83,13 +83,13 @@ namespace sgl
 
 		/* Mouse Events */
 		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos) {
-			Window& win = *(Window*)glfwGetWindowUserPointer(window);
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 			CursorEvent e(xPos, yPos);
 			win.eventCallbackFn(e);
 		});
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
-			Window& win = *(Window*)glfwGetWindowUserPointer(window);
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
@@ -106,7 +106,7 @@ namespace sgl
 		});
 		/* Key Events */
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			Window& win = *(Window*)glfwGetWindowUserPointer(window);
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
@@ -137,7 +137,7 @@ namespace sgl
 		});
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
-			Window& win = *(Window*)glfwGetWindowUserPointer(window);
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent e;
 			win.eventCallbackFn(e);
 		});
