@@ -3,6 +3,7 @@
 #include "Sgl/Graphics/Light.h"
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace sgl
 {

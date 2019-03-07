@@ -1,7 +1,7 @@
 project(Sandbox)
 
 set(sources
-    Sandbox.cpp
+    MouseTest.cpp
 )
 
 find_package(Threads REQUIRED)
