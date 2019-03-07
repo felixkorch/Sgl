@@ -23,7 +23,7 @@ namespace sgl
 		KeyPressedEvent(int keycode, int repeatCount)
 			: KeyEvent(keycode), repeatCount(repeatCount) {}
 
-		inline int GetRepeatCount() const { return repeatCount; }
+		int GetRepeatCount() const { return repeatCount; }
 
 		std::string ToString() const override
 		{

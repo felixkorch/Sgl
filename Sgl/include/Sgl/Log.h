@@ -7,17 +7,18 @@ namespace sgl
 	class Log {
 	private:
 		static std::shared_ptr<spdlog::logger> mainLogger;
+		static std::shared_ptr<spdlog::logger> clientLogger;
 	public:
 		static std::shared_ptr<spdlog::logger>& GetMainLogger()
 		{
 			return mainLogger;
 		}
 
-		static void Init()
+		static std::shared_ptr<spdlog::logger>& GetClientLogger()
 		{
-			spdlog::set_pattern("%^[%T] %n: %v%$");
-			mainLogger = spdlog::stdout_color_mt("SGL");
-			mainLogger->set_level(spdlog::level::trace);
+			return clientLogger;
 		}
+
+		static void Init();
 	};
 }

@@ -1,4 +1,4 @@
-#include "Sgl/Entrypoint.h"
+/*
 #include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
@@ -9,11 +9,11 @@
 
 using namespace sgl;
 
-class ExampleLayer : public Layer {
+class MainLayer : public Layer {
 private:
 	BatchRenderer* renderer;
 public:
-	ExampleLayer()
+	MainLayer()
 		: Layer("GameLayer")
 	{
 		Shader shader("res/shaders/" Shader("2D"));
@@ -34,7 +34,7 @@ public:
 
 	void OnUpdate() override
 	{
-		renderer->Begin();
+		ClientTrace("Main loop");
 
 		srand(time(nullptr));
 
@@ -49,6 +49,8 @@ public:
 		  0xF8B800, 0xB8F818, 0x58D854, 0x58F898, 0x00E8D8, 0x787878, 0x000000, 0x000000,
 		  0xFCFCFC, 0xA4E4FC, 0xB8B8F8, 0xD8B8F8, 0xF8B8F8, 0xF8A4C0, 0xF0D0B0, 0xFCE0A8,
 		  0xF8D878, 0xD8F878, 0xB8F8B8, 0xB8F8D8, 0x00FCFC, 0xF8D8F8, 0x000000, 0x000000 };
+
+		renderer->Begin();
 
 		for (int i = 0; i < nesRes.x; i += 16) {
 			for (int j = 0; j < nesRes.y; j += 16) {
@@ -66,15 +68,19 @@ public:
 			KeyPressedEvent k = (KeyPressedEvent&)event;
 
 			switch (k.GetKeyCode()) {
-			case GLFW_KEY_RIGHT: {
-				std::cout << "Right key pressed!" << std::endl;
+			case SGL_KEY_RIGHT: {
+				ClientTrace("Right key pressed!");
 				break;
 			}
-			case GLFW_KEY_LEFT: {
-				std::cout << "Left key pressed!" << std::endl;
+			case SGL_KEY_LEFT: {
+				ClientTrace("Left key pressed!");
 				break;
 			}
 			}
+		}
+		if (event.GetEventType() == EventType::MouseButtonPressed) {
+			MouseButtonPressed c = (MouseButtonPressed&)event;
+			ClientTrace(c.ToString());
 		}
 	}
 };
@@ -85,7 +91,7 @@ public:
 	Sandbox()
 		: Application(512, 480, "Sandbox")
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new MainLayer());
 	}
 
 	~Sandbox() {}
@@ -95,4 +101,4 @@ public:
 sgl::Application* sgl::CreateApplication()
 {
 	return new Sandbox;
-}
+}*/

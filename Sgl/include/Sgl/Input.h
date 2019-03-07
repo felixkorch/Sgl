@@ -3,8 +3,8 @@ namespace sgl
 {
 	class Input {
 	private:
-		static constexpr auto MaxKeys = 350;
-		static bool keys[350];
+		constexpr static auto MaxKeys = 350;
+		static bool keys[MaxKeys];
 	public:
 		static bool IsKeyPressed(unsigned int keycode)
 		{
