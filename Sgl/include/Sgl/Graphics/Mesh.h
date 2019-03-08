@@ -37,6 +37,11 @@ namespace sgl
 			return material;
 		}
 
+		void SetMaterial(const Material& other)
+		{
+			material = other;
+		}
+
 		void Draw();
 	};
 }

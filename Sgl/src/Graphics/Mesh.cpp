@@ -3,10 +3,10 @@
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/IndexBuffer.h"
 #include "Sgl/Graphics/Material.h"
+#include "Sgl/Common.h"
 
 #include "glm/glm.hpp"
 #include "obj_loader/OBJ_Loader.h"
-#include "Glad/glad.h"
 #include <string>
 
 namespace sgl

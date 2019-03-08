@@ -16,6 +16,11 @@ namespace sgl
 		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	}
 
+	Shader::Shader(const char* vertexShader, const char* fragmentShader)
+	{
+		rendererID = CreateShader(vertexShader, fragmentShader);
+	}
+
 	Shader::~Shader()
 	{
 		glDeleteProgram(rendererID);
@@ -46,19 +51,6 @@ namespace sgl
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
 	}
 
-	void Shader::SetSystemUniforms(const VertexUniforms* vUniforms, const FragmentUniforms* fUniforms)
-	{
-		Bind();
-
-		SetUniformMat4f("u_Model", vUniforms->model);
-		SetUniformMat4f("u_Proj", vUniforms->view * vUniforms->model);
-		SetUniform3f("u_CameraPos", fUniforms->cameraPos);
-		SetUniform3f("u_Light.position", fUniforms->light.position);
-		SetUniform3f("u_Light.ambient", fUniforms->light.ambient);
-		SetUniform3f("u_Light.diffuse", fUniforms->light.diffuse);
-		SetUniform3f("u_Light.specular", fUniforms->light.specular);
-	}
-
 	void Shader::SetUniform1f(const std::string& name, float v0)
 	{
 		glUniform1f(GetUniformLocation(name), v0);
@@ -76,7 +68,7 @@ namespace sgl
 
 		int location = glGetUniformLocation(rendererID, name.c_str());
 		if (location == -1)
-			SglError("Uniform {} doesn't exist!", name);
+			SglWarn("Unable to set Uniform {}, doesn't exist", name);
 
 		uniformLocationCache[name] = location;
 		return location;
@@ -158,23 +150,20 @@ namespace sgl
 		return { ss[0].str(), ss[1].str() };
 	}
 
-	void Shader::SetUniformData(const std::vector<UniformDeclaration>& declarations, const char* data)
+	void Shader::SetUniformData(UniformHandler& uHandler)
 	{
 		Bind();
 
-		for (auto u : declarations) {
+		for (auto& u : uHandler) {
 			switch (u.type) {
 			case UniformType::Int:
-				SetUniform1i(u.name, *(int*)(data + u.offset));
-				break;
-			case UniformType::Float:
-				SetUniform1f(u.name, *(float*)(data + u.offset));
-				break;
+				SetUniform1i(uHandler.GetName<int>(u), uHandler.GetValue<int>(u));
 			case UniformType::Vec3:
-				SetUniform3f(u.name, *(glm::vec3*)(data + u.offset));
-				break;
-			default:
-				break;
+				SetUniform3f(uHandler.GetName<glm::vec3>(u), uHandler.GetValue<glm::vec3>(u));
+			case UniformType::Mat4:
+				SetUniformMat4f(uHandler.GetName<glm::mat4>(u), uHandler.GetValue<glm::mat4>(u));
+			case UniformType::Float:
+				SetUniform1f(uHandler.GetName<float>(u), uHandler.GetValue<float>(u));
 			}
 		}
 	}

@@ -5,10 +5,23 @@
 
 namespace sgl
 {
+
+	/* Set of standard uniforms */
+	struct VertexUniforms {
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 projection;
+	};
+
+	struct FragmentUniforms {
+		glm::vec3 cameraPos;
+		Light light;
+	};
+
 	class ForwardRenderer {
 	private:
-		VertexUniforms* vertexUniformBuffer;
-		FragmentUniforms* fragmentUniformBuffer;
+		VertexUniforms* vertexUniforms; // Model / View / Projection
+		FragmentUniforms* fragmentUniforms; // Light / Camera
 		std::vector<Model> modelQueue;
 
 	public:
@@ -20,6 +33,6 @@ namespace sgl
 		void SubmitLight(const Light& light);
 		void Render();
 		void Clear();
-		void SetUniforms(Shader& shader);
+		void SetStandardUniforms(Shader& shader);
 	};
 }

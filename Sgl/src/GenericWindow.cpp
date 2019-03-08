@@ -142,27 +142,18 @@ namespace sgl
 			win.eventCallbackFn(e);
 		});
 
-		/*
-			TODO: This snippet throws an error.
-
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-		*/
-
-		/*
-			Can be enabled with extensions to Glad.
-
-			glEnable(GL_MULTISAMPLE);
-		*/
-
 		/* Initialize OpenGL for desktop or embedded */
 		int status = 1;
 		#ifndef USE_EMSCRIPTEN
 		status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		#endif
 		SglAssert(status, "Failed to initialize Glad.");
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_MULTISAMPLE);
 
 		return 1;
 	}

@@ -5,19 +5,19 @@ namespace sgl
 	ForwardRenderer::ForwardRenderer()
 	{
 		modelQueue.reserve(100);
-		vertexUniformBuffer = new VertexUniforms;
-		fragmentUniformBuffer = new FragmentUniforms;
+		vertexUniforms = new VertexUniforms;
+		fragmentUniforms = new FragmentUniforms;
 	}
 
 	ForwardRenderer::~ForwardRenderer()
 	{
-		delete vertexUniformBuffer;
-		delete fragmentUniformBuffer;
+		delete vertexUniforms;
+		delete fragmentUniforms;
 	}
 
 	void ForwardRenderer::Begin(const Camera& camera)
 	{
-		vertexUniformBuffer->view = camera.GetView();
+		vertexUniforms->view = camera.GetView();
 	}
 
 	void ForwardRenderer::Submit(const Model& model)
@@ -25,18 +25,17 @@ namespace sgl
 		modelQueue.push_back(model);
 	}
 
-	void ForwardRenderer::SubmitLight(const Light& light)
+	void ForwardRenderer::SubmitLight(const Light& light) // Only one light atm
 	{
-		fragmentUniformBuffer->light = light; // Only 1 light supported
+		fragmentUniforms->light = light;
 	}
-
 
 	void ForwardRenderer::Render()
 	{
 		for (Model& m : modelQueue) {
-			vertexUniformBuffer->model = m.GetModelMatrix();
+			vertexUniforms->model = m.GetModelMatrix();
 			const std::shared_ptr<Mesh>& mesh = m.GetMesh();
-			SetUniforms(mesh->GetMaterial().GetShader());
+			SetStandardUniforms(mesh->GetMaterial().GetShader());
 			mesh->GetMaterial().BindUniforms();
 			mesh->Draw();
 		}
@@ -47,8 +46,14 @@ namespace sgl
 		modelQueue.clear();
 	}
 
-	void ForwardRenderer::SetUniforms(Shader& shader)
+	void ForwardRenderer::SetStandardUniforms(Shader& shader)
 	{
-		shader.SetSystemUniforms(vertexUniformBuffer, fragmentUniformBuffer);
+		shader.Bind();
+		shader.SetUniformMat4f("u_Model", vertexUniforms->model);
+		shader.SetUniformMat4f("u_Proj", vertexUniforms->view * vertexUniforms->model);
+		shader.SetUniform3f("u_Light.ambient", fragmentUniforms->light.ambient);
+		shader.SetUniform3f("u_Light.diffuse", fragmentUniforms->light.diffuse);
+		shader.SetUniform3f("u_Light.specular", fragmentUniforms->light.specular);
+		shader.SetUniform3f("u_Light.position", fragmentUniforms->light.position);
 	}
 }

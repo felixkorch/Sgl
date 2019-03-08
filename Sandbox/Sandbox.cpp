@@ -1,4 +1,3 @@
-/*
 #include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
@@ -99,4 +98,4 @@ public:
 sgl::Application* sgl::CreateApplication()
 {
 	return new Sandbox;
-}*/
+}

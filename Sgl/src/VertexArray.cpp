@@ -1,6 +1,6 @@
 #include "Sgl/VertexArray.h"
 #include "Sgl/VertexBufferLayout.h"
-#include "glad/glad.h"
+#include "Sgl/Common.h"
 
 namespace sgl
 {

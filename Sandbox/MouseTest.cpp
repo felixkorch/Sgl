@@ -2,25 +2,27 @@
 #include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
-#define Shader(x) x ".gles3.shader"
+#define SHADER(x) x ".gles3.shader"
 #else
-#define Shader(x) x ".shader"
+#define SHADER(x) x ".shader"
 #endif
 
 using namespace sgl;
 
-class Sample : public Layer {
+class TestLayer : public Layer {
 private:
 	BatchRenderer* renderer;
+	Shader* shader;
+
 	Renderable2D rect;
 	glm::vec2 mousePos;
 	bool movingRect = false;
 public:
-	Sample()
+	TestLayer()
 		: Layer("GameLayer")
 	{
-		Shader shader("res/shaders/" Shader("2D"));
-		renderer = new BatchRenderer(1280, 720, shader);
+		shader = new Shader("res/shaders/" SHADER("2D"));
+		renderer = new BatchRenderer(1280, 720, *shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
 	}
 
@@ -41,13 +43,13 @@ public:
 	{
 		if (event.GetEventType() == EventType::MouseButtonPressed) {
 			MouseButtonPressed c = (MouseButtonPressed&)event;
-			SglTrace(c.ToString());
+			ClientTrace(c.ToString());
 			if (rect.bounds.Contains(mousePos))
 				movingRect = true;
 		}
 		else if (event.GetEventType() == EventType::MouseButtonReleased) {
 			MouseButtonReleased c = (MouseButtonReleased&)event;
-			SglTrace(c.ToString());
+			ClientTrace(c.ToString());
 			movingRect = false;
 		}
 		else if (event.GetEventType() == EventType::CursorMoved) {
@@ -58,20 +60,20 @@ public:
 	}
 };
 
-class Sandbox : public Application {
+class MouseTest : public Application {
 public:
 
-	Sandbox()
+	MouseTest()
 		: Application(1280, 720, "Sandbox")
 	{
-		PushLayer(new Sample());
+		PushLayer(new TestLayer());
 	}
 
-	~Sandbox() {}
+	~MouseTest() {}
 
 };
 
 sgl::Application* sgl::CreateApplication()
 {
-	return new Sandbox;
+	return new MouseTest;
 }
