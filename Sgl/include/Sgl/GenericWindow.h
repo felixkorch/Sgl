@@ -1,6 +1,6 @@
 #pragma once
 #include "Sgl/Window.h"
-#include "GLFW/glfw3.h"
+#include "Sgl/Common.h"
 
 namespace sgl
 {

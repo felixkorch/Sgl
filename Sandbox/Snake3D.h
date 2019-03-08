@@ -3,7 +3,7 @@
 #include "Sgl/Graphics/Camera.h"
 #include "Sgl/Graphics/Material.h"
 #include "Sgl/Graphics/Mesh.h"
-#include "Sgl/Graphics/light.h"
+#include "Sgl/Graphics/Light.h"
 #include "Sgl/Graphics/Model.h"
 #include "Sgl/Graphics/Texture.h"
 #include "Sgl/Input.h"
@@ -139,7 +139,7 @@ public:
 	}
 
 
-	void Snake3D::setDir(const glm::vec3& other)
+	void setDir(const glm::vec3& other)
 	{
 		dir = other;
 	}
