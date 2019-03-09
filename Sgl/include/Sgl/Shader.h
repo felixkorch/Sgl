@@ -33,5 +33,10 @@ namespace sgl
 		unsigned int CompileShader(unsigned int type, const std::string& source);
 		ShaderProgramSource ParseShader(const std::string& filepath);
 		void SetUniformData(UniformHandler& uniformHandler);
+
+		unsigned int GetRendererID()
+		{
+			return rendererID;
+		}
 	};
 }

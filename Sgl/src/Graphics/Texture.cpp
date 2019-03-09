@@ -1,3 +1,4 @@
+#include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/Texture.h"
 #include "Sgl/Common.h"
 #include "stb_image/stb_image.h"
@@ -20,7 +21,7 @@ namespace sgl
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);// clamp_to_edge?
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		if (localBuffer)

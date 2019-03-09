@@ -1,6 +1,10 @@
 #pragma once
-#include "Sgl/Entrypoint.h"
+#include "Sgl/OpenGL.h"
+#ifndef USE_EMSCRIPTEN
 #include "Sgl/Graphics/BatchRenderer.h"
+#else
+#include "Sgl/Graphics/BatchRendererGLES2.h"
+#endif
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/MouseEvent.h"

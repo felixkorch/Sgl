@@ -25,13 +25,3 @@
 #endif
 
 #define GLM_ENABLE_EXPERIMENTAL
-
-#ifdef USE_EMSCRIPTEN
-#include "emscripten/emscripten.h"
-#include "GLES3/gl32.h"
-#define GLFW_INCLUDE_ES3
-#else
-#include "glad/glad.h"
-#endif
-
-#include "GLFW/glfw3.h"

@@ -1,3 +1,4 @@
+#include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/Mesh.h"
 #include "Sgl/VertexArray.h"
 #include "Sgl/VertexBufferLayout.h"
@@ -20,7 +21,7 @@ namespace sgl
 
 		indexCount = loader.LoadedIndices.size();
 
-		vertexBuffer.Init_StaticDraw(loader.LoadedVertices.data(), loader.LoadedVertices.size() * sizeof(objl::Vertex));
+		vertexBuffer.InitStaticDraw(loader.LoadedVertices.data(), loader.LoadedVertices.size() * sizeof(objl::Vertex));
 		layout.Push<float>(3);
 		layout.Push<float>(3);
 		layout.Push<float>(2);
@@ -34,7 +35,7 @@ namespace sgl
 	Mesh::Mesh(Vertex* vertices, unsigned int nVertices, unsigned int* indices, unsigned int indexCount, const Material& material)
 		: vertexCount(nVertices), indexCount(indexCount), material(material)
 	{
-		vertexBuffer.Init_StaticDraw(vertices, nVertices * sizeof(Vertex));
+		vertexBuffer.InitStaticDraw(vertices, nVertices * sizeof(Vertex));
 		layout.Push<float>(3); // position
 		layout.Push<float>(3); // normal
 		layout.Push<float>(2); // texture
@@ -48,7 +49,7 @@ namespace sgl
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
 		: indexCount(indices.size()), material(material)
 	{
-		vertexBuffer.Init_StaticDraw(vertices.data(), vertices.size() * sizeof(Vertex));
+		vertexBuffer.InitStaticDraw(vertices.data(), vertices.size() * sizeof(Vertex));
 		layout.Push<float>(3); // position
 		layout.Push<float>(3); // normal
 		layout.Push<float>(2); // texture

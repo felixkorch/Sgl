@@ -1,3 +1,4 @@
+#include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/BatchRenderer.h"
 #include "Sgl/Common.h"
 #include "Sgl/VertexBufferLayout.h"
@@ -26,12 +27,7 @@ namespace sgl
 	{
 		shader.Bind();
 		vertexBuffer.Bind();
-		//vertexBuffer.BindAttrib(layout); // Instead of Vertex Arrays.
-		/*
-			This function isn't supported in GLES2 but should be used otherwise
-			vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-		*/
-		vertexDataBuffer.clear();
+		vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	}
 
 	void BatchRenderer::Submit(Renderable2D& renderable)
@@ -40,21 +36,28 @@ namespace sgl
 		const glm::vec3 boundsMax = glm::vec3(renderable.bounds.MaxBounds(), 1);
 		const glm::vec2& size = renderable.bounds.size;
 
-		vertexDataBuffer.emplace_back(VertexData{ boundsMin, renderable.color });
-		vertexDataBuffer.emplace_back(VertexData{ glm::vec3(boundsMin.x + size.x, boundsMin.y, 1), renderable.color });
-		vertexDataBuffer.emplace_back(VertexData{ boundsMax, renderable.color });
-		vertexDataBuffer.emplace_back(VertexData{ glm::vec3(boundsMin.x, boundsMin.y + size.y, 1), renderable.color });
+		*vertexDataBuffer = { boundsMin, renderable.color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { glm::vec3(boundsMin.x + size.x, boundsMin.y, 1), renderable.color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { boundsMax, renderable.color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { glm::vec3(boundsMin.x, boundsMin.y + size.y, 1), renderable.color };
+		vertexDataBuffer++;
 
 		indexCount += 6;
 	}
 
 	void BatchRenderer::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
-
-		vertexDataBuffer.emplace_back(VertexData{ p0, color });
-		vertexDataBuffer.emplace_back(VertexData{ p1, color });
-		vertexDataBuffer.emplace_back(VertexData{ p2, color });
-		vertexDataBuffer.emplace_back(VertexData{ p3, color });
+		*vertexDataBuffer = { p0, color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { p1, color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { p2, color };
+		vertexDataBuffer++;
+		*vertexDataBuffer = { p3, color };
+		vertexDataBuffer++;
 
 		indexCount += 6;
 	}
@@ -70,17 +73,11 @@ namespace sgl
 
 	void BatchRenderer::End()
 	{
-		/*
-			Used after call to glMapBuffer.
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-		*/
-		glBufferSubData(GL_ARRAY_BUFFER, 0, BufferSize, (void*)(vertexDataBuffer.data()));
-		vertexBuffer.Unbind();
+		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
 	void BatchRenderer::Flush()
 	{
-		vertexBuffer.Bind();
 		vertexArray.Bind();
 		indexBuffer->Bind();
 
@@ -101,12 +98,10 @@ namespace sgl
 
 	void BatchRenderer::Init()
 	{
-		vertexDataBuffer.reserve(BufferSize);
-		vertexBuffer.Init_DynamicDraw(BufferSize);  // allocate memory in gpu
-		layout.Push<float>(3); // position
-		layout.Push<float>(4); // color
+		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
+		layout.Push<float>(3); // Position
+		layout.Push<float>(4); // Color
 		vertexArray.AddBuffer(vertexBuffer, layout);
-		//vertexBuffer.BindAttrib(layout); // Instead of Vertex Arrays.
 		vertexBuffer.Unbind();
 
 		unsigned int indices[IndicesCount];

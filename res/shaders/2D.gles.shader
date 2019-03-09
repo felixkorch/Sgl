@@ -4,22 +4,22 @@
 attribute vec3 position;
 attribute vec4 color;
 
-varying vec4 color_frag;
+varying vec4 f_color;
 
 uniform mat4 u_Proj;
 
 void main() {
 
 	gl_Position = u_Proj * vec4(position, 1.0);
-    color_frag = color;
+    f_color = color;
 }
 
 #shader fragment
 #version 100
-precision highp float;
+precision mediump float;
 
-varying vec4 color_frag;
+varying vec4 f_color;
 
 void main() {
-	gl_FragColor = color_frag;
+	gl_FragColor = f_color;
 }

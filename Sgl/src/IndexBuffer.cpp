@@ -1,5 +1,5 @@
+#include "Sgl/OpenGL.h"
 #include "Sgl/IndexBuffer.h"
-#include "Sgl/Common.h"
 
 namespace sgl
 {

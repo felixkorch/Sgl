@@ -1,3 +1,5 @@
+#include "Sgl/OpenGL.h"
+#include "GLFW/glfw3.h"
 #include "Sgl/GenericWindow.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/ApplicationEvent.h"
@@ -152,7 +154,7 @@ namespace sgl
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_MULTISAMPLE);
+		// glEnable(GL_MULTISAMPLE); Only in core
 
 		return 1;
 	}

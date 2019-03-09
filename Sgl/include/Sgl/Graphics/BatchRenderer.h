@@ -10,6 +10,7 @@
 
 namespace sgl
 {
+
 	class BatchRenderer {
 	private:
 		static constexpr std::size_t MaxSprites = 100;
@@ -22,7 +23,7 @@ namespace sgl
 		VertexBuffer vertexBuffer;
 		IndexBuffer* indexBuffer;
 		VertexBufferLayout layout;
-		std::vector<VertexData> vertexDataBuffer;
+		VertexData* vertexDataBuffer;
 		Shader shader;
 		glm::vec2 screenSize;
 		Camera2D camera;
@@ -39,6 +40,8 @@ namespace sgl
 		void End();
 		void Flush();
 		void MoveCamera(const glm::vec2& val);
+
+
 	private:
 		void Init();
 	};

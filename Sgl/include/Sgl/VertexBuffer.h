@@ -10,9 +10,9 @@ namespace sgl
 		VertexBuffer();
 		~VertexBuffer();
 
-		void Init_StaticDraw(const void* data, std::size_t size);
-		void Init_DynamicDraw(std::size_t bufferSize);
-		void BindAttrib(const VertexBufferLayout& layout);
+		void InitStaticDraw(const void* data, std::size_t size);
+		void InitDynamicDraw(std::size_t bufferSize);
+		void BindLayout(const VertexBufferLayout& layout);
 		void Bind() const;
 		void Unbind() const;
 	};

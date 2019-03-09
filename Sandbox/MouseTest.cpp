@@ -2,7 +2,7 @@
 #include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
-#define SHADER(x) x ".gles3.shader"
+#define SHADER(x) x ".gles.shader"
 #else
 #define SHADER(x) x ".shader"
 #endif
@@ -11,7 +11,7 @@ using namespace sgl;
 
 class TestLayer : public Layer {
 private:
-	BatchRenderer* renderer;
+	BatchRendererGLES2* renderer;
 	Shader* shader;
 
 	Renderable2D rect;
@@ -22,7 +22,7 @@ public:
 		: Layer("GameLayer")
 	{
 		shader = new Shader("res/shaders/" SHADER("2D"));
-		renderer = new BatchRenderer(1280, 720, *shader);
+		renderer = new BatchRendererGLES2(1280, 720, *shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
 	}
 
