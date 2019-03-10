@@ -6,11 +6,11 @@ namespace sgl
 	class MouseEvent : public Event {
 	};
 
-	class CursorEvent : public MouseEvent {
+	class MouseMoved : public MouseEvent {
 	protected:
 		double xPos, yPos;
 	public:
-		CursorEvent(double xPos, double yPos)
+		MouseMoved(double xPos, double yPos)
 			: xPos(xPos), yPos(yPos) {}
 		
 		double GetXPos()
@@ -32,10 +32,10 @@ namespace sgl
 
 		const EventType GetEventType() const override
 		{
-			return EventType::CursorMoved;
+			return EventType::MouseMoved;
 		}
 
-		static EventType GetStaticType() { return EventType::CursorMoved; }
+		static EventType GetStaticType() { return EventType::MouseMoved; }
 	};
 
 	class MouseButtonPressed : public MouseEvent {

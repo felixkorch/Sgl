@@ -11,25 +11,31 @@ using namespace sgl;
 
 class TestLayer : public Layer {
 private:
-	BatchRendererGLES2* renderer;
-	Shader* shader;
-
+	BatchRenderer* renderer;
+	Shader shader;
 	Renderable2D rect;
-	glm::vec2 mousePos;
+	glm::vec2 offset;
 	bool movingRect = false;
 public:
 	TestLayer()
-		: Layer("GameLayer")
+		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
 	{
-		shader = new Shader("res/shaders/" SHADER("2D"));
-		renderer = new BatchRendererGLES2(1280, 720, *shader);
+		renderer = BatchRenderer::MakeBatchRenderer(1280, 720, shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
+		rect.color = glm::vec4(0.5, 0.2, 0.3, 1.0);
+		srand(time(nullptr));
+	}
+
+	~TestLayer()
+	{
+		delete renderer;
 	}
 
 	void OnUpdate() override
 	{
+		auto mousePos = Input::GetMousePosition();
 		if (movingRect)
-			rect.SetPos(mousePos);
+			rect.SetPos(glm::vec2(mousePos.first - offset.x, mousePos.second - offset.y));
 
 		renderer->Begin();
 
@@ -44,19 +50,25 @@ public:
 		if (event.GetEventType() == EventType::MouseButtonPressed) {
 			MouseButtonPressed c = (MouseButtonPressed&)event;
 			ClientTrace(c.ToString());
-			if (rect.bounds.Contains(mousePos))
+			auto mousePos = Input::GetMousePosition();
+			if (rect.bounds.Contains(glm::vec2(mousePos.first, mousePos.second))) {
 				movingRect = true;
+				offset = glm::vec2(mousePos.first - rect.bounds.MinBounds().x, mousePos.second - rect.bounds.MinBounds().y);
+			}
+			if (c.GetButton() == 1)
+				rect.color = RandColor();
 		}
 		else if (event.GetEventType() == EventType::MouseButtonReleased) {
 			MouseButtonReleased c = (MouseButtonReleased&)event;
 			ClientTrace(c.ToString());
 			movingRect = false;
 		}
-		else if (event.GetEventType() == EventType::CursorMoved) {
-			CursorEvent c = (CursorEvent&)event;
-			mousePos.x = c.GetXPos();
-			mousePos.y = 720 - c.GetYPos();
-		}
+	}
+
+private:
+	glm::vec4 RandColor()
+	{
+		return glm::vec4(1 / (float)(rand() % 15), 1 / (float)(rand() % 15), 1 / (float)(rand() % 15), 1.0);
 	}
 };
 

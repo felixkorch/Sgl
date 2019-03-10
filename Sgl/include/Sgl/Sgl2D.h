@@ -1,15 +1,12 @@
 #pragma once
 #include "Sgl/OpenGL.h"
-#ifndef USE_EMSCRIPTEN
 #include "Sgl/Graphics/BatchRenderer.h"
-#else
-#include "Sgl/Graphics/BatchRendererGLES2.h"
-#endif
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Events/KeyCodes.h"
 #include "Sgl/Log.h"
+#include "Sgl/Input.h"
 
 #define ClientWarn(...)  Log::GetClientLogger()->warn(__VA_ARGS__)
 #define ClientError(...) Log::GetClientLogger()->error(__VA_ARGS__)

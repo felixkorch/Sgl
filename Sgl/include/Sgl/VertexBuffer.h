@@ -8,6 +8,8 @@ namespace sgl
 		unsigned int rendererID;
 	public:
 		VertexBuffer();
+		VertexBuffer(const VertexBuffer&) = delete;
+		void operator=(const VertexBuffer&) = delete;
 		~VertexBuffer();
 
 		void InitStaticDraw(const void* data, std::size_t size);

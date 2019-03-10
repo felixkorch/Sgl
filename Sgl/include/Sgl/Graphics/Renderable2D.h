@@ -10,6 +10,8 @@ namespace sgl
 	struct VertexData {
 		glm::vec3 vertexCoord;
 		glm::vec4 color;
+		glm::vec2 uvCoords;
+		float tid;
 	};
 
 	class Rectangle {
@@ -52,19 +54,26 @@ namespace sgl
 	class Renderable2D {
 	public:
 		Rectangle bounds;
-		glm::vec4 color;
+		glm::vec4 color = glm::vec4(1);
+		std::vector<glm::vec2> uvCoords = GetStandardUVs();
+		float tid = 0;
 
 		Renderable2D() {}
 
 		Renderable2D(const glm::vec2& size, const glm::vec2& pos)
-			: bounds(size, pos), color(glm::vec4(1, 1, 1, 1)) {}
+			: bounds(size, pos) {}
 
-		constexpr Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
+		Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
 			: bounds(size, pos), color(color) {}
 
 		void SetPos(const glm::vec2& pos)
 		{
 			bounds.pos = pos;
+		}
+
+		static std::vector<glm::vec2> GetStandardUVs()
+		{
+			return std::vector<glm::vec2>{ glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 1), glm::vec2(1, 0) };
 		}
 	};
 

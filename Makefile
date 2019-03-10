@@ -7,10 +7,9 @@ INC = -ISgl/libs -ISgl/include -ISgl/libs/glm -ISgl/libs/spdlog/include \
 -ISgl/libs/GLFW/include
 
 SRC = Sgl/src/Application.cpp Sgl/src/IndexBuffer.cpp Sgl/src/Input.cpp Sgl/src/LayerStack.cpp Sgl/src/Log.cpp Sgl/src/Shader.cpp \
-Sgl/src/VertexBuffer.cpp Sgl/src/GenericWindow.cpp Sgl/src/Graphics/BatchRendererGLES2.cpp Sgl/src/Graphics/ForwardRenderer.cpp \
+Sgl/src/VertexBuffer.cpp Sgl/src/GenericWindow.cpp Sgl/src/Platform/GLES2/BatchRendererGLES2.cpp Sgl/src/Graphics/ForwardRenderer.cpp \
 Sgl/src/Graphics/Material.cpp Sgl/src/Graphics/Mesh.cpp Sgl/src/Graphics/Texture.cpp Sgl/libs/stb_image/stb_image.cpp \
 Sandbox/MouseTest.cpp
-#Sandbox/GLTest.cpp Sgl/libs/Glad/src/glad.c
 
 Main:
 	$(CC) $(SRC) $(FLAGS) $(INC) -o emscripten/index.html

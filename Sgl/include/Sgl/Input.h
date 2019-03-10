@@ -1,19 +1,42 @@
 #pragma once
+#include <utility>
+
 namespace sgl
 {
 	class Input {
-	private:
-		constexpr static auto MaxKeys = 350;
-		static bool keys[MaxKeys];
 	public:
-		static bool IsKeyPressed(unsigned int keycode)
+		static bool IsKeyPressed(int keycode)
 		{
-			return keys[keycode];
+			return sInstance->IsKeyPressedImpl(keycode);
 		}
 
-		static bool* GetKeys()
+		static bool IsMouseButtonPressed(int code)
 		{
-			return keys;
+			return sInstance->IsMouseButtonPressedImpl(code);
 		}
+
+		static double GetMousePositionX()
+		{
+			return sInstance->GetMousePositionXImpl();
+		}
+
+		static double GetMousePositionY()
+		{
+			return sInstance->GetMousePositionYImpl();
+		}
+
+		static std::pair<double, double> GetMousePosition()
+		{
+			return sInstance->GetMousePositionImpl();
+		}
+
+	protected:
+		virtual bool IsKeyPressedImpl(int keycode) = 0;
+		virtual bool IsMouseButtonPressedImpl(int code) = 0;
+		virtual double GetMousePositionXImpl() = 0;
+		virtual double GetMousePositionYImpl() = 0;
+		virtual std::pair<double, double> GetMousePositionImpl() = 0;
+	private:
+		static Input* sInstance;
 	};
 }

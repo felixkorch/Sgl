@@ -1,10 +1,10 @@
 #include "Sgl/OpenGL.h"
-#include "GLFW/glfw3.h"
 #include "Sgl/GenericWindow.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/ApplicationEvent.h"
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Input.h"
+#include "Sgl/Common.h"
 
 #include <functional>
 #include <array>
@@ -12,7 +12,8 @@
 namespace sgl
 {
 	GenericWindow::GenericWindow(unsigned int width, unsigned int height, const char* title)
-		: windowWidth(width), windowHeight(height), title(title)
+		: props{ width, height, title }, vSyncOn(true)
+
 	{
 		InitWindow();
 	}
@@ -73,7 +74,7 @@ namespace sgl
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		SetVSync(true);
 
-		window = glfwCreateWindow(windowWidth, windowHeight, title, nullptr, nullptr);
+		window = glfwCreateWindow(props.width, props.height, props.title, nullptr, nullptr);
 		if (!window) {
 			glfwTerminate();
 			return -1;
@@ -83,11 +84,11 @@ namespace sgl
 		glfwSetWindowUserPointer(window, this);
 
 		/* Mouse Events */
-		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos) {
+		/*glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			CursorEvent e(xPos, yPos);
+			MouseMoved e(xPos, win.windowHeight - yPos); // Makes the origin in the bottom left
 			win.eventCallbackFn(e);
-		});
+		});*/
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
@@ -133,8 +134,6 @@ namespace sgl
 				break;
 			}
 			}
-
-			Input::GetKeys()[key] = action != GLFW_RELEASE; // Temporary key pressed -polling solution
 		});
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {

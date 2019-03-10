@@ -5,7 +5,7 @@
 namespace sgl
 {
 	enum class EventType {
-		WindowClose, KeyPressed, KeyReleased, KeyRepeat, CursorMoved, MouseButtonPressed, MouseButtonReleased
+		WindowClose, KeyPressed, KeyReleased, KeyRepeat, MouseMoved, MouseButtonPressed, MouseButtonReleased
 	};
 
 	class Event {

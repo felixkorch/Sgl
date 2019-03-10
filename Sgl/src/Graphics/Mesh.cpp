@@ -5,8 +5,6 @@
 #include "Sgl/IndexBuffer.h"
 #include "Sgl/Graphics/Material.h"
 #include "Sgl/Common.h"
-
-#include "glm/glm.hpp"
 #include "obj_loader/OBJ_Loader.h"
 #include <string>
 
@@ -17,7 +15,7 @@ namespace sgl
 	{
 		objl::Loader loader;
 		if (!loader.LoadFile(filePath))
-			printf("Could'nt find obj file");
+			SglWarn("Couldn't find obj file ({})", filePath);
 
 		indexCount = loader.LoadedIndices.size();
 
@@ -26,35 +24,21 @@ namespace sgl
 		layout.Push<float>(3);
 		layout.Push<float>(2);
 		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer = new IndexBuffer(loader.LoadedIndices.data(), loader.LoadedIndices.size());
+		indexBuffer->Init(loader.LoadedIndices.data(), loader.LoadedIndices.size());
 
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();
 	}
 
-	Mesh::Mesh(Vertex* vertices, unsigned int nVertices, unsigned int* indices, unsigned int indexCount, const Material& material)
-		: vertexCount(nVertices), indexCount(indexCount), material(material)
+	Mesh::Mesh(Vertex* vertices, unsigned int vertexCount, unsigned int* indices, unsigned int indexCount, const Material& material)
+		: vertexCount(vertexCount), indexCount(indexCount), material(material)
 	{
-		vertexBuffer.InitStaticDraw(vertices, nVertices * sizeof(Vertex));
-		layout.Push<float>(3); // position
-		layout.Push<float>(3); // normal
-		layout.Push<float>(2); // texture
+		vertexBuffer.InitStaticDraw(vertices, vertexCount * sizeof(Vertex));
+		layout.Push<float>(3); // Position
+		layout.Push<float>(3); // Normal
+		layout.Push<float>(2); // Texture
 		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer = new IndexBuffer(indices, indexCount);
-
-		vertexBuffer.Unbind();
-		vertexArray.Unbind();
-	}
-
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
-		: indexCount(indices.size()), material(material)
-	{
-		vertexBuffer.InitStaticDraw(vertices.data(), vertices.size() * sizeof(Vertex));
-		layout.Push<float>(3); // position
-		layout.Push<float>(3); // normal
-		layout.Push<float>(2); // texture
-		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer = new IndexBuffer(indices.data(), indices.size());
+		indexBuffer->Init(indices, indexCount);
 
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();

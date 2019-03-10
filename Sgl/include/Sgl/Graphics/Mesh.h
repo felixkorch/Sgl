@@ -17,19 +17,17 @@ namespace sgl
 
 	class Mesh {
 	private:
-		unsigned int vertexCount;
-		glm::vec3 pos;
-		VertexArray vertexArray;
-		VertexBuffer vertexBuffer;
 		VertexBufferLayout layout;
+		VertexBuffer vertexBuffer;
+		VertexArray vertexArray;
 		IndexBuffer* indexBuffer;
-		unsigned int indexCount;
 		Material material;
+		unsigned int indexCount;
+		unsigned int vertexCount;
 	public:
 
 		Mesh(const std::string& filePath, const Material& material);
-		Mesh(Vertex* vertices, unsigned int nVertices, unsigned int* indices, unsigned int indexCount, const Material& material);
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material);
+		Mesh(Vertex* vertices, unsigned int vertexCount, unsigned int* indices, unsigned int indexCount, const Material& material);
 		~Mesh();
 
 		Material& GetMaterial()

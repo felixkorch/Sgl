@@ -19,6 +19,10 @@ namespace sgl
 		void OnEvent(Event& e);
 		bool OnWindowClose(Event& e);
 		void Run();
+		Window* GetWindow() { return window; }
+		static Application& Get() { return *sInstance; }
+	private:
+		static Application* sInstance;
 	};
 
 	// To be defined in client.

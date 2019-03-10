@@ -5,6 +5,7 @@
 #include "Sgl/Window.h"
 #include "Sgl/Events/Event.h"
 #include "Sgl/Events/ApplicationEvent.h"
+#include "GLFW/glfw3.h"
 
 namespace sgl
 {
@@ -17,8 +18,12 @@ namespace sgl
 	}
 	#endif
 
+	Application* Application::sInstance = nullptr;
+
 	Application::Application(unsigned int width, unsigned int height, const char* title)
 	{
+		SglAssert(sInstance == nullptr, "Application already exists!");
+		sInstance = this;
 		window = Window::Create(width, height, title);
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
@@ -60,17 +65,33 @@ namespace sgl
 
 	void Application::Run()
 	{
+		double lastTime = glfwGetTime();
+		int nbFrames = 0;
 
 		#ifdef USE_EMSCRIPTEN
 		std::function<void()> mainLoop = [&]() {
 			#else
 		while (running) {
 			#endif
+
+			/* Mesaure FPS */
+			double currentTime = glfwGetTime();
+			nbFrames++;
+			if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
+				// printf and reset timer
+				auto time = 1000.0 / double(nbFrames);
+				SglTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+				nbFrames = 0;
+				lastTime += 1.0;
+			}
+			/* Mesaure FPS */
+
 			window->Clear();
 			for (Layer* l : layerstack) {
 				l->OnUpdate();
 			}
 			window->Update();
+
 			#ifdef USE_EMSCRIPTEN
 		};
 		emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);

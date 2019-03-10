@@ -13,8 +13,10 @@ namespace sgl
 	public:
 		Texture(const std::string& filePath);
 		~Texture();
-		void Bind(unsigned int slot) const;
+		//Texture(const Texture&) = delete;
+		//void operator=(const Texture&) = delete;
 
+		void Bind(unsigned int slot) const;
 		void Unbind() const;
 	};
 }
