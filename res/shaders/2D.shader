@@ -16,12 +16,14 @@ void main() {
 
 	gl_Position = u_Proj * vec4(position, 1.0);
     f_color = color;
+	f_uv = uv;
+	f_tid = tid;
 }
 
 #shader fragment
 #version 330 core
 
-uniform sampler2D f_Sampler;
+uniform sampler2D f_Sampler[16];
 
 out vec4 fragColor;
 
@@ -30,5 +32,6 @@ in vec2  f_uv;
 in float f_tid;
 
 void main() {
-	fragColor = vec4(1.0);//texture(f_Sampler, f_uv);
+	int tid = int(f_tid);
+	fragColor = texture(f_Sampler[tid], f_uv);
 }

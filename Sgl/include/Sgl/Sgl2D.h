@@ -1,10 +1,11 @@
 #pragma once
 #include "Sgl/OpenGL.h"
-#include "Sgl/Graphics/BatchRenderer.h"
+#include "Sgl/Graphics/Renderer2D.h"
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Events/KeyCodes.h"
+#include "Sgl/Events/MouseCodes.h"
 #include "Sgl/Log.h"
 #include "Sgl/Input.h"
 

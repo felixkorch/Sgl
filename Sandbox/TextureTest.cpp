@@ -1,6 +1,6 @@
 #include "Sgl/Entrypoint.h"
 #include "Sgl/Sgl2D.h"
-#include "Sgl/Graphics/TextureStorage.h"
+#include "Sgl/Graphics/Texture.h"
 
 #ifdef USE_EMSCRIPTEN
 #define SHADER(x) x ".gles.shader"
@@ -17,15 +17,11 @@ class MainLayer : public Layer {
 private:
 	BatchRenderer* renderer;
 	Shader shader;
-	/*
-	VertexArray vArray;
-	VertexBuffer vBuffer;
-	IndexBuffer iBuffer; */
-	TextureStorage tex;
+	Texture *tex0, *tex1;
 
 	float* pixels;
 
-	Renderable2D renderable;
+	Renderable2D renderable0, renderable1;
 
 	static constexpr unsigned int nesRGB[] =
 	{ 0x7C7C7C, 0x0000FC, 0x0000BC, 0x4428BC, 0x940084, 0xA80020, 0xA81000, 0x881400,
@@ -42,39 +38,15 @@ public:
 		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
 	{
 		renderer = BatchRenderer::MakeBatchRenderer(Width, Height, shader);
-		renderable = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
-
-		/*
-		srand(time(nullptr));
-
-		pixels = new float[256 * 240 * sizeof(float)];
-
-		for (int i = 0; i < (256 * 240 * sizeof(float)); i += (4 * 8)) {
-			auto rgba = HexToRgb(nesRGB[rand() % 64]);
-			for (int j = 0; j < 32; j += 4) {
-				pixels[i + j + 0] = rgba.x;
-				pixels[i + j + 1] = rgba.y;
-				pixels[i + j + 2] = rgba.z;
-				pixels[i + j + 3] = rgba.w;
-			}
-		}
-
-		tex.LoadData(256, 240, pixels);
-		tex.Bind(0);
-		shader.SetUniform1i("f_Sampler", 0); */
+		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
+		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0,0));
+		renderable1.tid = 1;
 
 
-		/*
-		const static unsigned int indices[] = {
-			0, 1, 2,
-			2, 3, 0
-		};
+		TextureParameters params{ TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::NEAREST };
+		tex0 = new Texture(256, 240, params);
+		tex1 = new Texture("res/tile.png", params);
 
-		iBuffer.Init(indices, 6);
-
-		VertexBufferLayout layout;
-		layout.Push<float>(4); // Position
-		layout.Push<float>(2); // TexCoordinates
 
 		srand(time(nullptr));
 
@@ -90,20 +62,7 @@ public:
 			}
 		}
 
-		const static float vertices[] = {
-			-1, -1, 0, 1, 0, 0,
-			 1, -1, 0, 1, 1, 0,
-			 1,  1, 0, 1, 1, 1,
-			-1,  1, 0, 1, 0, 1
-		};
-
-		vBuffer.InitStaticDraw(vertices, 24 * 4);
-		vArray.AddBuffer(vBuffer, layout);
-
-		shader.Bind();
-		tex.LoadData(256, 240, pixels);
-		tex.Bind(0);
-		shader.SetUniform1i("f_Sampler", 0); */
+		tex0->SetData(pixels, GL_FLOAT);
 	}
 
 	glm::vec4 HexToRgb(unsigned int hexValue)
@@ -121,31 +80,20 @@ public:
 	~MainLayer()
 	{
 		delete pixels;
+		delete tex0;
+		delete tex1;
 		delete renderer;
 	}
 
 	void OnUpdate() override
 	{
-		//tex.Bind(0);
 		renderer->Begin();
-		renderer->Submit(renderable);
+		renderer->Submit(renderable0);
+		renderer->Submit(renderable1);
+		renderer->SubmitTexture(tex0);
+		renderer->SubmitTexture(tex1);
 		renderer->End();
 		renderer->Flush();
-		//tex.Unbind();
-
-		/*
-		shader.Bind();
-		vBuffer.Bind();
-		vArray.Bind();
-		iBuffer.Bind();
-		tex.Bind(0);
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-		iBuffer.Unbind();
-		vBuffer.Unbind();
-		vArray.Unbind();
-		tex.Unbind(); */
 	}
 
 	void OnEvent(Event& event) override

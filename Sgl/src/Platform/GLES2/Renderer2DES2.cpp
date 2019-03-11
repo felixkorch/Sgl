@@ -1,0 +1,143 @@
+#include "Sgl/OpenGL.h"
+#include "Sgl/Platform/GLES2/Renderer2DES2.h"
+#include "Sgl/VertexBufferLayout.h"
+#include "Sgl/Graphics/Camera2D.h"
+#include "Sgl/Common.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
+#include <array>
+
+namespace sgl
+{
+	Renderer2DES2::Renderer2DES2(unsigned int width, unsigned int height, const Shader& shader)
+		: Renderer2D(width, height, shader)
+	{
+		Init();
+	}
+
+	Renderer2DES2::~Renderer2DES2() {}
+
+	void Renderer2DES2::Begin()
+	{
+		shader.Bind();
+		vertexDataBuffer.clear();
+	}
+
+	void Renderer2DES2::Submit(Renderable2D& renderable)
+	{
+		auto vertices = renderable.GetVertices();
+
+		vertexDataBuffer.emplace_back(VertexData{ vertices[0], renderable.color, renderable.uv[0], renderable.tid });
+		vertexDataBuffer.emplace_back(VertexData{ vertices[1], renderable.color, renderable.uv[1], renderable.tid });
+		vertexDataBuffer.emplace_back(VertexData{ vertices[2], renderable.color, renderable.uv[2], renderable.tid });
+		vertexDataBuffer.emplace_back(VertexData{ vertices[3], renderable.color, renderable.uv[3], renderable.tid });
+
+		indexCount += 6;
+	}
+
+	void Renderer2DES2::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
+	{
+		const auto uvs = Renderable2D::GetStandardUVs();
+
+		vertexDataBuffer.emplace_back(VertexData{ p0, color, uvs[0], 0 });
+		vertexDataBuffer.emplace_back(VertexData{ p1, color, uvs[1], 0 });
+		vertexDataBuffer.emplace_back(VertexData{ p2, color, uvs[2], 0 });
+		vertexDataBuffer.emplace_back(VertexData{ p3, color, uvs[3], 0 });
+
+		indexCount += 6;
+	}
+
+	void Renderer2DES2::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
+	{
+		const glm::vec3 v1 = glm::vec3(pos, 1);
+		const glm::vec3 v2 = glm::vec3(pos.x + size.x, pos.y, 1);
+		const glm::vec3 v3 = glm::vec3(pos.x + size.x, pos.y + size.y, 1);
+		const glm::vec3 v4 = glm::vec3(pos.x, pos.y + size.y, 1);
+		DrawQuad(v1, v2, v3, v4, color);
+	}
+
+	void Renderer2DES2::End()
+	{
+		vertexBuffer.Bind();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, BufferSize, (void*)(vertexDataBuffer.data()));
+		vertexBuffer.Unbind();
+	}
+
+	void Renderer2DES2::Flush()
+	{
+		int i[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		shader.SetUniform1iv("f_Sampler", MaxTextures, i);
+
+		for (int i = 0; i < textures.size(); i++)
+			textures[i]->Bind(i);
+
+		vertexBuffer.Bind();
+		indexBuffer.Bind();
+		vertexBuffer.BindLayout(layout);
+
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+
+		vertexBuffer.Unbind();
+		indexBuffer.Unbind();
+
+		for (int i = 0; i < textures.size(); i++)
+			textures[i]->Unbind();
+
+		textures.clear();
+
+		indexCount = 0;
+	}
+
+	void Renderer2DES2::MoveCamera(const glm::vec2& val)
+	{
+		camera.Move(glm::vec3(val, 0));
+		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+	}
+
+	void Renderer2DES2::SubmitTexture(const Texture* texture)
+	{
+		if (textures.size() == MaxTextures) {
+			SglWarn("Max Textures exceeded");
+			return;
+		}
+		textures.push_back(texture);
+	}
+
+	void Renderer2DES2::Init()
+	{
+		vertexDataBuffer.reserve(BufferSize);
+		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
+		layout.Push<float>(3); // Position
+		layout.Push<float>(4); // Color
+		layout.Push<float>(2); // UV-Coords (Texture coordinates)
+		layout.Push<float>(1); // TID (Texture ID)
+
+		vertexBuffer.BindLayout(layout); // Instead of Vertex Arrays.
+		vertexBuffer.Unbind();
+
+		unsigned int indices[IndicesCount];
+
+		int offset = 0;
+		for (int i = 0; i < IndicesCount; i += 6) {
+			indices[i + 0] = offset + 0;
+			indices[i + 1] = offset + 1;
+			indices[i + 2] = offset + 2;
+			indices[i + 3] = offset + 2;
+			indices[i + 4] = offset + 3;
+			indices[i + 5] = offset + 0;
+
+			offset += 4;
+		}
+		indexBuffer.Init(indices, IndicesCount);
+
+		shader.Bind();
+		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+	}
+
+	Renderer2D* Renderer2D::Create(unsigned int width, unsigned int height, const Shader& shader)
+	{
+		return new Renderer2DES2(width, height, shader);
+	}
+}

@@ -8,9 +8,9 @@
 namespace sgl
 {
 	struct VertexData {
-		glm::vec3 vertexCoord;
+		glm::vec3 vertex;
 		glm::vec4 color;
-		glm::vec2 uvCoords;
+		glm::vec2 uv;
 		float tid;
 	};
 
@@ -55,7 +55,7 @@ namespace sgl
 	public:
 		Rectangle bounds;
 		glm::vec4 color = glm::vec4(1);
-		std::vector<glm::vec2> uvCoords = GetStandardUVs();
+		std::vector<glm::vec2> uv = GetStandardUVs();
 		float tid = 0;
 
 		Renderable2D() {}
@@ -71,9 +71,19 @@ namespace sgl
 			bounds.pos = pos;
 		}
 
+		const std::array<glm::vec3, 4> GetVertices()
+		{
+			const glm::vec3 boundsMin = glm::vec3(bounds.MinBounds(), 1);
+			const glm::vec3 boundsMax = glm::vec3(bounds.MaxBounds(), 1);
+			return {
+				boundsMin, glm::vec3(boundsMin.x + bounds.size.x, boundsMin.y, 1),
+				boundsMax, glm::vec3(boundsMin.x, boundsMin.y + bounds.size.y, 1)
+			};
+		}
+
 		static std::vector<glm::vec2> GetStandardUVs()
 		{
-			return std::vector<glm::vec2>{ glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 1), glm::vec2(1, 0) };
+			return { glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 1), glm::vec2(1, 0) };
 		}
 	};
 

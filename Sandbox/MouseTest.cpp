@@ -11,24 +11,28 @@ using namespace sgl;
 
 class TestLayer : public Layer {
 private:
-	BatchRenderer* renderer;
+	Renderer2D* renderer;
 	Shader shader;
 	Renderable2D rect;
+	Texture* tex;
 	glm::vec2 offset;
 	bool movingRect = false;
 public:
 	TestLayer()
 		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
 	{
-		renderer = BatchRenderer::MakeBatchRenderer(1280, 720, shader);
+		renderer = Renderer2D::Create(1280, 720, shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
 		rect.color = glm::vec4(0.5, 0.2, 0.3, 1.0);
+		tex = new Texture("res/tile.png");
+
 		srand(time(nullptr));
 	}
 
 	~TestLayer()
 	{
 		delete renderer;
+		delete tex;
 	}
 
 	void OnUpdate() override
@@ -40,6 +44,7 @@ public:
 		renderer->Begin();
 
 		renderer->Submit(rect);
+		renderer->SubmitTexture(tex);
 
 		renderer->End();
 		renderer->Flush();
@@ -55,7 +60,7 @@ public:
 				movingRect = true;
 				offset = glm::vec2(mousePos.first - rect.bounds.MinBounds().x, mousePos.second - rect.bounds.MinBounds().y);
 			}
-			if (c.GetButton() == 1)
+			if (c.GetButton() == SGL_MOUSE_BUTTON_RIGHT)
 				rect.color = RandColor();
 		}
 		else if (event.GetEventType() == EventType::MouseButtonReleased) {

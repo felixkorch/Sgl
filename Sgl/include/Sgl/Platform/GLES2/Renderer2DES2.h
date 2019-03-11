@@ -1,32 +1,33 @@
 #pragma once
-#include "Sgl/Graphics/BatchRenderer.h"
+#include "Sgl/Graphics/Renderer2D.h"
+#include "Sgl/Graphics/Renderable2D.h"
+#include "Sgl/Graphics/Camera2D.h"
 #include "Sgl/VertexArray.h"
 #include "Sgl/VertexBuffer.h"
 #include "Sgl/IndexBuffer.h"
 #include "Sgl/Shader.h"
-#include "Sgl/Graphics/Camera2D.h"
-#include "Sgl/Graphics/Renderable2D.h"
 
 #include <array>
 
 namespace sgl
 {
-	class BatchRendererGLES2 : public BatchRenderer {
+	class Renderer2DES2 : public Renderer2D {
 	private:
 		std::vector<VertexData> vertexDataBuffer;
 	public:
-		BatchRendererGLES2(unsigned int width, unsigned int height, const Shader& shader);
-		~BatchRendererGLES2();
-		BatchRendererGLES2(const BatchRendererGLES2&) = delete;
-		virtual void operator=(const BatchRendererGLES2&) = delete;
+		Renderer2DES2(unsigned int width, unsigned int height, const Shader& shader);
+		~Renderer2DES2();
+		Renderer2DES2(const Renderer2DES2&) = delete;
+		virtual void operator=(const Renderer2DES2&) = delete;
 
 		virtual void Begin() override;
 		virtual void Submit(Renderable2D& renderable) override;
-		virtual void DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color) override;
+		virtual void DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2,const glm::vec3& p3, const glm::vec4& color) override;
 		virtual void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1)) override;
 		virtual void End() override;
 		virtual void Flush() override;
 		virtual void MoveCamera(const glm::vec2& val) override;
+		void SubmitTexture(const Texture* texture) override;
 	private:
 		void Init();
 	};

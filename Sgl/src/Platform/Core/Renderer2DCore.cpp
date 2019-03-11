@@ -1,4 +1,4 @@
-#include "Sgl/Platform/Core/BatchRendererCore.h"
+#include "Sgl/Platform/Core/Renderer2DCore.h"
 #include "Sgl/OpenGL.h"
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/Graphics/Camera2D.h"
@@ -8,46 +8,45 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <array>
+#include <sstream>
 
 namespace sgl
 {
-	BatchRendererCore::BatchRendererCore(unsigned int width, unsigned int height, const Shader& shader)
-		: BatchRenderer(width, height, shader)
+	Renderer2DCore::Renderer2DCore(unsigned int width, unsigned int height, const Shader& shader)
+		: Renderer2D(width, height, shader)
 	{
 		Init();
 	}
 
-	BatchRendererCore::~BatchRendererCore()
+	Renderer2DCore::~Renderer2DCore()
 	{
 		delete vertexDataBuffer;
 	}
 
-	void BatchRendererCore::Begin()
+	void Renderer2DCore::Begin()
 	{
 		shader.Bind();
 		vertexBuffer.Bind();
 		vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	}
 
-	void BatchRendererCore::Submit(Renderable2D& renderable)
+	void Renderer2DCore::Submit(Renderable2D& renderable)
 	{
-		const glm::vec3 boundsMin = glm::vec3(renderable.bounds.MinBounds(), 1);
-		const glm::vec3 boundsMax = glm::vec3(renderable.bounds.MaxBounds(), 1);
-		const glm::vec2& size = renderable.bounds.size;
+		auto vertices = renderable.GetVertices();
 
-		*vertexDataBuffer = { boundsMin, renderable.color, renderable.uvCoords[0], renderable.tid };
+		*vertexDataBuffer = { vertices[0], renderable.color, renderable.uv[0], renderable.tid };
 		vertexDataBuffer++;
-		*vertexDataBuffer = { glm::vec3(boundsMin.x + size.x, boundsMin.y, 1), renderable.color, renderable.uvCoords[1], renderable.tid };
+		*vertexDataBuffer = { vertices[1], renderable.color, renderable.uv[1], renderable.tid };
 		vertexDataBuffer++;
-		*vertexDataBuffer = { boundsMax, renderable.color, renderable.uvCoords[2], renderable.tid };
+		*vertexDataBuffer = { vertices[2], renderable.color, renderable.uv[2], renderable.tid };
 		vertexDataBuffer++;
-		*vertexDataBuffer = { glm::vec3(boundsMin.x, boundsMin.y + size.y, 1), renderable.color, renderable.uvCoords[3], renderable.tid };
+		*vertexDataBuffer = { vertices[3], renderable.color, renderable.uv[3], renderable.tid };
 		vertexDataBuffer++;
 
 		indexCount += 6;
 	}
 
-	void BatchRendererCore::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
+	void Renderer2DCore::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
 		const auto uvs = Renderable2D::GetStandardUVs();
 
@@ -63,22 +62,28 @@ namespace sgl
 		indexCount += 6;
 	}
 
-	void BatchRendererCore::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
+	void Renderer2DCore::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
 	{
-		const glm::vec3 v1 = glm::vec3(pos, 1);
-		const glm::vec3 v2 = glm::vec3(pos.x + size.x, pos.y, 1);
-		const glm::vec3 v3 = glm::vec3(pos.x + size.x, pos.y + size.y, 1);
-		const glm::vec3 v4 = glm::vec3(pos.x, pos.y + size.y, 1);
+		const auto v1 = glm::vec3(pos, 1);
+		const auto v2 = glm::vec3(pos.x + size.x, pos.y, 1);
+		const auto v3 = glm::vec3(pos.x + size.x, pos.y + size.y, 1);
+		const auto v4 = glm::vec3(pos.x, pos.y + size.y, 1);
 		DrawQuad(v1, v2, v3, v4, color);
 	}
 
-	void BatchRendererCore::End()
+	void Renderer2DCore::End()
 	{
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
-	void BatchRendererCore::Flush()
+	void Renderer2DCore::Flush()
 	{
+		int i[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		shader.SetUniform1iv("f_Sampler", MaxTextures, i);
+
+		for (int i = 0; i < textures.size(); i++)
+			textures[i]->Bind(i);
+
 		vertexArray.Bind();
 		indexBuffer.Bind();
 
@@ -88,16 +93,30 @@ namespace sgl
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();
 
+		for (int i = 0; i < textures.size(); i++)
+			textures[i]->Unbind();
+
+		textures.clear();
+
 		indexCount = 0;
 	}
 
-	void BatchRendererCore::MoveCamera(const glm::vec2& val)
+	void Renderer2DCore::MoveCamera(const glm::vec2& val)
 	{
 		camera.Move(glm::vec3(val, 0));
 		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 	}
 
-	void BatchRendererCore::Init()
+	void Renderer2DCore::SubmitTexture(const Texture* texture)
+	{
+		if (textures.size() == MaxTextures) {
+			SglWarn("Max Textures exceeded");
+			return;
+		}
+		textures.push_back(texture);
+	}
+
+	void Renderer2DCore::Init()
 	{
 		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
 		layout.Push<float>(3); // Position
@@ -128,8 +147,8 @@ namespace sgl
 
 	}
 
-	BatchRenderer* BatchRenderer::MakeBatchRenderer(unsigned int width, unsigned int height, const Shader& shader)
+	Renderer2D* Renderer2D::Create(unsigned int width, unsigned int height, const Shader& shader)
 	{
-		return new BatchRendererCore(width, height, shader);
+		return new Renderer2DCore(width, height, shader);
 	}
 }

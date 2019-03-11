@@ -5,18 +5,21 @@
 #include "Sgl/Shader.h"
 #include "Sgl/Graphics/Camera2D.h"
 #include "Sgl/Graphics/Renderable2D.h"
+#include "Sgl/Graphics/Texture.h"
 
 #include <array>
 
 namespace sgl
 {
-	class BatchRenderer {
+	class Renderer2D {
 	protected:
 		static constexpr std::size_t MaxSprites = 1000;
 		static constexpr std::size_t VertexSize = sizeof(VertexData);
 		static constexpr std::size_t SpriteSize = (4 * VertexSize);
 		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;
 		static constexpr std::size_t IndicesCount = (6 * MaxSprites);
+
+		static constexpr std::size_t MaxTextures = 16;
 
 		VertexBufferLayout layout;
 		VertexBuffer vertexBuffer;
@@ -25,13 +28,17 @@ namespace sgl
 		glm::vec2 screenSize;
 		Camera2D camera;
 		unsigned int indexCount;
+		std::vector<const Texture*> textures;
 
 	public:
-		BatchRenderer(unsigned int width, unsigned int height, const Shader& shader)
+		Renderer2D(unsigned int width, unsigned int height, const Shader& shader)
 			: indexCount(0), screenSize(width, height), shader(shader),
-			camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)) {}
+			camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f))
+		{
+			textures.reserve(MaxTextures);
+		}
 
-		virtual ~BatchRenderer() {}
+		virtual ~Renderer2D() {}
 
 		virtual void Begin() = 0;
 		virtual void Submit(Renderable2D& renderable) = 0;
@@ -40,7 +47,8 @@ namespace sgl
 		virtual void End() = 0;
 		virtual void Flush() = 0;
 		virtual void MoveCamera(const glm::vec2& val) = 0;
+		virtual void SubmitTexture(const Texture* texture) = 0;
 
-		static BatchRenderer* MakeBatchRenderer(unsigned int width, unsigned int height, const Shader& shader);
+		static Renderer2D* Create(unsigned int width, unsigned int height, const Shader& shader);
 	};
 }

@@ -1,18 +1,18 @@
 #pragma once
-#include "Sgl/Graphics/BatchRenderer.h"
+#include "Sgl/Graphics/Renderer2D.h"
 
 namespace sgl
 {
-	class BatchRendererCore : public BatchRenderer {
+	class Renderer2DCore : public Renderer2D {
 	private:
 		VertexArray vertexArray;
 		VertexData* vertexDataBuffer;
 
 	public:
-		BatchRendererCore(unsigned int width, unsigned int height, const Shader& shader);
-		~BatchRendererCore();
-		BatchRendererCore(const BatchRendererCore&) = delete;
-		void operator=(const BatchRendererCore&) = delete;
+		Renderer2DCore(unsigned int width, unsigned int height, const Shader& shader);
+		~Renderer2DCore();
+		Renderer2DCore(const Renderer2DCore&) = delete;
+		void operator=(const Renderer2DCore&) = delete;
 
 		void Begin() override;
 		void Submit(Renderable2D& renderable) override;
@@ -21,6 +21,7 @@ namespace sgl
 		void End() override;
 		void Flush() override;
 		void MoveCamera(const glm::vec2& val) override;
+		void SubmitTexture(const Texture* texture) override;
 
 	private:
 		void Init();

@@ -1,0 +1,14 @@
+#pragma once
+
+#define SGL_MOUSE_BUTTON_1         0
+#define SGL_MOUSE_BUTTON_2         1
+#define SGL_MOUSE_BUTTON_3         2
+#define SGL_MOUSE_BUTTON_4         3
+#define SGL_MOUSE_BUTTON_5         4
+#define SGL_MOUSE_BUTTON_6         5
+#define SGL_MOUSE_BUTTON_7         6
+#define SGL_MOUSE_BUTTON_8         7
+#define SGL_MOUSE_BUTTON_LAST      SGL_MOUSE_BUTTON_8
+#define SGL_MOUSE_BUTTON_LEFT      SGL_MOUSE_BUTTON_1
+#define SGL_MOUSE_BUTTON_RIGHT     SGL_MOUSE_BUTTON_2
+#define SGL_MOUSE_BUTTON_MIDDLE    SGL_MOUSE_BUTTON_3
