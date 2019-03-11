@@ -24,19 +24,18 @@ namespace sgl
 	class Texture {
 	private:
 		unsigned int rendererID;
-		unsigned char* localBuffer;
 		std::string filePath;
 		int width, height, bpp;
 		TextureParameters texParams;
 
-		static constexpr TextureParameters DefaultParams = { TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::LINEAR };
+		static TextureParameters DefaultParams;
 
 	public:
 		Texture(const std::string& filePath, TextureParameters params = DefaultParams);
-		Texture(unsigned int width, unsigned int height, TextureParameters parameters);
+		Texture(unsigned int width, unsigned int height, TextureParameters params = DefaultParams);
 		~Texture();
-		//Texture(const Texture&) = delete;
-		//void operator=(const Texture&) = delete;
+		Texture(const Texture&) = delete;
+		void operator=(const Texture&) = delete;
 
 		void SetData(void* pixels, unsigned int glType);
 		void Bind(unsigned int slot) const;

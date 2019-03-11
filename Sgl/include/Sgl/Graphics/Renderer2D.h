@@ -18,7 +18,6 @@ namespace sgl
 		static constexpr std::size_t SpriteSize = (4 * VertexSize);
 		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;
 		static constexpr std::size_t IndicesCount = (6 * MaxSprites);
-
 		static constexpr std::size_t MaxTextures = 16;
 
 		VertexBufferLayout layout;

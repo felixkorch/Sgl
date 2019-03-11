@@ -13,24 +13,11 @@ namespace sgl
 	Mesh::Mesh(const std::string& filePath, const Material& material)
 		: material(material)
 	{
-		objl::Loader loader;
-		if (!loader.LoadFile(filePath))
-			SglWarn("Couldn't find obj file ({})", filePath);
-
-		indexCount = loader.LoadedIndices.size();
-
-		vertexBuffer.InitStaticDraw(loader.LoadedVertices.data(), loader.LoadedVertices.size() * sizeof(objl::Vertex));
-		layout.Push<float>(3);
-		layout.Push<float>(3);
-		layout.Push<float>(2);
-		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer->Init(loader.LoadedIndices.data(), loader.LoadedIndices.size());
-
-		vertexBuffer.Unbind();
-		vertexArray.Unbind();
+		const auto obj = LoadObj(filePath);
+		Mesh(obj.vertices, obj.indices, material);
 	}
 
-	Mesh::Mesh(Vertex* vertices, unsigned int vertexCount, unsigned int* indices, unsigned int indexCount, const Material& material)
+	Mesh::Mesh(const Vertex* vertices, unsigned int vertexCount, const unsigned int* indices, unsigned int indexCount, const Material& material)
 		: vertexCount(vertexCount), indexCount(indexCount), material(material)
 	{
 		vertexBuffer.InitStaticDraw(vertices, vertexCount * sizeof(Vertex));
@@ -38,15 +25,28 @@ namespace sgl
 		layout.Push<float>(3); // Normal
 		layout.Push<float>(2); // Texture
 		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer->Init(indices, indexCount);
+		indexBuffer.Init(indices, indexCount);
 
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();
 	}
 
-	Mesh::~Mesh()
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
+		: Mesh(vertices.data(), vertices.size(), indices.data(), indices.size(), material) {}
+
+	Mesh::~Mesh() {}
+
+	Obj3D Mesh::LoadObj(const std::string& filePath)
 	{
-		delete indexBuffer;
+		SglAssert(false, "NOT IMPEMENTED");
+		objl::Loader loader;
+		if (!loader.LoadFile(filePath))
+			SglWarn("Couldn't find obj file ({})", filePath);
+
+		/*
+		TODO NOT IMPLEMENTED
+		*/
+		return Obj3D{ };
 	}
 
 	void Mesh::Draw()
@@ -54,11 +54,11 @@ namespace sgl
 		material.Bind();
 		vertexBuffer.Bind();
 		vertexArray.Bind();
-		indexBuffer->Bind();
+		indexBuffer.Bind();
 
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 
-		indexBuffer->Unbind();
+		indexBuffer.Unbind();
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();
 	}

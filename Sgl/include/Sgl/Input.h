@@ -1,5 +1,6 @@
 #pragma once
 #include <utility>
+#include <vector>
 
 namespace sgl
 {
@@ -8,6 +9,21 @@ namespace sgl
 		static bool IsKeyPressed(int keycode)
 		{
 			return sInstance->IsKeyPressedImpl(keycode);
+		}
+
+		static bool IsJoystickButtonPressed(int code, int joystick)
+		{
+			return sInstance->IsJoystickButtonPressedImpl(code, joystick);
+		}
+
+		static bool IsJoystickPresent(int number)
+		{
+			return sInstance->IsJoystickPresentImpl(number);
+		}
+
+		static std::vector<float> GetJoystickAxis(int joystick)
+		{
+			return sInstance->GetJoystickAxisImpl(joystick);
 		}
 
 		static bool IsMouseButtonPressed(int code)
@@ -32,6 +48,9 @@ namespace sgl
 
 	protected:
 		virtual bool IsKeyPressedImpl(int keycode) = 0;
+		virtual bool IsJoystickPresentImpl(int number) = 0;
+		virtual bool IsJoystickButtonPressedImpl(int code, int joystick) = 0;
+		virtual std::vector<float> GetJoystickAxisImpl(int joystick) = 0;
 		virtual bool IsMouseButtonPressedImpl(int code) = 0;
 		virtual double GetMousePositionXImpl() = 0;
 		virtual double GetMousePositionYImpl() = 0;

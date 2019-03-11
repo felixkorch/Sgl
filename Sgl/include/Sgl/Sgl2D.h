@@ -6,6 +6,7 @@
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Events/KeyCodes.h"
 #include "Sgl/Events/MouseCodes.h"
+#include "Sgl/Events/JoystickCodes.h"
 #include "Sgl/Log.h"
 #include "Sgl/Input.h"
 

@@ -16,6 +16,38 @@ namespace sgl
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
+	bool GenericInput::IsJoystickButtonPressedImpl(int code, int joystick)
+	{
+		if (!IsJoystickPresent(joystick))
+			return false;
+
+		int count;
+		const unsigned char* button = glfwGetJoystickButtons(joystick, &count);
+		if (code - 1 > count || code < 0) {
+			SglWarn("Joystick({}) Button doesn't exist!", joystick);
+			return false;
+		}
+		return button[code] == GLFW_PRESS || button[code] == GLFW_REPEAT;
+	}
+
+	bool GenericInput::IsJoystickPresentImpl(int number)
+	{
+		int present = glfwJoystickPresent(number);
+		return present;
+	}
+
+	std::vector<float> GenericInput::GetJoystickAxisImpl(int joystick) // TODO: y-axis is inversed
+	{
+		if (!IsJoystickPresent(joystick))
+			return std::vector<float>();
+
+		int count;
+		const float* axis = glfwGetJoystickAxes(joystick, &count);
+		std::vector<float> temp(count);
+		std::copy(axis, axis + count, temp.begin());
+		return temp;
+	}
+
 	bool GenericInput::IsMouseButtonPressedImpl(int code)
 	{
 		auto win = (GLFWwindow*)Application::Get().GetWindow()->GetNativeWindow();

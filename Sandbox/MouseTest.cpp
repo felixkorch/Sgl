@@ -41,6 +41,17 @@ public:
 		if (movingRect)
 			rect.SetPos(glm::vec2(mousePos.first - offset.x, mousePos.second - offset.y));
 
+		for (int i = 0; i < 10; i++) {
+			if (Input::IsJoystickButtonPressed(i, SGL_JOYSTICK_1))
+				ClientTrace("Button {} pressed!", i);
+		}
+
+		auto axis = Input::GetJoystickAxis(SGL_JOYSTICK_1);
+		if (!axis.empty()) {
+			rect.bounds.pos.x += axis[0];
+			rect.bounds.pos.y -= axis[1];
+		}
+
 		renderer->Begin();
 
 		renderer->Submit(rect);

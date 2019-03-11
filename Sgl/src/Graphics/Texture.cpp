@@ -7,11 +7,10 @@
 namespace sgl
 {
 	Texture::Texture(const std::string& filePath, TextureParameters params)
-		: rendererID(0), filePath(filePath), localBuffer(nullptr),
-		width(0), height(0), bpp(0), texParams(params)
+		: rendererID(0), filePath(filePath), width(0), height(0), bpp(0), texParams(params)
 	{
 		stbi_set_flip_vertically_on_load(1);
-		localBuffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
+		auto localBuffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
 
 		glGenTextures(1, &rendererID);
 		glBindTexture(GL_TEXTURE_2D, rendererID);
@@ -25,7 +24,7 @@ namespace sgl
 	}
 
 	Texture::Texture(unsigned int width, unsigned int height, TextureParameters params)
-		: rendererID(0), filePath("NULL"), localBuffer(nullptr), width(width), height(height), texParams(params)
+		: rendererID(0), filePath("NULL"), width(width), height(height), bpp(0), texParams(params)
 	{
 		glGenTextures(1, &rendererID);
 		glBindTexture(GL_TEXTURE_2D, rendererID);
@@ -52,8 +51,8 @@ namespace sgl
 	unsigned int Texture::GetTextureWrap(TextureWrap wrap)
 	{
 		switch (wrap) {
-		case TextureWrap::CLAMP:			return GL_CLAMP;
-		case TextureWrap::CLAMP_TO_BORDER:	return GL_CLAMP_TO_BORDER;
+		//case TextureWrap::CLAMP:			return GL_CLAMP;
+		//case TextureWrap::CLAMP_TO_BORDER:	return GL_CLAMP_TO_BORDER;
 		case TextureWrap::CLAMP_TO_EDGE:	return GL_CLAMP_TO_EDGE;
 		case TextureWrap::REPEAT:			return GL_REPEAT;
 		case TextureWrap::MIRRORED_REPEAT:	return GL_MIRRORED_REPEAT;
@@ -66,7 +65,7 @@ namespace sgl
 		switch (format) {
 		case TextureFormat::RGBA:				return GL_RGBA;
 		case TextureFormat::RGB:				return GL_RGB;
-		case TextureFormat::RGBA32F:			return GL_RGBA32F;
+		//case TextureFormat::RGBA32F:			return GL_RGBA32F;
 		case TextureFormat::LUMINANCE:			return GL_LUMINANCE;
 		case TextureFormat::LUMINANCE_ALPHA:	return GL_LUMINANCE_ALPHA;
 		}
@@ -96,4 +95,6 @@ namespace sgl
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+
+	TextureParameters Texture::DefaultParams = { TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::LINEAR };
 }

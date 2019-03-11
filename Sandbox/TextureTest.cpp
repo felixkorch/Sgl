@@ -15,7 +15,7 @@ using namespace sgl;
 
 class MainLayer : public Layer {
 private:
-	BatchRenderer* renderer;
+	Renderer2D* renderer;
 	Shader shader;
 	Texture *tex0, *tex1;
 
@@ -37,7 +37,7 @@ public:
 	MainLayer()
 		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
 	{
-		renderer = BatchRenderer::MakeBatchRenderer(Width, Height, shader);
+		renderer = Renderer2D::Create(Width, Height, shader);
 		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
 		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0,0));
 		renderable1.tid = 1;

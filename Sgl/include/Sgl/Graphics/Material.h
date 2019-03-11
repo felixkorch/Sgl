@@ -11,7 +11,7 @@ namespace sgl
 	class Material {
 	private:
 		Shader shader;
-		std::vector<Texture> textures;
+		std::vector<const Texture*> textures;
 		UniformHandler uniformHandler;
 	public:
 		Material(const Shader& shader);
@@ -20,7 +20,7 @@ namespace sgl
 		void Bind();
 		void Unbind() const;
 		void BindUniforms();
-		void SetTexture(const Texture& texture);
+		void SetTexture(const Texture* texture);
 
 		Shader& GetShader()
 		{
