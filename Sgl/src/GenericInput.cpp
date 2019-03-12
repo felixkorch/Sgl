@@ -24,7 +24,7 @@ namespace sgl
 		int count;
 		const unsigned char* button = glfwGetJoystickButtons(joystick, &count);
 		if (code - 1 > count || code < 0) {
-			SglWarn("Joystick({}) Button doesn't exist!", joystick);
+			SglCoreWarn("Joystick({}) Button doesn't exist!", joystick);
 			return false;
 		}
 		return button[code] == GLFW_PRESS || button[code] == GLFW_REPEAT;

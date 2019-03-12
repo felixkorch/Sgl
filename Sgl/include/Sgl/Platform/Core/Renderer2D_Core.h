@@ -3,16 +3,16 @@
 
 namespace sgl
 {
-	class Renderer2DCore : public Renderer2D {
+	class Renderer2D_Core : public Renderer2D {
 	private:
 		VertexArray vertexArray;
 		VertexData* vertexDataBuffer;
 
 	public:
-		Renderer2DCore(unsigned int width, unsigned int height, const Shader& shader);
-		~Renderer2DCore();
-		Renderer2DCore(const Renderer2DCore&) = delete;
-		void operator=(const Renderer2DCore&) = delete;
+		Renderer2D_Core(unsigned int width, unsigned int height, const Shader& shader);
+		~Renderer2D_Core();
+		Renderer2D_Core(const Renderer2D_Core&) = delete;
+		void operator=(const Renderer2D_Core&) = delete;
 
 		void Begin() override;
 		void Submit(Renderable2D& renderable) override;
@@ -21,7 +21,7 @@ namespace sgl
 		void End() override;
 		void Flush() override;
 		void MoveCamera(const glm::vec2& val) override;
-		void SubmitTexture(const Texture* texture) override;
+		void SubmitTexture(const Texture2D* texture) override;
 
 	private:
 		void Init();

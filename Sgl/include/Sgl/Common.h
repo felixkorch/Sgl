@@ -16,12 +16,6 @@
         } \
     } while (false)
 
-#define SglWarn(...)  Log::GetMainLogger()->warn(__VA_ARGS__)
-#define SglError(...) Log::GetMainLogger()->error(__VA_ARGS__)
-#define SglTrace(...) Log::GetMainLogger()->trace(__VA_ARGS__)
-#define SglInfo(...)  Log::GetMainLogger()->info(__VA_ARGS__)
-#define SglFatal(...) Log::GetMainLogger()->fatal(__VA_ARGS__)
-
 #endif
 
 #define GLM_ENABLE_EXPERIMENTAL

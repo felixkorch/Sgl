@@ -21,7 +21,7 @@ namespace sgl
 		TextureFilter filter;
 	};
 
-	class Texture {
+	class Texture2D {
 	private:
 		unsigned int rendererID;
 		std::string filePath;
@@ -31,13 +31,13 @@ namespace sgl
 		static TextureParameters DefaultParams;
 
 	public:
-		Texture(const std::string& filePath, TextureParameters params = DefaultParams);
-		Texture(unsigned int width, unsigned int height, TextureParameters params = DefaultParams);
-		~Texture();
-		Texture(const Texture&) = delete;
-		void operator=(const Texture&) = delete;
+		Texture2D(const std::string& filePath, TextureParameters params = DefaultParams);
+		Texture2D(unsigned int width, unsigned int height, TextureParameters params = DefaultParams);
+		~Texture2D();
+		Texture2D(const Texture2D&) = delete;
+		void operator=(const Texture2D&) = delete;
 
-		void SetData(void* pixels, unsigned int glType);
+		void SetData(void* pixels);
 		void Bind(unsigned int slot) const;
 		void Unbind() const;
 

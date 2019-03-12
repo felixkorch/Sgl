@@ -74,7 +74,7 @@ namespace sgl
 
 		int location = glGetUniformLocation(rendererID, name.c_str());
 		if (location == -1)
-			SglWarn("Unable to set Uniform {}, doesn't exist", name);
+			SglCoreWarn("Unable to set Uniform {}, doesn't exist", name);
 
 		uniformLocationCache[name] = location;
 		return location;
@@ -83,7 +83,7 @@ namespace sgl
 	unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		if (vertexShader.empty() || fragmentShader.empty())
-			SglError("Vertex or Fragment shader empty.");
+			SglCoreError("Vertex or Fragment shader empty.");
 
 		unsigned int program = glCreateProgram();
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
@@ -115,7 +115,7 @@ namespace sgl
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)alloca(length * sizeof(char));
 			glGetShaderInfoLog(id, length, &length, message);
-			SglWarn("{}, {}", message, type);
+			SglCoreWarn("{}, {}", message, type);
 			glDeleteShader(id);
 			return 0;
 		}
@@ -128,7 +128,7 @@ namespace sgl
 		std::ifstream stream(filepath);
 
 		if (!stream.good()) {
-			SglError("Shader not found, path given: {}", filepath);
+			SglCoreError("Shader not found, path given: {}", filepath);
 		}
 
 		enum class ShaderType {

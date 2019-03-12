@@ -11,14 +11,14 @@
 
 namespace sgl
 {
-	class Renderer2DES2 : public Renderer2D {
+	class Renderer2D_ES2 : public Renderer2D {
 	private:
 		std::vector<VertexData> vertexDataBuffer;
 	public:
-		Renderer2DES2(unsigned int width, unsigned int height, const Shader& shader);
-		~Renderer2DES2();
-		Renderer2DES2(const Renderer2DES2&) = delete;
-		virtual void operator=(const Renderer2DES2&) = delete;
+		Renderer2D_ES2(unsigned int width, unsigned int height, const Shader& shader);
+		~Renderer2D_ES2();
+		Renderer2D_ES2(const Renderer2D_ES2&) = delete;
+		virtual void operator=(const Renderer2D_ES2&) = delete;
 
 		virtual void Begin() override;
 		virtual void Submit(Renderable2D& renderable) override;
@@ -27,7 +27,7 @@ namespace sgl
 		virtual void End() override;
 		virtual void Flush() override;
 		virtual void MoveCamera(const glm::vec2& val) override;
-		void SubmitTexture(const Texture* texture) override;
+		void SubmitTexture(const Texture2D* texture) override;
 	private:
 		void Init();
 	};

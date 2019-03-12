@@ -32,5 +32,8 @@ varying float f_tid;
 
 void main() {
 	int tid = int(f_tid);
-	gl_FragColor = texture(f_Sampler[tid], f_uv);
+	for (int i = 0; i < 16; i++) {
+		if (tid == i)
+			gl_FragColor = texture2D(f_Sampler[i], f_uv);
+	}
 }

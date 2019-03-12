@@ -1,6 +1,6 @@
 #include "Sgl/Graphics/Material.h"
 #include "Sgl/Shader.h"
-#include "Sgl/Graphics/Texture.h"
+#include "Sgl/Graphics/Texture2D.h"
 
 #include <vector>
 #include <iostream>
@@ -24,12 +24,12 @@ namespace sgl
 
 	void Material::Unbind() const
 	{
-		for (const Texture* tex : textures) {
+		for (const Texture2D* tex : textures) {
 			tex->Unbind();
 		}
 	}
 
-	void Material::SetTexture(const Texture* texture)
+	void Material::SetTexture(const Texture2D* texture)
 	{
 		textures.push_back(texture);
 	}

@@ -1,12 +1,12 @@
 #include "Sgl/OpenGL.h"
-#include "Sgl/Graphics/Texture.h"
+#include "Sgl/Graphics/Texture2D.h"
 #include "Sgl/Common.h"
 #include "stb_image/stb_image.h"
 #include <string>
 
 namespace sgl
 {
-	Texture::Texture(const std::string& filePath, TextureParameters params)
+	Texture2D::Texture2D(const std::string& filePath, TextureParameters params)
 		: rendererID(0), filePath(filePath), width(0), height(0), bpp(0), texParams(params)
 	{
 		stbi_set_flip_vertically_on_load(1);
@@ -23,7 +23,7 @@ namespace sgl
 			stbi_image_free(localBuffer);
 	}
 
-	Texture::Texture(unsigned int width, unsigned int height, TextureParameters params)
+	Texture2D::Texture2D(unsigned int width, unsigned int height, TextureParameters params)
 		: rendererID(0), filePath("NULL"), width(width), height(height), bpp(0), texParams(params)
 	{
 		glGenTextures(1, &rendererID);
@@ -34,7 +34,7 @@ namespace sgl
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture::SetParams(TextureParameters params, const void* data)
+	void Texture2D::SetParams(TextureParameters params, const void* data)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
@@ -45,10 +45,11 @@ namespace sgl
 			glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format),
 				width, height, 0, GetTextureFormat(params.format), GL_UNSIGNED_BYTE, data);
 		}
+
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	unsigned int Texture::GetTextureWrap(TextureWrap wrap)
+	unsigned int Texture2D::GetTextureWrap(TextureWrap wrap)
 	{
 		switch (wrap) {
 		//case TextureWrap::CLAMP:			return GL_CLAMP;
@@ -60,7 +61,7 @@ namespace sgl
 		return 0;
 	}
 
-	unsigned int Texture::GetTextureFormat(TextureFormat format)
+	unsigned int Texture2D::GetTextureFormat(TextureFormat format)
 	{
 		switch (format) {
 		case TextureFormat::RGBA:				return GL_RGBA;
@@ -72,29 +73,29 @@ namespace sgl
 		return 0;
 	}
 
-	void Texture::SetData(void* pixels, unsigned int glType)
+	void Texture2D::SetData(void* pixels)
 	{
 		glBindTexture(GL_TEXTURE_2D, rendererID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format), width, height, 0,
-			GetTextureFormat(texParams.format), glType, pixels);
+			GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, pixels);
 	}
 
 
-	Texture::~Texture()
+	Texture2D::~Texture2D()
 	{
 		glDeleteTextures(1, &rendererID);
 	}
 
-	void Texture::Bind(unsigned int slot) const
+	void Texture2D::Bind(unsigned int slot) const
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, rendererID);
 	}
 
-	void Texture::Unbind() const
+	void Texture2D::Unbind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	TextureParameters Texture::DefaultParams = { TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::LINEAR };
+	TextureParameters Texture2D::DefaultParams = { TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::NEAREST };
 }

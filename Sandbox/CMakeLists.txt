@@ -1,7 +1,7 @@
 project(Sandbox)
 
 set(sources
-    Snake3D.cpp
+    TextureTest.cpp
 )
 
 find_package(Threads REQUIRED)
@@ -9,9 +9,9 @@ find_package(Threads REQUIRED)
 add_executable(${PROJECT_NAME} ${sources})
 
 if(UNIX AND NOT APPLE)
-	target_link_libraries(${PROJECT_NAME} glfw3 Sgl GL X11 Xrandr Xi Xxf86vm Xinerama Xcursor dl Threads::Threads)
+	target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Sgl GL X11 Xrandr Xi Xxf86vm Xinerama Xcursor dl Threads::Threads)
 else()
-	target_link_libraries(${PROJECT_NAME} glfw3 Sgl GL Threads::Threads)
+	target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Sgl GL Threads::Threads)
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

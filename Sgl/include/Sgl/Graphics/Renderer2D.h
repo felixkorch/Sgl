@@ -5,7 +5,7 @@
 #include "Sgl/Shader.h"
 #include "Sgl/Graphics/Camera2D.h"
 #include "Sgl/Graphics/Renderable2D.h"
-#include "Sgl/Graphics/Texture.h"
+#include "Sgl/Graphics/Texture2D.h"
 
 #include <array>
 
@@ -27,7 +27,7 @@ namespace sgl
 		glm::vec2 screenSize;
 		Camera2D camera;
 		unsigned int indexCount;
-		std::vector<const Texture*> textures;
+		std::vector<const Texture2D*> textures;
 
 	public:
 		Renderer2D(unsigned int width, unsigned int height, const Shader& shader)
@@ -46,7 +46,7 @@ namespace sgl
 		virtual void End() = 0;
 		virtual void Flush() = 0;
 		virtual void MoveCamera(const glm::vec2& val) = 0;
-		virtual void SubmitTexture(const Texture* texture) = 0;
+		virtual void SubmitTexture(const Texture2D* texture) = 0;
 
 		static Renderer2D* Create(unsigned int width, unsigned int height, const Shader& shader);
 	};

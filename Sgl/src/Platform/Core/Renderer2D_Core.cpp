@@ -1,4 +1,4 @@
-#include "Sgl/Platform/Core/Renderer2DCore.h"
+#include "Sgl/Platform/Core/Renderer2D_Core.h"
 #include "Sgl/OpenGL.h"
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/Graphics/Camera2D.h"
@@ -12,25 +12,25 @@
 
 namespace sgl
 {
-	Renderer2DCore::Renderer2DCore(unsigned int width, unsigned int height, const Shader& shader)
+	Renderer2D_Core::Renderer2D_Core(unsigned int width, unsigned int height, const Shader& shader)
 		: Renderer2D(width, height, shader)
 	{
 		Init();
 	}
 
-	Renderer2DCore::~Renderer2DCore()
+	Renderer2D_Core::~Renderer2D_Core()
 	{
 		delete vertexDataBuffer;
 	}
 
-	void Renderer2DCore::Begin()
+	void Renderer2D_Core::Begin()
 	{
 		shader.Bind();
 		vertexBuffer.Bind();
 		vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	}
 
-	void Renderer2DCore::Submit(Renderable2D& renderable)
+	void Renderer2D_Core::Submit(Renderable2D& renderable)
 	{
 		auto vertices = renderable.GetVertices();
 
@@ -46,7 +46,7 @@ namespace sgl
 		indexCount += 6;
 	}
 
-	void Renderer2DCore::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
+	void Renderer2D_Core::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
 		const auto uvs = Renderable2D::GetStandardUVs();
 
@@ -62,7 +62,7 @@ namespace sgl
 		indexCount += 6;
 	}
 
-	void Renderer2DCore::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
+	void Renderer2D_Core::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
 	{
 		const auto v1 = glm::vec3(pos, 1);
 		const auto v2 = glm::vec3(pos.x + size.x, pos.y, 1);
@@ -71,15 +71,15 @@ namespace sgl
 		DrawQuad(v1, v2, v3, v4, color);
 	}
 
-	void Renderer2DCore::End()
+	void Renderer2D_Core::End()
 	{
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
-	void Renderer2DCore::Flush()
+	void Renderer2D_Core::Flush()
 	{
-		int i[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		shader.SetUniform1iv("f_Sampler", MaxTextures, i);
+		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
 
 		for (int i = 0; i < textures.size(); i++)
 			textures[i]->Bind(i);
@@ -101,22 +101,22 @@ namespace sgl
 		indexCount = 0;
 	}
 
-	void Renderer2DCore::MoveCamera(const glm::vec2& val)
+	void Renderer2D_Core::MoveCamera(const glm::vec2& val)
 	{
 		camera.Move(glm::vec3(val, 0));
 		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 	}
 
-	void Renderer2DCore::SubmitTexture(const Texture* texture)
+	void Renderer2D_Core::SubmitTexture(const Texture2D* texture)
 	{
 		if (textures.size() == MaxTextures) {
-			SglWarn("Max Textures exceeded");
+			SglCoreWarn("Max Textures exceeded");
 			return;
 		}
 		textures.push_back(texture);
 	}
 
-	void Renderer2DCore::Init()
+	void Renderer2D_Core::Init()
 	{
 		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
 		layout.Push<float>(3); // Position
@@ -139,7 +139,7 @@ namespace sgl
 
 			offset += 4;
 		}
-		indexBuffer.Init(indices, IndicesCount);
+		indexBuffer.Load(indices, IndicesCount);
 		vertexArray.Unbind();
 
 		shader.Bind();
@@ -149,6 +149,6 @@ namespace sgl
 
 	Renderer2D* Renderer2D::Create(unsigned int width, unsigned int height, const Shader& shader)
 	{
-		return new Renderer2DCore(width, height, shader);
+		return new Renderer2D_Core(width, height, shader);
 	}
 }

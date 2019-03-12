@@ -25,7 +25,7 @@ namespace sgl
 		layout.Push<float>(3); // Normal
 		layout.Push<float>(2); // Texture
 		vertexArray.AddBuffer(vertexBuffer, layout);
-		indexBuffer.Init(indices, indexCount);
+		indexBuffer.Load(indices, indexCount);
 
 		vertexBuffer.Unbind();
 		vertexArray.Unbind();
@@ -41,7 +41,7 @@ namespace sgl
 		SglAssert(false, "NOT IMPEMENTED");
 		objl::Loader loader;
 		if (!loader.LoadFile(filePath))
-			SglWarn("Couldn't find obj file ({})", filePath);
+			SglCoreWarn("Couldn't find obj file ({})", filePath);
 
 		/*
 		TODO NOT IMPLEMENTED

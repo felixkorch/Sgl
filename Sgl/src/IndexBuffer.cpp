@@ -14,7 +14,7 @@ namespace sgl
 		glDeleteBuffers(1, &rendererID);
 	}
 
-	void IndexBuffer::Init(const unsigned int* data, unsigned int count)
+	void IndexBuffer::Load(const unsigned int* data, unsigned int count)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);

@@ -27,7 +27,7 @@ namespace sgl
 		window = Window::Create(width, height, title);
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
-		SglInfo("Sucessfully initialized the app!");
+		SglCoreInfo("Sucessfully initialized the app!");
 	}
 
 	Application::~Application()
@@ -80,7 +80,7 @@ namespace sgl
 			if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
 				// printf and reset timer
 				auto time = 1000.0 / double(nbFrames);
-				SglTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+				SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
 				nbFrames = 0;
 				lastTime += 1.0;
 			}

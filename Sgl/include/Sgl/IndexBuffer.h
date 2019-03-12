@@ -12,7 +12,7 @@ namespace sgl
 		IndexBuffer(const IndexBuffer&) = delete;
 		void operator=(const IndexBuffer&) = delete;
 
-		void Init(const unsigned int* data, unsigned int count);
+		void Load(const unsigned int* data, unsigned int count);
 		void Bind() const;
 		void Unbind() const;
 	};
