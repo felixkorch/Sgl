@@ -43,9 +43,7 @@ namespace sgl
 
 		int count;
 		const float* axis = glfwGetJoystickAxes(joystick, &count);
-		std::vector<float> temp(count);
-		std::copy(axis, axis + count, temp.begin());
-		return temp;
+		return std::vector<float>(axis, axis + count);
 	}
 
 	bool GenericInput::IsMouseButtonPressedImpl(int code)
