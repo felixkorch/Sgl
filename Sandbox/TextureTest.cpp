@@ -85,7 +85,7 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		renderer->Submit(renderable1);
+		//renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
 		renderer->SubmitTexture(tex1);
 		renderer->End();
@@ -94,8 +94,8 @@ public:
 
 	void OnEvent(Event& event) override
 	{
-		if (event.GetEventType() == EventType::DropCallbackEvent) {
-			DropCallbackEvent c = (DropCallbackEvent&)event;
+		if (event.GetEventType() == EventType::DropEvent) {
+			DropEvent c = (DropEvent&)event;
 			SglTrace(c.ToString());
 		}
 	}

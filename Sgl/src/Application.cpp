@@ -45,22 +45,13 @@ namespace sgl
 		layerstack.PushOverlay(overlay);
 	}
 
-	void Application::OnEvent(Event& e)
+	void Application::OnEvent(Event* e)
 	{
-
 		// Add to event queue
-
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
-
-		for (auto it = layerstack.end(); it != layerstack.begin();) {
-			(*--it)->OnEvent(e);
-			if (e.handled)
-				break;
-		}
+		eventQueue.PushEvent(e);
 	}
 
-	bool Application::OnWindowClose(Event& e)
+	bool Application::OnWindowClose(Event* e)
 	{
 		running = false;
 		return true;
@@ -87,12 +78,28 @@ namespace sgl
 				nbFrames = 0;
 				lastTime += 1.0;
 			}
-			/* Mesaure FPS */
 
 			window->Clear();
+
+			/* Event loop */
+			Event* e = eventQueue.GetNext();
+			while (e) {
+				EventDispatcher dispatcher(e);
+				dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+				for (auto it = layerstack.end(); it != layerstack.begin();) {
+					(*--it)->OnEvent(*e);
+					if (e->handled)
+						break;
+				}
+				eventQueue.Pop();
+				e = eventQueue.GetNext();
+			}
+
+			/* Update */
 			for (Layer* l : layerstack) {
 				l->OnUpdate();
 			}
+
 			window->Update();
 
 			#ifdef USE_EMSCRIPTEN

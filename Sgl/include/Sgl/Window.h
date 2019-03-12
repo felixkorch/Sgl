@@ -12,7 +12,7 @@ namespace sgl
 
 	class Window {
 	protected:
-		using EventCallbackFn = std::function<void(Event&)>;
+		using EventCallbackFn = std::function<void(Event*)>;
 		EventCallbackFn eventCallbackFn;
 	public:
 		virtual ~Window() {}

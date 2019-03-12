@@ -23,11 +23,11 @@ namespace sgl
 		static EventType GetStaticType() { return EventType::WindowClose; }
 	};
 
-	class DropCallbackEvent : public Event {
+	class DropEvent : public Event {
 	private:
 		std::vector<std::string> paths;
 	public:
-		DropCallbackEvent(int count, const char** _paths)
+		DropEvent(int count, const char** _paths)
 		{
 			for (int i = 0; i < count; i++) {
 				const char* temp = _paths[i];
@@ -37,7 +37,7 @@ namespace sgl
 
 		const EventType GetEventType() const override
 		{
-			return EventType::DropCallbackEvent;
+			return EventType::DropEvent;
 		}
 
 		std::vector<std::string> GetPaths()
@@ -48,12 +48,12 @@ namespace sgl
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "Files Dropped:" << std::endl;
+			ss << "Files Dropped:";
 			for (const auto& p : paths)
-				ss << p << std::endl;
+				ss << std::endl << p;
 			return ss.str();
 		}
 
-		static EventType GetStaticType() { return EventType::DropCallbackEvent; }
+		static EventType GetStaticType() { return EventType::DropEvent; }
 	};
 }

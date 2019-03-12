@@ -92,7 +92,7 @@ namespace sgl
 
 		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			DropCallbackEvent e(count, paths);
+			auto e = new DropEvent(count, paths);
 			win.eventCallbackFn(e);
 		});
 
@@ -101,12 +101,12 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-				MouseButtonPressed e(button);
+				auto e = new MouseButtonPressed(button);
 				win.eventCallbackFn(e);
 				break;
 			}
 			case GLFW_RELEASE: {
-				MouseButtonReleased e(button);
+				auto e = new MouseButtonReleased(button);
 				win.eventCallbackFn(e);
 				break;
 			}
@@ -125,17 +125,17 @@ namespace sgl
 					glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
 				}*/
 
-				KeyPressedEvent e(key, 0);
+				auto e = new KeyPressedEvent(key, 0);
 				win.eventCallbackFn(e);
 				break;
 			}
 			case GLFW_RELEASE: {
-				KeyReleasedEvent e(key);
+				auto e = new KeyReleasedEvent(key);
 				win.eventCallbackFn(e);
 				break;
 			}
 			case GLFW_REPEAT: {
-				KeyPressedEvent e(key, 1);
+				auto e = new KeyPressedEvent(key, 1);
 				win.eventCallbackFn(e);
 				break;
 			}
@@ -144,7 +144,7 @@ namespace sgl
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			WindowCloseEvent e;
+			auto e = new WindowCloseEvent;
 			win.eventCallbackFn(e);
 		});
 

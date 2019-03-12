@@ -6,32 +6,34 @@ namespace sgl
 {
 	enum class EventType {
 		WindowClose, KeyPressed, KeyReleased, KeyRepeat, MouseMoved, MouseButtonPressed, MouseButtonReleased,
-		JoystickButtonPressed, JoystickButtonReleased, DropCallbackEvent
+		JoystickButtonPressed, JoystickButtonReleased, DropEvent
 	};
 
 	class Event {
 	public:
+		Event() {}
+		virtual ~Event() {}
+
 		bool handled = false;
 		const virtual EventType GetEventType() const = 0;
 		virtual std::string ToString() const = 0;
-
 	};
 
 	class EventDispatcher {
 	private:
-		Event& event;
+		Event* event;
 
 		template<class T>
-		using EventFn = std::function<bool(T&)>;
+		using EventFn = std::function<bool(T*)>;
 	public:
-		EventDispatcher(Event& e)
+		EventDispatcher(Event* e)
 			: event(e) {}
 
 		template<class T>
 		bool Dispatch(EventFn<T> func)
 		{
-			if (event.GetEventType() == T::GetStaticType()) {
-				event.handled = func(*(T*)&event);
+			if (event->GetEventType() == T::GetStaticType()) {
+				event->handled = func((T*)event);
 				return true;
 			}
 			return false;
