@@ -90,6 +90,12 @@ namespace sgl
 			win.eventCallbackFn(e);
 		});*/
 
+		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			DropCallbackEvent e(count, paths);
+			win.eventCallbackFn(e);
+		});
+
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 

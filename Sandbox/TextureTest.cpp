@@ -21,7 +21,7 @@ private:
 	Shader shader;
 	Texture2D *tex0, *tex1;
 
-	std::uint8_t pixels[TexWidth][TexHeight][4];
+	std::uint8_t* pixels; // pixels[ x * height * depth + y * depth + z ] = elements[x][y][z] 
 
 	Renderable2D renderable0, renderable1;
 
@@ -39,19 +39,22 @@ public:
 
 		TextureParameters params{ TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::NEAREST };
 		tex0 = new Texture2D(TexWidth, TexHeight);
-		tex1 = new Texture2D("res/tile.png", params);
+		tex1 = new Texture2D(100, 100);
+		tex1->SetColor(255, 150, 150, 255);
 
 		srand(time(nullptr));
 
-		int i, j, c;
+		pixels = new std::uint8_t[TexWidth * TexHeight * 4];
+
+		int i, j;
 
 		for (i = 0; i < TexWidth; i++) {
 			for (j = 0; j < TexHeight; j++) {
 				auto c = HexToRgb(nesRGB[rand() % 64]);
-				pixels[i][j][0] = (std::uint8_t)c.x;
-				pixels[i][j][1] = (std::uint8_t)c.y;
-				pixels[i][j][2] = (std::uint8_t)c.z;
-				pixels[i][j][3] = (std::uint8_t)255;
+				pixels[i * TexHeight * 4 + j * 4 + 0] = (std::uint8_t)c.x;
+				pixels[i * TexHeight * 4 + j * 4 + 1] = (std::uint8_t)c.y;
+				pixels[i * TexHeight * 4 + j * 4 + 2] = (std::uint8_t)c.z;
+				pixels[i * TexHeight * 4 + j * 4 + 3] = (std::uint8_t)255;
 			}
 		}
 
@@ -72,7 +75,7 @@ public:
 
 	~MainLayer()
 	{
-		//delete pixels;
+		delete pixels;
 		delete tex0;
 		delete tex1;
 		delete renderer;
@@ -82,16 +85,19 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		//renderer->Submit(renderable1);
+		renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
-		//renderer->SubmitTexture(tex1);
+		renderer->SubmitTexture(tex1);
 		renderer->End();
 		renderer->Flush();
 	}
 
 	void OnEvent(Event& event) override
 	{
-		
+		if (event.GetEventType() == EventType::DropCallbackEvent) {
+			DropCallbackEvent c = (DropCallbackEvent&)event;
+			SglTrace(c.ToString());
+		}
 	}
 };
 
@@ -105,20 +111,20 @@ unsigned int MainLayer::nesRGB[] =
 	  0xFCFCFC, 0xA4E4FC, 0xB8B8F8, 0xD8B8F8, 0xF8B8F8, 0xF8A4C0, 0xF0D0B0, 0xFCE0A8,
 	  0xF8D878, 0xD8F878, 0xB8F8B8, 0xB8F8D8, 0x00FCFC, 0xF8D8F8, 0x000000, 0x000000 };
 
-class TextureTest : public Application {
+class NESApp : public Application {
 public:
 
-	TextureTest()
+	NESApp()
 		: Application(Width, Height, "TextureTest")
 	{
 		PushLayer(new MainLayer());
 	}
 
-	~TextureTest() {}
+	~NESApp() {}
 
 };
 
 sgl::Application* sgl::CreateApplication()
 {
-	return new TextureTest;
+	return new NESApp;
 }

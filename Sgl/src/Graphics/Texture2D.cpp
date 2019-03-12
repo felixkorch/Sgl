@@ -81,6 +81,22 @@ namespace sgl
 	}
 
 
+	void Texture2D::SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
+	{
+		auto data = new std::uint8_t[width * height * 4];
+		int i, j;
+		for (i = 0; i < width; i++) {
+			for (j = 0; j < height; j++) {
+				data[i * height * 4 + j * 4 + 0] = r;
+				data[i * height * 4 + j * 4 + 1] = g;
+				data[i * height * 4 + j * 4 + 2] = b;
+				data[i * height * 4 + j * 4 + 3] = a;
+			}
+		}
+		SetData(data);
+		delete data;
+	}
+
 	Texture2D::~Texture2D()
 	{
 		glDeleteTextures(1, &rendererID);
