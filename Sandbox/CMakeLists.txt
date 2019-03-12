@@ -1,11 +1,7 @@
 project(Sandbox)
 
 set(sources
-<<<<<<< HEAD
     TextureTest.cpp
-=======
-    MouseTest.cpp
->>>>>>> c8cc4bdf354d5cf55e8cb5b60f9061f6fc72a9a1
 )
 
 find_package(Threads REQUIRED)
