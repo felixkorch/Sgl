@@ -47,6 +47,9 @@ namespace sgl
 
 	void Application::OnEvent(Event& e)
 	{
+
+		// Add to event queue
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 
@@ -77,8 +80,8 @@ namespace sgl
 			/* Mesaure FPS */
 			double currentTime = glfwGetTime();
 			nbFrames++;
-			if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
-				// printf and reset timer
+			if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+				// Print and reset timer
 				auto time = 1000.0 / double(nbFrames);
 				SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
 				nbFrames = 0;
