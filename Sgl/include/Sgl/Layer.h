@@ -9,8 +9,8 @@ namespace sgl
 	protected:
 		std::string debugName;
 	public:
-		Layer(const std::string& name)
-			: debugName(name) {}
+		Layer(const std::string& name);
+		virtual ~Layer();
 		virtual void OnAttach() {};
 		virtual void OnDetach() {};
 		virtual void OnUpdate() {};

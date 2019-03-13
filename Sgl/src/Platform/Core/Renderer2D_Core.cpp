@@ -20,7 +20,6 @@ namespace sgl
 
 	Renderer2D_Core::~Renderer2D_Core()
 	{
-		delete vertexDataBuffer;
 	}
 
 	void Renderer2D_Core::Begin()

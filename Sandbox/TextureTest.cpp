@@ -1,4 +1,3 @@
-#include "Sgl/Entrypoint.h"
 #include "Sgl/Sgl2D.h"
 
 #ifdef USE_EMSCRIPTEN
@@ -97,6 +96,10 @@ public:
 		if (event.GetEventType() == EventType::DropEvent) {
 			DropEvent c = (DropEvent&)event;
 			SglTrace(c.ToString());
+		}
+		else if (event.GetEventType() == EventType::KeyPressed)
+		{
+			SglTrace("Key pressed from MainLayer");
 		}
 	}
 };

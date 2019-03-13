@@ -3,8 +3,8 @@
 namespace sgl
 {
 	LayerStack::LayerStack()
+		: layerInsert(layers.begin())
 	{
-		layerInsert = layers.begin();
 	}
 	LayerStack::~LayerStack()
 	{
