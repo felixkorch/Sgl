@@ -14,7 +14,7 @@ private:
 	Renderer2D* renderer;
 	Shader shader;
 	Renderable2D rect;
-	Texture* tex;
+	Texture2D* tex;
 	glm::vec2 offset;
 	bool movingRect = false;
 public:
@@ -24,7 +24,7 @@ public:
 		renderer = Renderer2D::Create(1280, 720, shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
 		rect.color = glm::vec4(0.5, 0.2, 0.3, 1.0);
-		tex = new Texture("res/tile.png");
+		tex = new Texture2D("res/tile.png");
 
 		srand(time(nullptr));
 	}
@@ -43,7 +43,7 @@ public:
 
 		for (int i = 0; i < 10; i++) {
 			if (Input::IsJoystickButtonPressed(i, SGL_JOYSTICK_1))
-				ClientTrace("Button {} pressed!", i);
+				SglTrace("Button {} pressed!", i);
 		}
 
 		auto axis = Input::GetJoystickAxis(SGL_JOYSTICK_1);
@@ -65,7 +65,7 @@ public:
 	{
 		if (event.GetEventType() == EventType::MouseButtonPressed) {
 			MouseButtonPressed c = (MouseButtonPressed&)event;
-			ClientTrace(c.ToString());
+			SglTrace(c.ToString());
 			auto mousePos = Input::GetMousePosition();
 			if (rect.bounds.Contains(glm::vec2(mousePos.first, mousePos.second))) {
 				movingRect = true;
@@ -76,7 +76,7 @@ public:
 		}
 		else if (event.GetEventType() == EventType::MouseButtonReleased) {
 			MouseButtonReleased c = (MouseButtonReleased&)event;
-			ClientTrace(c.ToString());
+			SglTrace(c.ToString());
 			movingRect = false;
 		}
 	}
