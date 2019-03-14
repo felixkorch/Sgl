@@ -38,10 +38,12 @@ namespace sgl
 	void Application::PushLayer(Layer* layer)
 	{
 		layerstack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
+		overlay->OnAttach();
 		layerstack.PushOverlay(overlay);
 	}
 

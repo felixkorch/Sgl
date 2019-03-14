@@ -92,8 +92,7 @@ namespace sgl
 
 		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			auto e = new DropEvent(count, paths);
-			win.eventCallbackFn(e);
+			win.eventCallbackFn(new DropEvent(count, paths));
 		});
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -101,13 +100,11 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-				auto e = new MouseButtonPressed(button);
-				win.eventCallbackFn(e);
+				win.eventCallbackFn(new MouseButtonPressed(button));
 				break;
 			}
 			case GLFW_RELEASE: {
-				auto e = new MouseButtonReleased(button);
-				win.eventCallbackFn(e);
+				win.eventCallbackFn(new MouseButtonReleased(button));
 				break;
 			}
 			}
@@ -125,18 +122,15 @@ namespace sgl
 					glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
 				}*/
 
-				auto e = new KeyPressedEvent(key, 0);
-				win.eventCallbackFn(e);
+				win.eventCallbackFn(new KeyPressedEvent(key, 0));
 				break;
 			}
 			case GLFW_RELEASE: {
-				auto e = new KeyReleasedEvent(key);
-				win.eventCallbackFn(e);
+				win.eventCallbackFn(new KeyReleasedEvent(key));
 				break;
 			}
 			case GLFW_REPEAT: {
-				auto e = new KeyPressedEvent(key, 1);
-				win.eventCallbackFn(e);
+				win.eventCallbackFn(new KeyPressedEvent(key, 1));
 				break;
 			}
 			}
@@ -144,8 +138,7 @@ namespace sgl
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			auto e = new WindowCloseEvent;
-			win.eventCallbackFn(e);
+			win.eventCallbackFn(new WindowCloseEvent);
 		});
 
 		/* Initialize OpenGL for desktop or embedded */

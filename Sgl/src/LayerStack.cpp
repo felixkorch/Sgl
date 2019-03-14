@@ -8,7 +8,7 @@ namespace sgl
 	}
 	LayerStack::~LayerStack()
 	{
-		for (auto l : layers)
+		for (Layer* l : layers)
 			delete l;
 	}
 
@@ -26,6 +26,7 @@ namespace sgl
 	{
 		auto it = std::find(layers.begin(), layers.end(), layer);
 		if (it != layers.end()) {
+			delete *it;
 			layers.erase(it);
 			--layerInsert;
 		}
@@ -34,8 +35,10 @@ namespace sgl
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
 		auto it = std::find(layers.begin(), layers.end(), overlay);
-		if (it != layers.end())
+		if (it != layers.end()) {
+			delete *it;
 			layers.erase(it);
+		}
 	}
 
 	std::vector<Layer*>::iterator LayerStack::begin()

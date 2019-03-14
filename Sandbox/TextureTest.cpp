@@ -1,4 +1,4 @@
-#include "Sgl/Sgl2D.h"
+#include <Sgl.h>
 
 #ifdef USE_EMSCRIPTEN
 #define SHADER(x) x ".gles.shader"
@@ -19,7 +19,6 @@ private:
 	Renderer2D* renderer;
 	Shader shader;
 	Texture2D *tex0, *tex1;
-
 	std::uint8_t* pixels; // pixels[ x * height * depth + y * depth + z ] = elements[x][y][z] 
 
 	Renderable2D renderable0, renderable1;
@@ -84,7 +83,7 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		//renderer->Submit(renderable1);
+		renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
 		renderer->SubmitTexture(tex1);
 		renderer->End();
@@ -94,7 +93,7 @@ public:
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
-			DropEvent c = (DropEvent&)event;
+			auto& c = (DropEvent&)event;
 			SglTrace(c.ToString());
 		}
 		else if (event.GetEventType() == EventType::KeyPressed)
@@ -114,12 +113,43 @@ unsigned int MainLayer::nesRGB[] =
 	  0xFCFCFC, 0xA4E4FC, 0xB8B8F8, 0xD8B8F8, 0xF8B8F8, 0xF8A4C0, 0xF0D0B0, 0xFCE0A8,
 	  0xF8D878, 0xD8F878, 0xB8F8B8, 0xB8F8D8, 0x00FCFC, 0xF8D8F8, 0x000000, 0x000000 };
 
+
+class OverLayTest : public Layer {
+public:
+	OverLayTest()
+		: Layer("TestOverlay") {}
+
+	~OverLayTest()
+	{
+	}
+
+	void OnAttach() override
+	{
+
+	}
+
+	void OnDetach() override
+	{
+		SglTrace("Terminating overlay");
+	}
+
+	void OnEvent(Event& event) override
+	{
+	}
+
+	void OnUpdate() override
+	{
+
+	}
+};
+
 class NESApp : public Application {
 public:
 
 	NESApp()
 		: Application(Width, Height, "TextureTest")
 	{
+		PushOverlay(new OverLayTest());
 		PushLayer(new MainLayer());
 	}
 

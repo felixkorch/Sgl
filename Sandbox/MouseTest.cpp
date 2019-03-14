@@ -1,5 +1,4 @@
-#include "Sgl/Entrypoint.h"
-#include "Sgl/Sgl2D.h"
+#include <Sgl.h>
 
 #ifdef USE_EMSCRIPTEN
 #define SHADER(x) x ".gles.shader"

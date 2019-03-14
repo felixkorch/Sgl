@@ -9,6 +9,6 @@ namespace sgl
 
 	Layer::~Layer()
 	{
-
+		OnDetach();
 	}
 }

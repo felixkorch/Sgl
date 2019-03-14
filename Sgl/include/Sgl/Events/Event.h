@@ -13,6 +13,8 @@ namespace sgl
 	public:
 		Event() {}
 		virtual ~Event() {}
+		Event(const Event&) = delete;
+		void operator=(const Event&) = delete;
 
 		bool handled = false;
 		const virtual EventType GetEventType() const = 0;

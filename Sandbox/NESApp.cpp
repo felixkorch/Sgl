@@ -1,4 +1,4 @@
-#include "Sgl/Sgl2D.h"
+#include <Sgl.h>
 #include "NESKeys.h"
 
 #ifdef USE_EMSCRIPTEN

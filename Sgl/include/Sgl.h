@@ -5,6 +5,7 @@
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/MouseEvent.h"
+#include "Sgl/Events/JoystickEvent.h"
 #include "Sgl/Events/ApplicationEvent.h"
 #include "Sgl/Events/KeyCodes.h"
 #include "Sgl/Events/MouseCodes.h"

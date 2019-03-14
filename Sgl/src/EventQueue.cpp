@@ -2,6 +2,15 @@
 
 namespace sgl
 {
+
+	EventQueue::EventQueue() {}
+
+	EventQueue::~EventQueue()
+	{
+		for (Event* e : events)
+			delete e;
+	}
+
 	void EventQueue::PushEvent(Event* e)
 	{
 		events.push_back(e);
@@ -9,8 +18,10 @@ namespace sgl
 
 	void EventQueue::Pop()
 	{
-		delete events.front();
-		events.pop_front();
+		if (!events.empty()) {
+			delete events.front();
+			events.pop_front();
+		}
 	}
 
 	Event* EventQueue::GetNext()
