@@ -1,4 +1,4 @@
-project(Sandbox)
+project(Test)
 
 set(sources
     TextureTest.cpp
