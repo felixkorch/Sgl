@@ -13,6 +13,12 @@ namespace sgl
 	};
 
 	class Shader {
+	public:
+		/* Some simple shader programs */
+		static const char* Core_Vertex_Shader2D;
+		static const char* Core_Fragment_Shader2D;
+		static const char* GLES2_Vertex_Shader2D;
+		static const char* GLES2_Fragment_Shader2D;
 	private:
 		unsigned int rendererID;
 		std::string filePath;

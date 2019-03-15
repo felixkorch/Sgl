@@ -10,6 +10,85 @@
 
 namespace sgl
 {
+	/* Some simple shader programs */
+	const char* Shader::Core_Vertex_Shader2D = R"END(
+	#version 330 core
+	layout(location = 0) in vec3 position;
+	layout(location = 1) in vec4 color;
+	layout(location = 2) in vec2 uv;
+	layout(location = 3) in float tid;
+
+	out vec4  f_color;
+	out vec2  f_uv;
+	out float f_tid;
+
+	uniform mat4 u_Proj;
+
+	void main() {
+		gl_Position = u_Proj * vec4(position, 1.0);
+		f_color = color;
+		f_uv = uv;
+		f_tid = tid;
+	}
+	)END";
+
+	const char* Shader::Core_Fragment_Shader2D = R"END(
+	#version 330 core
+	uniform sampler2D f_Sampler[16];
+
+	out vec4 fragColor;
+
+	in vec4  f_color;
+	in vec2  f_uv;
+	in float f_tid;
+
+	void main() {
+		int tid = int(f_tid);
+		fragColor = texture(f_Sampler[tid], f_uv);
+	}
+	)END";
+
+	const char* Shader::GLES2_Vertex_Shader2D = R"END(
+	#version 100
+	attribute vec3 position;
+	attribute vec4 color;
+	attribute vec2 uv;
+	attribute float tid;
+
+	varying vec4  f_color;
+	varying vec2  f_uv;
+	varying float f_tid;
+
+	uniform mat4 u_Proj;
+
+	void main() {
+
+		gl_Position = u_Proj * vec4(position, 1.0);
+		f_color = color;
+		f_uv = uv;
+		f_tid = tid;
+	}
+	)END";
+
+	const char* Shader::GLES2_Fragment_Shader2D = R"END(
+	#version 100
+	precision mediump float;
+
+	uniform sampler2D f_Sampler[16];
+
+	varying vec4  f_color;
+	varying vec2  f_uv;
+	varying float f_tid;
+
+	void main() {
+		int tid = int(f_tid);
+		for (int i = 0; i < 16; i++) {
+			if (tid == i)
+				gl_FragColor = texture2D(f_Sampler[i], f_uv);
+		}
+	}
+	)END";
+
 	Shader::Shader(const std::string& filepath)
 		: filePath(filepath), rendererID(0)
 	{

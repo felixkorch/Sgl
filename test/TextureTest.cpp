@@ -1,9 +1,11 @@
 #include <Sgl.h>
 
 #ifdef USE_EMSCRIPTEN
-#define SHADER(x) x ".gles.shader"
+#define VertexShader   Shader::GLES2_Vertex_Shader2D
+#define FragmentShader Shader::GLES2_Fragment_Shader2D
 #else
-#define SHADER(x) x ".shader"
+#define VertexShader   Shader::Core_Vertex_Shader2D
+#define FragmentShader Shader::Core_Fragment_Shader2D
 #endif
 
 #define Width 512
@@ -27,7 +29,7 @@ private:
 
 public:
 	MainLayer()
-		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
+		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
 	{
 		renderer = Renderer2D::Create(Width, Height, shader);
 		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));

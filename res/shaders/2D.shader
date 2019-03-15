@@ -13,7 +13,6 @@ out float f_tid;
 uniform mat4 u_Proj;
 
 void main() {
-
 	gl_Position = u_Proj * vec4(position, 1.0);
     f_color = color;
 	f_uv = uv;
