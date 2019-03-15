@@ -1,5 +1,4 @@
 #pragma once
-#include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/Renderer2D.h"
 #include "Sgl/Graphics/Texture2D.h"
 #include "Sgl/Shader.h"
