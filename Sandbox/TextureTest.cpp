@@ -96,9 +96,8 @@ public:
 			auto& c = (DropEvent&)event;
 			SglTrace(c.ToString());
 		}
-		else if (event.GetEventType() == EventType::KeyPressed)
-		{
-			SglTrace("Key pressed from MainLayer");
+		else if (event.GetEventType() == EventType::KeyPressed) {
+			SglTrace("Key pressed from Layer");
 		}
 	}
 };
@@ -135,6 +134,9 @@ public:
 
 	void OnEvent(Event& event) override
 	{
+		if (event.GetEventType() == EventType::KeyPressed) {
+			SglTrace("Key pressed from Overlay");
+		}
 	}
 
 	void OnUpdate() override
@@ -149,8 +151,8 @@ public:
 	NESApp()
 		: Application(Width, Height, "TextureTest")
 	{
-		PushOverlay(new OverLayTest());
 		PushLayer(new MainLayer());
+		PushOverlay(new OverLayTest());
 	}
 
 	~NESApp() {}

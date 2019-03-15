@@ -1,13 +1,12 @@
 #pragma once
 #include "Sgl/Layer.h"
-#include <vector>
+#include <deque>
 
 namespace sgl
 {
 	class LayerStack {
 	private:
-		std::vector<Layer*> layers;
-		std::vector<Layer*>::iterator layerInsert;
+		std::deque<Layer*> layers;
 	public:
 		LayerStack();
 		~LayerStack();
@@ -16,7 +15,7 @@ namespace sgl
 		void PushOverlay(Layer* overlay);
 		void PopLayer(Layer* layer);
 		void PopOverlay(Layer* overlay);
-		std::vector<Layer*>::iterator begin();
-		std::vector<Layer*>::iterator end();
+		std::deque<Layer*>::iterator begin();
+		std::deque<Layer*>::iterator end();
 	};
 }

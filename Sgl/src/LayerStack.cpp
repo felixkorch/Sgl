@@ -2,10 +2,8 @@
 
 namespace sgl
 {
-	LayerStack::LayerStack()
-		: layerInsert(layers.begin())
-	{
-	}
+	LayerStack::LayerStack() {}
+
 	LayerStack::~LayerStack()
 	{
 		for (Layer* l : layers)
@@ -14,12 +12,12 @@ namespace sgl
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		layerInsert = layers.emplace(layerInsert, layer);
+		layers.push_front(layer);
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		layers.emplace_back(overlay);
+		layers.push_back(overlay);
 	}
 
 	void LayerStack::PopLayer(Layer* layer)
@@ -28,7 +26,6 @@ namespace sgl
 		if (it != layers.end()) {
 			delete *it;
 			layers.erase(it);
-			--layerInsert;
 		}
 	}
 
@@ -41,12 +38,12 @@ namespace sgl
 		}
 	}
 
-	std::vector<Layer*>::iterator LayerStack::begin()
+	std::deque<Layer*>::iterator LayerStack::begin()
 	{
 		return layers.begin();
 	}
 
-	std::vector<Layer*>::iterator LayerStack::end()
+	std::deque<Layer*>::iterator LayerStack::end()
 	{
 		return layers.end();
 	}
