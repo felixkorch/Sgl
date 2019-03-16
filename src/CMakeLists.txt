@@ -1,8 +1,6 @@
 project(Sgl)
 
 set(sources
-    ../deps/Glad/src/glad.c
-    ../deps/stb_image/stb_image.cpp
     Application.cpp
     Layer.cpp
     Log.cpp
@@ -25,15 +23,12 @@ add_library(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps>
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/spdlog/include>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/Glad/include>
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/glm>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/GLFW/include>
             
 )
 
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Glad stb_image)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${PROJECT_NAME}
