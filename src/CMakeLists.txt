@@ -12,7 +12,7 @@ set(sources
     IndexBuffer.cpp
     VertexBuffer.cpp
     VertexArray.cpp
-    GenerticInput.cpp
+    GenericInput.cpp
     GenericWindow.cpp
     Graphics/Renderer2D_Core.cpp
     Graphics/ForwardRenderer.cpp
