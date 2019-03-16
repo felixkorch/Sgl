@@ -6,11 +6,6 @@ if(!MSVC)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
 endif()
 
-include_directories(deps)
-include_directories(deps/spdlog/include)
-include_directories(deps/glm)
-include_directories(include)
-
 add_subdirectory(deps/GLFW)
 add_subdirectory(deps/Glad)
 add_subdirectory(deps/stb_image)
