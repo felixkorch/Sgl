@@ -13,22 +13,22 @@ add_subdirectory(deps/Glad)
 add_subdirectory(deps/stb_image)
 
 set(sources
-    Application.cpp
-    Layer.cpp
-    Log.cpp
-    Shader.cpp
-    EventQueue.cpp
-    LayerStack.cpp
-    IndexBuffer.cpp
-    VertexBuffer.cpp
-    VertexArray.cpp
-    GenericInput.cpp
-    GenericWindow.cpp
-    Platform/Core/Renderer2D_Core.cpp
-    Graphics/ForwardRenderer.cpp
-    Graphics/Material.cpp
-    Graphics/Mesh.cpp
-    Graphics/Texture2D.cpp
+    src/Application.cpp
+    src/Layer.cpp
+    src/Log.cpp
+    src/Shader.cpp
+    src/EventQueue.cpp
+    src/LayerStack.cpp
+    src/IndexBuffer.cpp
+    src/VertexBuffer.cpp
+    src/VertexArray.cpp
+    src/GenericInput.cpp
+    src/GenericWindow.cpp
+    src/Platform/Core/Renderer2D_Core.cpp
+    src/Graphics/ForwardRenderer.cpp
+    src/Graphics/Material.cpp
+    src/Graphics/Mesh.cpp
+    src/Graphics/Texture2D.cpp
 )
 
 add_library(${PROJECT_NAME} ${sources})
