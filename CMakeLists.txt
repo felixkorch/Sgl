@@ -39,7 +39,6 @@ target_include_directories(${PROJECT_NAME}
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/spdlog/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/glm>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps>
 )
 
 target_link_libraries(${PROJECT_NAME} ${SGL_LIBRARIES})
