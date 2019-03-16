@@ -1,8 +1,8 @@
 project(Sgl)
 
 set(sources
-    ..deps/Glad/glad.c
-    ..deps/stb_image/stb_image.cpp
+    ../deps/Glad/glad.c
+    ../deps/stb_image/stb_image.cpp
     Application.cpp
     Layer.cpp
     Log.cpp
