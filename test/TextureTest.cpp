@@ -1,4 +1,5 @@
 #include <Sgl.h>
+#include <ctime>
 
 #ifdef USE_EMSCRIPTEN
 #define VertexShader   Shader::GLES2_Vertex_Shader2D
@@ -85,7 +86,7 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		renderer->Submit(renderable1);
+		//renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
 		renderer->SubmitTexture(tex1);
 		renderer->End();
