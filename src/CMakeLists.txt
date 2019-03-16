@@ -14,7 +14,7 @@ set(sources
     VertexArray.cpp
     GenericInput.cpp
     GenericWindow.cpp
-    Graphics/Renderer2D_Core.cpp
+    Platform/Core/Renderer2D_Core.cpp
     Graphics/ForwardRenderer.cpp
     Graphics/Material.cpp
     Graphics/Mesh.cpp
