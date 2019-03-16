@@ -25,6 +25,7 @@ target_include_directories(${PROJECT_NAME}
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/spdlog/include>
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/glm>
+            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps>
             
 )
 
