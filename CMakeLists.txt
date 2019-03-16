@@ -7,6 +7,8 @@ if(!MSVC)
 endif()
 
 include_directories(deps)
+include_directories(deps/spdlog/include)
+include_directories(deps/glm)
 include_directories(include)
 
 add_subdirectory(deps/GLFW)
