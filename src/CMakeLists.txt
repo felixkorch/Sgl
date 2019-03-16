@@ -19,13 +19,15 @@ set(sources
     Graphics/Texture2D.cpp
 )
 
+get_filename_component(DIR_PARENT ../ ABSOLUTE)
+
 add_library(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/spdlog/include>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/glm>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps>
+            $<BUILD_INTERFACE:${DIR_PARENT}/include>
+            $<BUILD_INTERFACE:${DIR_PARENT}/deps/spdlog/include>
+            $<BUILD_INTERFACE:${DIR_PARENT}/deps/glm>
+            $<BUILD_INTERFACE:${DIR_PARENT}/deps>
             
 )
 
