@@ -80,7 +80,7 @@ namespace sgl
 		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
 
-		for (int i = 0; i < textures.size(); i++)
+        for (unsigned int i = 0; i < textures.size(); i++)
 			textures[i]->Bind(i);
 
 		vertexArray.Bind();

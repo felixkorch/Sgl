@@ -90,7 +90,7 @@ namespace sgl
 	)END";
 
 	Shader::Shader(const std::string& filepath)
-		: filePath(filepath), rendererID(0)
+        : rendererID(0), filePath(filepath)
 	{
 		ShaderProgramSource source = ParseShader(filepath);
 		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
@@ -243,12 +243,16 @@ namespace sgl
 			switch (u.type) {
 			case UniformType::Int:
 				SetUniform1i(uHandler.GetName<int>(u), uHandler.GetValue<int>(u));
+                break;
 			case UniformType::Vec3:
 				SetUniform3f(uHandler.GetName<glm::vec3>(u), uHandler.GetValue<glm::vec3>(u));
+                break;
 			case UniformType::Mat4:
 				SetUniformMat4f(uHandler.GetName<glm::mat4>(u), uHandler.GetValue<glm::mat4>(u));
+                break;
 			case UniformType::Float:
 				SetUniform1f(uHandler.GetName<float>(u), uHandler.GetValue<float>(u));
+                break;
 			}
 		}
 	}

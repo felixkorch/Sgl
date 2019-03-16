@@ -9,6 +9,7 @@
 bin-int
 bin
 Sgl/libs/Glad/bin-int
+build*
 
 
 .gitattributes

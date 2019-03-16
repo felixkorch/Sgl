@@ -26,13 +26,15 @@ namespace sgl
 		Shader shader;
 		glm::vec2 screenSize;
 		Camera2D camera;
-		unsigned int indexCount;
+        int indexCount;
 		std::vector<const Texture2D*> textures;
 
 	public:
-		Renderer2D(unsigned int width, unsigned int height, const Shader& shader)
-			: indexCount(0), screenSize(width, height), shader(shader),
-			camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f))
+        Renderer2D(unsigned int width, unsigned int height, const Shader& shader) :
+            shader(shader),
+            screenSize(width, height),
+            camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)),
+            indexCount(0)
 		{
 			textures.reserve(MaxTextures);
 		}

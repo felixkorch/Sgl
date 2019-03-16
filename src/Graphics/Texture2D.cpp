@@ -23,7 +23,7 @@ namespace sgl
 			stbi_image_free(localBuffer);
 	}
 
-	Texture2D::Texture2D(unsigned int width, unsigned int height, TextureParameters params)
+    Texture2D::Texture2D(int width, int height, TextureParameters params)
 		: rendererID(0), filePath("NULL"), width(width), height(height), bpp(0), texParams(params)
 	{
 		glGenTextures(1, &rendererID);
@@ -49,7 +49,7 @@ namespace sgl
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	unsigned int Texture2D::GetTextureWrap(TextureWrap wrap)
+    int Texture2D::GetTextureWrap(TextureWrap wrap)
 	{
 		switch (wrap) {
 		//case TextureWrap::CLAMP:			return GL_CLAMP;
@@ -61,7 +61,7 @@ namespace sgl
 		return 0;
 	}
 
-	unsigned int Texture2D::GetTextureFormat(TextureFormat format)
+    int Texture2D::GetTextureFormat(TextureFormat format)
 	{
 		switch (format) {
 		case TextureFormat::RGBA:				return GL_RGBA;
@@ -94,7 +94,7 @@ namespace sgl
 			}
 		}
 		SetData(data);
-		delete data;
+        delete[] data;
 	}
 
 	Texture2D::~Texture2D()

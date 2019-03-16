@@ -31,17 +31,17 @@ set(sources
     src/Graphics/Texture2D.cpp
 )
 
+list(APPEND SGL_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image)
+
 add_library(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/spdlog/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/glm>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps>
-            
 )
 
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Glad stb_image)
+target_link_libraries(${PROJECT_NAME} ${SGL_LIBRARIES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${PROJECT_NAME}

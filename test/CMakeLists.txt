@@ -4,15 +4,9 @@ set(sources
     TextureTest.cpp
 )
 
-find_package(Threads REQUIRED)
-
 add_executable(${PROJECT_NAME} ${sources})
 
-if(UNIX AND NOT APPLE)
-	target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Sgl Glad stb_image Threads::Threads)
-else()
-	target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Sgl Glad stb_image Threads::Threads)
-endif()
+target_link_libraries(${PROJECT_NAME} Sgl ${SGL_LIBRARIES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${PROJECT_NAME}

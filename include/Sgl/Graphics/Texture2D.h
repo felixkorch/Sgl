@@ -32,7 +32,7 @@ namespace sgl
 
 	public:
 		Texture2D(const std::string& filePath, TextureParameters params = DefaultParams);
-		Texture2D(unsigned int width, unsigned int height, TextureParameters params = DefaultParams);
+        Texture2D(int width, int height, TextureParameters params = DefaultParams);
 		~Texture2D();
 		Texture2D(const Texture2D&) = delete;
 		void operator=(const Texture2D&) = delete;
@@ -43,8 +43,8 @@ namespace sgl
 		void Unbind() const;
 
 	private:
-		unsigned int GetTextureWrap(TextureWrap wrap);
-		unsigned int GetTextureFormat(TextureFormat format);
+        int GetTextureWrap(TextureWrap wrap);
+        int GetTextureFormat(TextureFormat format);
 		void SetParams(TextureParameters parameters, const void* data);
 	};
 }

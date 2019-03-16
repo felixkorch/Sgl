@@ -37,8 +37,6 @@ public:
 		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0,0));
 		renderable1.tid = 1;
 
-
-		TextureParameters params{ TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::NEAREST };
 		tex0 = new Texture2D(TexWidth, TexHeight);
 		tex1 = new Texture2D(100, 100);
 		tex1->SetColor(255, 150, 150, 255);
@@ -74,7 +72,7 @@ public:
 		return rgbColor;
 	}
 
-	~MainLayer()
+    ~MainLayer() override
 	{
 		delete pixels;
 		delete tex0;
@@ -121,7 +119,7 @@ public:
 	OverLayTest()
 		: Layer("TestOverlay") {}
 
-	~OverLayTest()
+    ~OverLayTest() override
 	{
 	}
 
