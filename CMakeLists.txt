@@ -7,6 +7,7 @@ if(!MSVC)
 endif()
 
 include_directories(deps)
+include_directories(include)
 
 add_subdirectory(deps/GLFW)
 add_subdirectory(deps/Glad)
