@@ -43,6 +43,13 @@ public:
 
 	void OnUpdate() override
 	{
+		if (Input::IsKeyPressed(SGL_KEY_RIGHT)) {
+			renderable0.bounds.pos.x += 1;
+		}
+		else if (Input::IsKeyPressed(SGL_KEY_LEFT)) {
+			renderable0.bounds.pos.x -= 1;
+		}
+
 		renderer->Begin();
 		renderer->Submit(renderable0);
 		renderer->SubmitTexture(tex0);

@@ -10,17 +10,17 @@ namespace sgl
 		: rendererID(0), filePath(filePath), width(0), height(0), bpp(0), texParams(params)
 	{
 		stbi_set_flip_vertically_on_load(1);
-		auto localBuffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
+		auto buffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
 
 		glGenTextures(1, &rendererID);
 		glBindTexture(GL_TEXTURE_2D, rendererID);
 
-		SetParams(params, localBuffer);
+		SetParams(params, buffer);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		if (localBuffer)
-			stbi_image_free(localBuffer);
+		if (buffer)
+			stbi_image_free(buffer);
 	}
 
     Texture2D::Texture2D(int width, int height, TextureParameters params)

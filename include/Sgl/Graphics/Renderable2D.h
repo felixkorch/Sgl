@@ -83,7 +83,7 @@ namespace sgl
 
 		static std::vector<glm::vec2> GetStandardUVs()
 		{
-			return { glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 1), glm::vec2(1, 0) };
+			return { glm::vec2(0, 0), glm::vec2(1, 0), glm::vec2(1, 1), glm::vec2(0, 1) };
 		}
 	};
 
