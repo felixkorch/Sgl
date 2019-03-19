@@ -52,7 +52,7 @@ var fileData4 = [];
 fileData4.push.apply(fileData4, [35, 115, 104, 97, 100, 101, 114, 32, 118, 101, 114, 116, 101, 120, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 49, 48, 48, 13, 10, 13, 10, 97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 118, 101, 99, 51, 32, 112, 111, 115, 105, 116, 105, 111, 110, 59, 13, 10, 97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 118, 101, 99, 52, 32, 99, 111, 108, 111, 114, 59, 13, 10, 97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 118, 101, 99, 50, 32, 117, 118, 59, 13, 10, 97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 102, 108, 111, 97, 116, 32, 116, 105, 100, 59, 13, 10, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 109, 97, 116, 52, 32, 117, 95, 80, 114, 111, 106, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 13, 10, 9, 103, 108, 95, 80, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 117, 95, 80, 114, 111, 106, 32, 42, 32, 118, 101, 99, 52, 40, 112, 111, 115, 105, 116, 105, 111, 110, 44, 32, 49, 46, 48, 41, 59, 13, 10, 32, 32, 32, 32, 102, 95, 99, 111, 108, 111, 114, 32, 61, 32, 99, 111, 108, 111, 114, 59, 13, 10, 9, 102, 95, 117, 118, 32, 61, 32, 117, 118, 59, 13, 10, 9, 102, 95, 116, 105, 100, 32, 61, 32, 116, 105, 100, 59, 13, 10, 125, 13, 10, 13, 10, 35, 115, 104, 97, 100, 101, 114, 32, 102, 114, 97, 103, 109, 101, 110, 116, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 49, 48, 48, 13, 10, 112, 114, 101, 99, 105, 115, 105, 111, 110, 32, 109, 101, 100, 105, 117, 109, 112, 32, 102, 108, 111, 97, 116, 59, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 115, 97, 109, 112, 108, 101, 114, 50, 68, 32, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 49, 54, 93, 59, 13, 10, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 118, 97, 114, 121, 105, 110, 103, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 9, 105, 110, 116, 32, 116, 105, 100, 32, 61, 32, 105, 110, 116, 40, 102, 95, 116, 105, 100, 41, 59, 13, 10, 9, 102, 111, 114, 32, 40, 105, 110, 116, 32, 105, 32, 61, 32, 48, 59, 32, 105, 32, 60, 32, 49, 54, 59, 32, 105, 43, 43, 41, 32, 123, 13, 10, 9, 9, 105, 102, 32, 40, 116, 105, 100, 32, 61, 61, 32, 105, 41, 13, 10, 9, 9, 9, 103, 108, 95, 70, 114, 97, 103, 67, 111, 108, 111, 114, 32, 61, 32, 116, 101, 120, 116, 117, 114, 101, 50, 68, 40, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 105, 93, 44, 32, 102, 95, 117, 118, 41, 59, 13, 10, 9, 125, 13, 10, 125]);
 Module['FS_createDataFile']('/res/shaders', '2D.gles.shader', fileData4, true, true, false);
 var fileData5 = [];
-fileData5.push.apply(fileData5, [35, 115, 104, 97, 100, 101, 114, 32, 118, 101, 114, 116, 101, 120, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 51, 48, 32, 99, 111, 114, 101, 13, 10, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 48, 41, 32, 105, 110, 32, 118, 101, 99, 51, 32, 112, 111, 115, 105, 116, 105, 111, 110, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 49, 41, 32, 105, 110, 32, 118, 101, 99, 52, 32, 99, 111, 108, 111, 114, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 50, 41, 32, 105, 110, 32, 118, 101, 99, 50, 32, 117, 118, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 51, 41, 32, 105, 110, 32, 102, 108, 111, 97, 116, 32, 116, 105, 100, 59, 13, 10, 13, 10, 111, 117, 116, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 111, 117, 116, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 111, 117, 116, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 109, 97, 116, 52, 32, 117, 95, 80, 114, 111, 106, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 13, 10, 9, 103, 108, 95, 80, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 117, 95, 80, 114, 111, 106, 32, 42, 32, 118, 101, 99, 52, 40, 112, 111, 115, 105, 116, 105, 111, 110, 44, 32, 49, 46, 48, 41, 59, 13, 10, 32, 32, 32, 32, 102, 95, 99, 111, 108, 111, 114, 32, 61, 32, 99, 111, 108, 111, 114, 59, 13, 10, 9, 102, 95, 117, 118, 32, 61, 32, 117, 118, 59, 13, 10, 9, 102, 95, 116, 105, 100, 32, 61, 32, 116, 105, 100, 59, 13, 10, 125, 13, 10, 13, 10, 35, 115, 104, 97, 100, 101, 114, 32, 102, 114, 97, 103, 109, 101, 110, 116, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 51, 48, 32, 99, 111, 114, 101, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 115, 97, 109, 112, 108, 101, 114, 50, 68, 32, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 49, 54, 93, 59, 13, 10, 13, 10, 111, 117, 116, 32, 118, 101, 99, 52, 32, 102, 114, 97, 103, 67, 111, 108, 111, 114, 59, 13, 10, 13, 10, 105, 110, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 105, 110, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 105, 110, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 9, 105, 110, 116, 32, 116, 105, 100, 32, 61, 32, 105, 110, 116, 40, 102, 95, 116, 105, 100, 41, 59, 13, 10, 9, 102, 114, 97, 103, 67, 111, 108, 111, 114, 32, 61, 32, 116, 101, 120, 116, 117, 114, 101, 40, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 116, 105, 100, 93, 44, 32, 102, 95, 117, 118, 41, 59, 13, 10, 125]);
+fileData5.push.apply(fileData5, [35, 115, 104, 97, 100, 101, 114, 32, 118, 101, 114, 116, 101, 120, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 51, 48, 32, 99, 111, 114, 101, 13, 10, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 48, 41, 32, 105, 110, 32, 118, 101, 99, 51, 32, 112, 111, 115, 105, 116, 105, 111, 110, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 49, 41, 32, 105, 110, 32, 118, 101, 99, 52, 32, 99, 111, 108, 111, 114, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 50, 41, 32, 105, 110, 32, 118, 101, 99, 50, 32, 117, 118, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 51, 41, 32, 105, 110, 32, 102, 108, 111, 97, 116, 32, 116, 105, 100, 59, 13, 10, 13, 10, 111, 117, 116, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 111, 117, 116, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 111, 117, 116, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 109, 97, 116, 52, 32, 117, 95, 80, 114, 111, 106, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 9, 103, 108, 95, 80, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 117, 95, 80, 114, 111, 106, 32, 42, 32, 118, 101, 99, 52, 40, 112, 111, 115, 105, 116, 105, 111, 110, 44, 32, 49, 46, 48, 41, 59, 13, 10, 32, 32, 32, 32, 102, 95, 99, 111, 108, 111, 114, 32, 61, 32, 99, 111, 108, 111, 114, 59, 13, 10, 9, 102, 95, 117, 118, 32, 61, 32, 117, 118, 59, 13, 10, 9, 102, 95, 116, 105, 100, 32, 61, 32, 116, 105, 100, 59, 13, 10, 125, 13, 10, 13, 10, 35, 115, 104, 97, 100, 101, 114, 32, 102, 114, 97, 103, 109, 101, 110, 116, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 51, 48, 32, 99, 111, 114, 101, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 115, 97, 109, 112, 108, 101, 114, 50, 68, 32, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 49, 54, 93, 59, 13, 10, 13, 10, 111, 117, 116, 32, 118, 101, 99, 52, 32, 102, 114, 97, 103, 67, 111, 108, 111, 114, 59, 13, 10, 13, 10, 105, 110, 32, 118, 101, 99, 52, 32, 32, 102, 95, 99, 111, 108, 111, 114, 59, 13, 10, 105, 110, 32, 118, 101, 99, 50, 32, 32, 102, 95, 117, 118, 59, 13, 10, 105, 110, 32, 102, 108, 111, 97, 116, 32, 102, 95, 116, 105, 100, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 9, 105, 110, 116, 32, 116, 105, 100, 32, 61, 32, 105, 110, 116, 40, 102, 95, 116, 105, 100, 41, 59, 13, 10, 9, 102, 114, 97, 103, 67, 111, 108, 111, 114, 32, 61, 32, 116, 101, 120, 116, 117, 114, 101, 40, 102, 95, 83, 97, 109, 112, 108, 101, 114, 91, 116, 105, 100, 93, 44, 32, 102, 95, 117, 118, 41, 59, 13, 10, 125]);
 Module['FS_createDataFile']('/res/shaders', '2D.shader', fileData5, true, true, false);
 var fileData6 = [];
 fileData6.push.apply(fileData6, [35, 115, 104, 97, 100, 101, 114, 32, 118, 101, 114, 116, 101, 120, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 48, 48, 32, 101, 115, 13, 10, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 48, 41, 32, 105, 110, 32, 118, 101, 99, 51, 32, 112, 111, 115, 105, 116, 105, 111, 110, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 49, 41, 32, 105, 110, 32, 118, 101, 99, 51, 32, 110, 111, 114, 109, 97, 108, 59, 13, 10, 108, 97, 121, 111, 117, 116, 40, 108, 111, 99, 97, 116, 105, 111, 110, 32, 61, 32, 50, 41, 32, 105, 110, 32, 118, 101, 99, 50, 32, 116, 101, 120, 67, 111, 111, 114, 100, 59, 13, 10, 13, 10, 117, 110, 105, 102, 111, 114, 109, 32, 109, 97, 116, 52, 32, 117, 95, 80, 114, 111, 106, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 13, 10, 9, 103, 108, 95, 80, 111, 115, 105, 116, 105, 111, 110, 32, 61, 32, 117, 95, 80, 114, 111, 106, 32, 42, 32, 118, 101, 99, 52, 40, 112, 111, 115, 105, 116, 105, 111, 110, 44, 32, 49, 46, 48, 41, 59, 13, 10, 13, 10, 125, 13, 10, 13, 10, 35, 115, 104, 97, 100, 101, 114, 32, 102, 114, 97, 103, 109, 101, 110, 116, 13, 10, 35, 118, 101, 114, 115, 105, 111, 110, 32, 51, 48, 48, 32, 101, 115, 13, 10, 13, 10, 112, 114, 101, 99, 105, 115, 105, 111, 110, 32, 104, 105, 103, 104, 112, 32, 102, 108, 111, 97, 116, 59, 13, 10, 13, 10, 111, 117, 116, 32, 118, 101, 99, 52, 32, 102, 114, 97, 103, 67, 111, 108, 111, 114, 59, 13, 10, 13, 10, 118, 111, 105, 100, 32, 109, 97, 105, 110, 40, 41, 32, 123, 13, 10, 13, 10, 9, 102, 114, 97, 103, 67, 111, 108, 111, 114, 32, 61, 32, 118, 101, 99, 52, 40, 49, 46, 48, 41, 59, 13, 10, 125, 13, 10]);
@@ -1191,11 +1191,11 @@ function updateGlobalBufferViews() {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 35248,
+    STACK_BASE = 35936,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 5278128,
-    DYNAMIC_BASE = 5278128,
-    DYNAMICTOP_PTR = 34992;
+    STACK_MAX = 5278816,
+    DYNAMIC_BASE = 5278816,
+    DYNAMICTOP_PTR = 35680;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1647,8 +1647,8 @@ Module['asm'] = function(global, env, providedBuffer) {
   ;
   // import table
   env['table'] = wasmTable = new WebAssembly.Table({
-    'initial': 832,
-    'maximum': 832,
+    'initial': 828,
+    'maximum': 828,
     'element': 'anyfunc'
   });
   env['__memory_base'] = 1024; // tell the memory segments where to place themselves
@@ -1667,7 +1667,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 34224;
+// STATICTOP = STATIC_BASE + 34912;
 /* global initializers */  __ATINIT__.push({ func: function() { globalCtors() } });
 
 
@@ -1678,7 +1678,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 35232
+var tempDoublePtr = 35920
 assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
@@ -3163,11 +3163,11 @@ function copyTempDouble(ptr) {
   
   var ERRNO_CODES={EPERM:1,ENOENT:2,ESRCH:3,EINTR:4,EIO:5,ENXIO:6,E2BIG:7,ENOEXEC:8,EBADF:9,ECHILD:10,EAGAIN:11,EWOULDBLOCK:11,ENOMEM:12,EACCES:13,EFAULT:14,ENOTBLK:15,EBUSY:16,EEXIST:17,EXDEV:18,ENODEV:19,ENOTDIR:20,EISDIR:21,EINVAL:22,ENFILE:23,EMFILE:24,ENOTTY:25,ETXTBSY:26,EFBIG:27,ENOSPC:28,ESPIPE:29,EROFS:30,EMLINK:31,EPIPE:32,EDOM:33,ERANGE:34,ENOMSG:42,EIDRM:43,ECHRNG:44,EL2NSYNC:45,EL3HLT:46,EL3RST:47,ELNRNG:48,EUNATCH:49,ENOCSI:50,EL2HLT:51,EDEADLK:35,ENOLCK:37,EBADE:52,EBADR:53,EXFULL:54,ENOANO:55,EBADRQC:56,EBADSLT:57,EDEADLOCK:35,EBFONT:59,ENOSTR:60,ENODATA:61,ETIME:62,ENOSR:63,ENONET:64,ENOPKG:65,EREMOTE:66,ENOLINK:67,EADV:68,ESRMNT:69,ECOMM:70,EPROTO:71,EMULTIHOP:72,EDOTDOT:73,EBADMSG:74,ENOTUNIQ:76,EBADFD:77,EREMCHG:78,ELIBACC:79,ELIBBAD:80,ELIBSCN:81,ELIBMAX:82,ELIBEXEC:83,ENOSYS:38,ENOTEMPTY:39,ENAMETOOLONG:36,ELOOP:40,EOPNOTSUPP:95,EPFNOSUPPORT:96,ECONNRESET:104,ENOBUFS:105,EAFNOSUPPORT:97,EPROTOTYPE:91,ENOTSOCK:88,ENOPROTOOPT:92,ESHUTDOWN:108,ECONNREFUSED:111,EADDRINUSE:98,ECONNABORTED:103,ENETUNREACH:101,ENETDOWN:100,ETIMEDOUT:110,EHOSTDOWN:112,EHOSTUNREACH:113,EINPROGRESS:115,EALREADY:114,EDESTADDRREQ:89,EMSGSIZE:90,EPROTONOSUPPORT:93,ESOCKTNOSUPPORT:94,EADDRNOTAVAIL:99,ENETRESET:102,EISCONN:106,ENOTCONN:107,ETOOMANYREFS:109,EUSERS:87,EDQUOT:122,ESTALE:116,ENOTSUP:95,ENOMEDIUM:123,EILSEQ:84,EOVERFLOW:75,ECANCELED:125,ENOTRECOVERABLE:131,EOWNERDEAD:130,ESTRPIPE:86};
   
-  var _stdin=35008;
+  var _stdin=35696;
   
-  var _stdout=35024;
+  var _stdout=35712;
   
-  var _stderr=35040;var FS={root:null,mounts:[],devices:{},streams:[],nextInode:1,nameTable:null,currentPath:"/",initialized:false,ignorePermissions:true,trackingDelegate:{},tracking:{openFlags:{READ:1,WRITE:2}},ErrnoError:null,genericErrors:{},filesystems:null,syncFSRequests:0,handleFSError:function (e) {
+  var _stderr=35728;var FS={root:null,mounts:[],devices:{},streams:[],nextInode:1,nameTable:null,currentPath:"/",initialized:false,ignorePermissions:true,trackingDelegate:{},tracking:{openFlags:{READ:1,WRITE:2}},ErrnoError:null,genericErrors:{},filesystems:null,syncFSRequests:0,handleFSError:function (e) {
         if (!(e instanceof FS.ErrnoError)) throw e + ' : ' + stackTrace();
         return ___setErrNo(e.errno);
       },lookupPath:function (path, opts) {
@@ -5045,75 +5045,6 @@ function copyTempDouble(ptr) {
   }
   }
 
-  function ___syscall221(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // fcntl64
-      var stream = SYSCALLS.getStreamFromFD(), cmd = SYSCALLS.get();
-      switch (cmd) {
-        case 0: {
-          var arg = SYSCALLS.get();
-          if (arg < 0) {
-            return -ERRNO_CODES.EINVAL;
-          }
-          var newStream;
-          newStream = FS.open(stream.path, stream.flags, 0, arg);
-          return newStream.fd;
-        }
-        case 1:
-        case 2:
-          return 0;  // FD_CLOEXEC makes no sense for a single process.
-        case 3:
-          return stream.flags;
-        case 4: {
-          var arg = SYSCALLS.get();
-          stream.flags |= arg;
-          return 0;
-        }
-        case 12:
-        /* case 12: Currently in musl F_GETLK64 has same value as F_GETLK, so omitted to avoid duplicate case blocks. If that changes, uncomment this */ {
-          
-          var arg = SYSCALLS.get();
-          var offset = 0;
-          // We're always unlocked.
-          HEAP16[(((arg)+(offset))>>1)]=2;
-          return 0;
-        }
-        case 13:
-        case 14:
-        /* case 13: Currently in musl F_SETLK64 has same value as F_SETLK, so omitted to avoid duplicate case blocks. If that changes, uncomment this */
-        /* case 14: Currently in musl F_SETLKW64 has same value as F_SETLKW, so omitted to avoid duplicate case blocks. If that changes, uncomment this */
-          
-          
-          return 0; // Pretend that the locking is successful.
-        case 16:
-        case 8:
-          return -ERRNO_CODES.EINVAL; // These are for sockets. We don't have them fully implemented yet.
-        case 9:
-          // musl trusts getown return values, due to a bug where they must be, as they overlap with errors. just return -1 here, so fnctl() returns that, and we set errno ourselves.
-          ___setErrNo(ERRNO_CODES.EINVAL);
-          return -1;
-        default: {
-          return -ERRNO_CODES.EINVAL;
-        }
-      }
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
-  function ___syscall5(which, varargs) {SYSCALLS.varargs = varargs;
-  try {
-   // open
-      var pathname = SYSCALLS.getStr(), flags = SYSCALLS.get(), mode = SYSCALLS.get() // optional TODO
-      var stream = FS.open(pathname, flags, mode);
-      return stream.fd;
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
-    return -e.errno;
-  }
-  }
-
   function ___syscall54(which, varargs) {SYSCALLS.varargs = varargs;
   try {
    // ioctl
@@ -6578,8 +6509,6 @@ function copyTempDouble(ptr) {
         );
     }
 
-  function _glGenerateMipmap(x0) { GLctx['generateMipmap'](x0) }
-
   function _glGetShaderInfoLog(shader, maxLength, length, infoLog) {
       var log = GLctx.getShaderInfoLog(GL.shaders[shader]);
       if (log === null) log = '(unknown error)';
@@ -7720,7 +7649,7 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_timezone=(stringToUTF8("GMT", 35136, 4), 35136);function _gmtime_r(time, tmPtr) {
+  var ___tm_timezone=(stringToUTF8("GMT", 35824, 4), 35824);function _gmtime_r(time, tmPtr) {
       var date = new Date(HEAP32[((time)>>2)]*1000);
       HEAP32[((tmPtr)>>2)]=date.getUTCSeconds();
       HEAP32[(((tmPtr)+(4))>>2)]=date.getUTCMinutes();
@@ -8304,7 +8233,7 @@ function nullFunc_viijii(x) { err("Invalid function pointer called with signatur
 
 var asmGlobalArg = {}
 
-var asmLibraryArg = { "abort": abort, "setTempRet0": setTempRet0, "getTempRet0": getTempRet0, "abortStackOverflow": abortStackOverflow, "nullFunc_di": nullFunc_di, "nullFunc_ii": nullFunc_ii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_v": nullFunc_v, "nullFunc_vi": nullFunc_vi, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_viijii": nullFunc_viijii, "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___cxa_allocate_exception": ___cxa_allocate_exception, "___cxa_begin_catch": ___cxa_begin_catch, "___cxa_deleted_virtual": ___cxa_deleted_virtual, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___cxa_free_exception": ___cxa_free_exception, "___cxa_pure_virtual": ___cxa_pure_virtual, "___cxa_throw": ___cxa_throw, "___cxa_uncaught_exception": ___cxa_uncaught_exception, "___gxx_personality_v0": ___gxx_personality_v0, "___lock": ___lock, "___map_file": ___map_file, "___resumeException": ___resumeException, "___setErrNo": ___setErrNo, "___syscall140": ___syscall140, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall20": ___syscall20, "___syscall221": ___syscall221, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___syscall6": ___syscall6, "___syscall91": ___syscall91, "___unlock": ___unlock, "__addDays": __addDays, "__arraySum": __arraySum, "__computeUnpackAlignedImageSize": __computeUnpackAlignedImageSize, "__glGenObject": __glGenObject, "__heapObjectForWebGLType": __heapObjectForWebGLType, "__isLeapYear": __isLeapYear, "_abort": _abort, "_clock_gettime": _clock_gettime, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_get_now": _emscripten_get_now, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_emscripten_set_main_loop_arg": _emscripten_set_main_loop_arg, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_getenv": _getenv, "_glActiveTexture": _glActiveTexture, "_glAttachShader": _glAttachShader, "_glBindBuffer": _glBindBuffer, "_glBindTexture": _glBindTexture, "_glBufferData": _glBufferData, "_glBufferSubData": _glBufferSubData, "_glClear": _glClear, "_glClearColor": _glClearColor, "_glCompileShader": _glCompileShader, "_glCreateProgram": _glCreateProgram, "_glCreateShader": _glCreateShader, "_glCullFace": _glCullFace, "_glDeleteBuffers": _glDeleteBuffers, "_glDeleteProgram": _glDeleteProgram, "_glDeleteShader": _glDeleteShader, "_glDeleteTextures": _glDeleteTextures, "_glDepthFunc": _glDepthFunc, "_glDrawElements": _glDrawElements, "_glEnable": _glEnable, "_glEnableVertexAttribArray": _glEnableVertexAttribArray, "_glGenBuffers": _glGenBuffers, "_glGenTextures": _glGenTextures, "_glGenerateMipmap": _glGenerateMipmap, "_glGetShaderInfoLog": _glGetShaderInfoLog, "_glGetShaderiv": _glGetShaderiv, "_glGetUniformLocation": _glGetUniformLocation, "_glLinkProgram": _glLinkProgram, "_glShaderSource": _glShaderSource, "_glTexImage2D": _glTexImage2D, "_glTexParameteri": _glTexParameteri, "_glUniform1iv": _glUniform1iv, "_glUniformMatrix4fv": _glUniformMatrix4fv, "_glUseProgram": _glUseProgram, "_glValidateProgram": _glValidateProgram, "_glVertexAttribPointer": _glVertexAttribPointer, "_glfwCreateWindow": _glfwCreateWindow, "_glfwDestroyWindow": _glfwDestroyWindow, "_glfwGetCursorPos": _glfwGetCursorPos, "_glfwGetJoystickAxes": _glfwGetJoystickAxes, "_glfwGetJoystickButtons": _glfwGetJoystickButtons, "_glfwGetKey": _glfwGetKey, "_glfwGetMouseButton": _glfwGetMouseButton, "_glfwGetTime": _glfwGetTime, "_glfwGetWindowUserPointer": _glfwGetWindowUserPointer, "_glfwInit": _glfwInit, "_glfwJoystickPresent": _glfwJoystickPresent, "_glfwMakeContextCurrent": _glfwMakeContextCurrent, "_glfwPollEvents": _glfwPollEvents, "_glfwSetDropCallback": _glfwSetDropCallback, "_glfwSetKeyCallback": _glfwSetKeyCallback, "_glfwSetMouseButtonCallback": _glfwSetMouseButtonCallback, "_glfwSetWindowCloseCallback": _glfwSetWindowCloseCallback, "_glfwSetWindowUserPointer": _glfwSetWindowUserPointer, "_glfwSwapBuffers": _glfwSwapBuffers, "_glfwSwapInterval": _glfwSwapInterval, "_glfwTerminate": _glfwTerminate, "_glfwWindowHint": _glfwWindowHint, "_glfwWindowShouldClose": _glfwWindowShouldClose, "_gmtime_r": _gmtime_r, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_llvm_trap": _llvm_trap, "_localtime_r": _localtime_r, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_cond_signal": _pthread_cond_signal, "_pthread_cond_wait": _pthread_cond_wait, "_pthread_join": _pthread_join, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_strftime": _strftime, "_strftime_l": _strftime_l, "_time": _time, "_tzset": _tzset, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "emscriptenWebGLGetTexPixelData": emscriptenWebGLGetTexPixelData, "tempDoublePtr": tempDoublePtr, "DYNAMICTOP_PTR": DYNAMICTOP_PTR }
+var asmLibraryArg = { "abort": abort, "setTempRet0": setTempRet0, "getTempRet0": getTempRet0, "abortStackOverflow": abortStackOverflow, "nullFunc_di": nullFunc_di, "nullFunc_ii": nullFunc_ii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_v": nullFunc_v, "nullFunc_vi": nullFunc_vi, "nullFunc_vii": nullFunc_vii, "nullFunc_viii": nullFunc_viii, "nullFunc_viiii": nullFunc_viiii, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_viijii": nullFunc_viijii, "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___cxa_allocate_exception": ___cxa_allocate_exception, "___cxa_begin_catch": ___cxa_begin_catch, "___cxa_deleted_virtual": ___cxa_deleted_virtual, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___cxa_free_exception": ___cxa_free_exception, "___cxa_pure_virtual": ___cxa_pure_virtual, "___cxa_throw": ___cxa_throw, "___cxa_uncaught_exception": ___cxa_uncaught_exception, "___gxx_personality_v0": ___gxx_personality_v0, "___lock": ___lock, "___map_file": ___map_file, "___resumeException": ___resumeException, "___setErrNo": ___setErrNo, "___syscall140": ___syscall140, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "___syscall20": ___syscall20, "___syscall54": ___syscall54, "___syscall6": ___syscall6, "___syscall91": ___syscall91, "___unlock": ___unlock, "__addDays": __addDays, "__arraySum": __arraySum, "__computeUnpackAlignedImageSize": __computeUnpackAlignedImageSize, "__glGenObject": __glGenObject, "__heapObjectForWebGLType": __heapObjectForWebGLType, "__isLeapYear": __isLeapYear, "_abort": _abort, "_clock_gettime": _clock_gettime, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_get_now": _emscripten_get_now, "_emscripten_get_now_is_monotonic": _emscripten_get_now_is_monotonic, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_emscripten_set_main_loop_arg": _emscripten_set_main_loop_arg, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_getenv": _getenv, "_glActiveTexture": _glActiveTexture, "_glAttachShader": _glAttachShader, "_glBindBuffer": _glBindBuffer, "_glBindTexture": _glBindTexture, "_glBufferData": _glBufferData, "_glBufferSubData": _glBufferSubData, "_glClear": _glClear, "_glClearColor": _glClearColor, "_glCompileShader": _glCompileShader, "_glCreateProgram": _glCreateProgram, "_glCreateShader": _glCreateShader, "_glCullFace": _glCullFace, "_glDeleteBuffers": _glDeleteBuffers, "_glDeleteProgram": _glDeleteProgram, "_glDeleteShader": _glDeleteShader, "_glDeleteTextures": _glDeleteTextures, "_glDepthFunc": _glDepthFunc, "_glDrawElements": _glDrawElements, "_glEnable": _glEnable, "_glEnableVertexAttribArray": _glEnableVertexAttribArray, "_glGenBuffers": _glGenBuffers, "_glGenTextures": _glGenTextures, "_glGetShaderInfoLog": _glGetShaderInfoLog, "_glGetShaderiv": _glGetShaderiv, "_glGetUniformLocation": _glGetUniformLocation, "_glLinkProgram": _glLinkProgram, "_glShaderSource": _glShaderSource, "_glTexImage2D": _glTexImage2D, "_glTexParameteri": _glTexParameteri, "_glUniform1iv": _glUniform1iv, "_glUniformMatrix4fv": _glUniformMatrix4fv, "_glUseProgram": _glUseProgram, "_glValidateProgram": _glValidateProgram, "_glVertexAttribPointer": _glVertexAttribPointer, "_glfwCreateWindow": _glfwCreateWindow, "_glfwDestroyWindow": _glfwDestroyWindow, "_glfwGetCursorPos": _glfwGetCursorPos, "_glfwGetJoystickAxes": _glfwGetJoystickAxes, "_glfwGetJoystickButtons": _glfwGetJoystickButtons, "_glfwGetKey": _glfwGetKey, "_glfwGetMouseButton": _glfwGetMouseButton, "_glfwGetTime": _glfwGetTime, "_glfwGetWindowUserPointer": _glfwGetWindowUserPointer, "_glfwInit": _glfwInit, "_glfwJoystickPresent": _glfwJoystickPresent, "_glfwMakeContextCurrent": _glfwMakeContextCurrent, "_glfwPollEvents": _glfwPollEvents, "_glfwSetDropCallback": _glfwSetDropCallback, "_glfwSetKeyCallback": _glfwSetKeyCallback, "_glfwSetMouseButtonCallback": _glfwSetMouseButtonCallback, "_glfwSetWindowCloseCallback": _glfwSetWindowCloseCallback, "_glfwSetWindowUserPointer": _glfwSetWindowUserPointer, "_glfwSwapBuffers": _glfwSwapBuffers, "_glfwSwapInterval": _glfwSwapInterval, "_glfwTerminate": _glfwTerminate, "_glfwWindowHint": _glfwWindowHint, "_glfwWindowShouldClose": _glfwWindowShouldClose, "_gmtime_r": _gmtime_r, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_llvm_trap": _llvm_trap, "_localtime_r": _localtime_r, "_pthread_cond_destroy": _pthread_cond_destroy, "_pthread_cond_signal": _pthread_cond_signal, "_pthread_cond_wait": _pthread_cond_wait, "_pthread_join": _pthread_join, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_strftime": _strftime, "_strftime_l": _strftime_l, "_time": _time, "_tzset": _tzset, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "emscriptenWebGLGetTexPixelData": emscriptenWebGLGetTexPixelData, "tempDoublePtr": tempDoublePtr, "DYNAMICTOP_PTR": DYNAMICTOP_PTR }
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (asmGlobalArg, asmLibraryArg, buffer);
