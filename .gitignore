@@ -6,6 +6,7 @@
 *.vcxproj
 *.filters
 *.user
+*.json
 bin-int
 bin
 Sgl/libs/Glad/bin-int

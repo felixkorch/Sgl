@@ -1,10 +1,14 @@
 #include <Sgl.h>
+#include <ctime>
 
 #ifdef USE_EMSCRIPTEN
-#define SHADER(x) x ".gles.shader"
+#define VertexShader   Shader::GLES2_Vertex_Shader2D
+#define FragmentShader Shader::GLES2_Fragment_Shader2D
 #else
-#define SHADER(x) x ".shader"
+#define VertexShader   Shader::Core_Vertex_Shader2D
+#define FragmentShader Shader::Core_Fragment_Shader2D
 #endif
+
 
 using namespace sgl;
 
@@ -18,7 +22,7 @@ private:
 	bool movingRect = false;
 public:
 	TestLayer()
-		: Layer("GameLayer"), shader("res/shaders/" SHADER("2D"))
+		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
 	{
 		renderer = Renderer2D::Create(1280, 720, shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
@@ -63,7 +67,7 @@ public:
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::MouseButtonPressed) {
-			MouseButtonPressed c = (MouseButtonPressed&)event;
+			auto& c = (MouseButtonPressed&)event;
 			SglTrace(c.ToString());
 			auto mousePos = Input::GetMousePosition();
 			if (rect.bounds.Contains(glm::vec2(mousePos.first, mousePos.second))) {
@@ -74,7 +78,7 @@ public:
 				rect.color = RandColor();
 		}
 		else if (event.GetEventType() == EventType::MouseButtonReleased) {
-			MouseButtonReleased c = (MouseButtonReleased&)event;
+			auto& c = (MouseButtonReleased&)event;
 			SglTrace(c.ToString());
 			movingRect = false;
 		}

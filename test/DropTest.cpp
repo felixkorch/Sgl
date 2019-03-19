@@ -1,9 +1,12 @@
 #include <Sgl.h>
+#include <ctime>
 
 #ifdef USE_EMSCRIPTEN
-#define SHADER(x) x ".gles.shader"
+#define VertexShader   Shader::GLES2_Vertex_Shader2D
+#define FragmentShader Shader::GLES2_Fragment_Shader2D
 #else
-#define SHADER(x) x ".shader"
+#define VertexShader   Shader::Core_Vertex_Shader2D
+#define FragmentShader Shader::Core_Fragment_Shader2D
 #endif
 
 #define Width 512
@@ -23,7 +26,7 @@ private:
 
 public:
 	MainLayer()
-		: Layer("Main Layer"), shader("res/shaders/" SHADER("2D"))
+		: Layer("Main Layer"), shader(VertexShader, FragmentShader)
 	{
 		renderer = Renderer2D::Create(Width, Height, shader);
 		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
@@ -50,7 +53,7 @@ public:
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
-			DropEvent c = (DropEvent&)event;
+			auto& c = (DropEvent&)event;
 			
 			auto file = c.GetPaths()[0];
 			tex0 = new Texture2D(file);

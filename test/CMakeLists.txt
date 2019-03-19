@@ -1,7 +1,7 @@
 project(Test)
 
 set(sources
-    TextureTest.cpp
+	MouseTest.cpp
 )
 
 add_executable(${PROJECT_NAME} ${sources})
