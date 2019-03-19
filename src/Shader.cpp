@@ -42,10 +42,27 @@ namespace sgl
 	in vec2  f_uv;
 	in float f_tid;
 
-	void main() {
-		int tid = int(f_tid);
-		fragColor = texture(f_Sampler[tid], f_uv);
+	vec4 GetValueFromSamplerArray(float ndx, vec2 uv) { // Temporary solution for indexing the sampler array, only 6 textures allowed atm.
+		for(float f = 0.5; f < 16; f++)
+		if (ndx < .5) {
+			return texture2D(f_Sampler[0], uv);
+		} else if (ndx < 1.5) {
+			return texture2D(f_Sampler[1], uv);
+		} else if (ndx < 2.5) {
+			return texture2D(f_Sampler[2], uv);
+		} else if (ndx < 3.5) {
+			return texture2D(f_Sampler[3], uv);
+		} else if (ndx < 4.5) {
+			return texture2D(f_Sampler[4], uv);
+		} else {
+			return texture2D(f_Sampler[5], uv);
+		}
 	}
+
+	void main() {
+		fragColor = GetValueFromSamplerArray(f_tid, f_uv);
+	}
+
 	)END";
 
 	const char* Shader::GLES2_Vertex_Shader2D = R"END(
@@ -80,12 +97,24 @@ namespace sgl
 	varying vec2  f_uv;
 	varying float f_tid;
 
-	void main() {
-		int tid = int(f_tid);
-		for (int i = 0; i < 16; i++) {
-			if (tid == i)
-				gl_FragColor = texture2D(f_Sampler[i], f_uv);
+	vec4 GetValueFromSamplerArray(float ndx, vec2 uv) { // Temporary solution for indexing the sampler array, only 6 textures allowed atm.
+		if (ndx < .5) {
+			return texture2D(f_Sampler[0], uv);
+		} else if (ndx < 1.5) {
+			return texture2D(f_Sampler[1], uv);
+		} else if (ndx < 2.5) {
+			return texture2D(f_Sampler[2], uv);
+		} else if (ndx < 3.5) {
+			return texture2D(f_Sampler[3], uv);
+		} else if (ndx < 4.5) {
+			return texture2D(f_Sampler[4], uv);
+		} else {
+			return texture2D(f_Sampler[5], uv);
 		}
+	}
+
+	void main() {
+		GetValueFromSamplerArray(f_tid, f_uv);
 	}
 	)END";
 

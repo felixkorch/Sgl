@@ -84,7 +84,7 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		//renderer->Submit(renderable1);
+		renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
 		renderer->SubmitTexture(tex1);
 		renderer->End();

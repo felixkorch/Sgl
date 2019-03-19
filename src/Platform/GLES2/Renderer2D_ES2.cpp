@@ -67,9 +67,6 @@ namespace sgl
 
 	void Renderer2D_ES2::Flush()
 	{
-		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
-
 		for (int i = 0; i < textures.size(); i++)
 			textures[i]->Bind(i);
 
@@ -134,6 +131,9 @@ namespace sgl
 
 		shader.Bind();
 		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+
+		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
 	}
 
 	Renderer2D* Renderer2D::Create(unsigned int width, unsigned int height, const Shader& shader)
