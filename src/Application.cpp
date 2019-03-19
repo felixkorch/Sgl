@@ -25,6 +25,10 @@ namespace sgl
 		SglAssert(sInstance == nullptr, "Application already exists!");
 		sInstance = this;
 		window = Window::Create(width, height, title);
+		if (!window) {
+			running = false;
+			return;
+		}
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
 		SglCoreInfo("Sucessfully initialized the app!");
@@ -32,7 +36,7 @@ namespace sgl
 
 	Application::~Application()
 	{
-		delete window;
+		if(window) delete window;
 	}
 
 	void Application::PushLayer(Layer* layer)

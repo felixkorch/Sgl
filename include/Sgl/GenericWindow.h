@@ -34,7 +34,6 @@ namespace sgl
 			return props.height;
 		}
 
-	private:
 		int InitWindow();
 	};
 }

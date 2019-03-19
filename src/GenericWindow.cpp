@@ -12,11 +12,7 @@
 namespace sgl
 {
 	GenericWindow::GenericWindow(unsigned int width, unsigned int height, const char* title)
-		: props{ width, height, title }, vSyncOn(true)
-
-	{
-		InitWindow();
-	}
+		: props{ width, height, title }, vSyncOn(true) {}
 
 	GenericWindow::~GenericWindow()
 	{
@@ -26,7 +22,12 @@ namespace sgl
 
 	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
 	{
-		return new GenericWindow(width, height, title);
+		auto window = new GenericWindow(width, height, title);
+		if (window->InitWindow() == -1) {
+			delete window;
+			return nullptr;
+		}
+		return window;
 	}
 
 	bool GenericWindow::IsClosed() const
@@ -36,7 +37,7 @@ namespace sgl
 
 	void GenericWindow::Clear() const
 	{
-		glClearColor(0.1, 0.1, 0.1, 1);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -61,11 +62,12 @@ namespace sgl
 		eventCallbackFn = fn;
 	}
 
-
 	int GenericWindow::InitWindow()
 	{
-		if (!glfwInit())
+		if (!glfwInit()) {
+			SglCoreError("glfwInit failed!");
 			return -1;
+		}
 
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -78,6 +80,7 @@ namespace sgl
 		window = glfwCreateWindow(props.width, props.height, props.title, nullptr, nullptr);
 		if (!window) {
 			glfwTerminate();
+			SglCoreError("glfwCreateWindow failed!");
 			return -1;
 		}
 
@@ -143,11 +146,12 @@ namespace sgl
 		});
 
 		/* Initialize OpenGL for desktop or embedded */
-		int status = 1;
 		#ifndef USE_EMSCRIPTEN
-		status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+			SglCoreError("Failed to initialize Glad");
+			return -1;
+		}
 		#endif
-		SglAssert(status, "Failed to initialize Glad.");
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
