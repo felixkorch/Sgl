@@ -6,7 +6,7 @@ namespace sgl
 {
 	class Log {
 	private:
-		static std::shared_ptr<spdlog::logger> mainLogger;
+        static std::shared_ptr<spdlog::logger> mainLogger;
 		static std::shared_ptr<spdlog::logger> clientLogger;
 	public:
 		static std::shared_ptr<spdlog::logger>& GetMainLogger()
