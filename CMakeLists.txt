@@ -49,4 +49,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Release/${PROJECT_NAME}
 )
 
+set(BASE_DIR CMAKE_CURRENT_LIST_DIR)
+
 add_subdirectory(test)

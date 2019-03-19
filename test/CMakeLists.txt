@@ -10,7 +10,7 @@ foreach (test ${SGL_TESTS})
 		target_link_libraries(${test} Sgl ${SGL_LIBRARIES})
 
 		set_target_properties(${test} PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${test}
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Release/${test})
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BASE_DIR}/bin/Debug/${test}
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BASE_DIR}/bin/Release/${test})
 
 endforeach()
