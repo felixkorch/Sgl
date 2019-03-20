@@ -3,10 +3,17 @@
 
 namespace sgl
 {
+	/*
+		CLAMP, CLAMP_TO_BORDER is not supported on embedded so they are commented out for the moment.
+	*/
+
 	enum class TextureWrap {
 		CLAMP, CLAMP_TO_BORDER, CLAMP_TO_EDGE, REPEAT, MIRRORED_REPEAT
 	};
 
+	/*
+		RGBA32F is not supported on embedded so they are commented out for the moment.
+	*/
 	enum class TextureFormat {
 		RGBA, RGB, RGBA32F, LUMINANCE, LUMINANCE_ALPHA
 	};

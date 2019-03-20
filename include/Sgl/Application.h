@@ -7,9 +7,11 @@
 namespace sgl
 {
 	class Application {
+	private:
+		static Application* sInstance;
 	protected:
 		Window* window;
-		LayerStack layerstack;
+		LayerStack* layerstack;
 		EventQueue eventQueue;
 		bool running = true;
 	public:
@@ -23,8 +25,9 @@ namespace sgl
 		void Run();
 		Window* GetWindow() { return window; }
 		static Application& Get() { return *sInstance; }
-	private:
-		static Application* sInstance;
+	public:
+		void ProcessEvents();
+		void MeasureFPS(int& nbFrames, double& lastTime);
 	};
 
 	// To be defined in client.

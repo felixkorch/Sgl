@@ -52,8 +52,8 @@ namespace sgl
     int Texture2D::GetTextureWrap(TextureWrap wrap)
 	{
 		switch (wrap) {
-		//case TextureWrap::CLAMP:			return GL_CLAMP;
-		//case TextureWrap::CLAMP_TO_BORDER:	return GL_CLAMP_TO_BORDER;
+		//case TextureWrap::CLAMP:            return GL_CLAMP;
+		//case TextureWrap::CLAMP_TO_BORDER:  return GL_CLAMP_TO_BORDER;
 		case TextureWrap::CLAMP_TO_EDGE:	return GL_CLAMP_TO_EDGE;
 		case TextureWrap::REPEAT:			return GL_REPEAT;
 		case TextureWrap::MIRRORED_REPEAT:	return GL_MIRRORED_REPEAT;

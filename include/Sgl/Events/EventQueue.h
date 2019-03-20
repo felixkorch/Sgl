@@ -4,6 +4,10 @@
 
 namespace sgl
 {
+	/// EventQueue is a temporary container for Events which gets distributed by the application.
+	/// It is using a FIFO based data structure.
+	///
+
 	class EventQueue {
 	private:
 		std::deque<Event*> events;

@@ -21,6 +21,7 @@ namespace sgl
 	Application* Application::sInstance = nullptr;
 
 	Application::Application(unsigned int width, unsigned int height, const char* title)
+		: layerstack(new LayerStack)
 	{
 		SglAssert(sInstance == nullptr, "Application already exists!");
 		sInstance = this;
@@ -36,19 +37,20 @@ namespace sgl
 
 	Application::~Application()
 	{
+		delete layerstack;
 		if(window) delete window;
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
-		layerstack.PushLayer(layer);
+		layerstack->PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
 		overlay->OnAttach();
-		layerstack.PushOverlay(overlay);
+		layerstack->PushOverlay(overlay);
 	}
 
 	void Application::OnEvent(Event* e)
@@ -65,6 +67,7 @@ namespace sgl
 
 	void Application::Run()
 	{
+		/* Variables used to measure FPS */
 		double lastTime = glfwGetTime();
 		int nbFrames = 0;
 
@@ -74,38 +77,17 @@ namespace sgl
 		while (running) {
 			#endif
 
-			/* Mesaure FPS */
-			double currentTime = glfwGetTime();
-			nbFrames++;
-			if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-				// Print and reset timer
-				auto time = 1000.0 / double(nbFrames);
-				SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-				nbFrames = 0;
-				lastTime += 1.0;
-			}
-
+			/* Measure FPS */
+			MeasureFPS(nbFrames, lastTime);
 			window->Clear();
 
 			/* Event loop */
-			Event* e = eventQueue.GetNext();
-			while (e) {
-				EventDispatcher dispatcher(e);
-				dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
-				for (auto it = layerstack.end(); it != layerstack.begin();) {
-					(*--it)->OnEvent(*e);
-					if (e->handled)
-						break;
-				}
-				eventQueue.Pop();
-				e = eventQueue.GetNext();
-			}
+			ProcessEvents();
 
 			/* Update */
-			for (Layer* l : layerstack) {
+			for (Layer* l : *layerstack) {
 				l->OnUpdate();
 			}
-
 			window->Update();
 
 			#ifdef USE_EMSCRIPTEN
@@ -115,5 +97,36 @@ namespace sgl
 		}
 		#endif
 	}
+
+	/*************    Private Helper Functions    **************/
+	void Application::ProcessEvents()
+	{
+		Event* e = eventQueue.GetNext();
+		while (e) {
+			EventDispatcher dispatcher(e);
+			dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+			for (auto it = layerstack->end(); it != layerstack->begin();) {
+				(*--it)->OnEvent(*e);
+				if (e->handled)
+					break;
+			}
+			eventQueue.Pop();
+			e = eventQueue.GetNext();
+		}
+	}
+
+	void Application::MeasureFPS(int& nbFrames, double& lastTime)
+	{
+		double currentTime = glfwGetTime();
+			nbFrames++;
+			if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+				// Print and reset timer
+				auto time = 1000.0 / double(nbFrames);
+				SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+				nbFrames = 0;
+				lastTime += 1.0;
+			}
+	}
+
 
 }
