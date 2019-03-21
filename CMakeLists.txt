@@ -12,8 +12,7 @@ add_subdirectory(deps/GLFW)
 add_subdirectory(deps/Glad)
 add_subdirectory(deps/stb_image)
 
-set(sources
-    # Srcs
+set(Sgl_SOURCE
     src/Application.cpp
     src/Layer.cpp
     src/Log.cpp
@@ -30,50 +29,11 @@ set(sources
     src/Graphics/Material.cpp
     src/Graphics/Mesh.cpp
     src/Graphics/Texture2D.cpp
-
-    # Includes
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Input.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Common.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/OpenGL.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/VertexBufferLayout.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Log.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Window.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/EntryPoint.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Application.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Layer.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Log.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/GLTypes.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Shader.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/EventQueue.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/Event.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/KeyEvent.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/MouseEvent.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/ApplicationEvent.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/JoystickEvent.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Events/KeyCodes.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/LayerStack.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/IndexBuffer.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/VertexBuffer.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/VertexArray.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/GenericInput.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/GenericWindow.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Platform/Core/Renderer2D_Core.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/ForwardRenderer.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Material.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Mesh.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Texture2D.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Renderable2D.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Renderer2D.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Model.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Light.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Camera.h
-    ${CMAKE_CURRENT_LIST_DIR}/include/Sgl/Graphics/Camera2D.h
 )
 
-list(APPEND SGL_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image)
+list(APPEND Sgl_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image)
 
-add_library(${PROJECT_NAME} ${sources})
+add_library(${PROJECT_NAME} ${Sgl_SOURCE})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
@@ -82,7 +42,7 @@ target_include_directories(${PROJECT_NAME}
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/obj_loader/include>
 )
 
-target_link_libraries(${PROJECT_NAME} ${SGL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Sgl_LIBRARIES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Debug/${PROJECT_NAME}
