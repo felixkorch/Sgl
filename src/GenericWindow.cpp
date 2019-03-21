@@ -12,7 +12,7 @@
 namespace sgl
 {
 	GenericWindow::GenericWindow(unsigned int width, unsigned int height, const char* title)
-		: props{ width, height, title }, vSyncOn(true) {}
+		: props{ width, height, title }, vSyncOn(true), fullScreen{ 0, 0, false } {}
 
 	GenericWindow::~GenericWindow()
 	{
@@ -60,6 +60,20 @@ namespace sgl
 	void GenericWindow::SetEventCallback(EventCallbackFn fn)
 	{
 		eventCallbackFn = fn;
+	}
+
+	void GenericWindow::ToggleFullScreen()
+	{
+		auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		if (fullScreen.on) {
+			glfwSetWindowMonitor(window, NULL, fullScreen.windowedPosX, fullScreen.windowedPosY, props.width, props.height, GLFW_DONT_CARE);
+		}
+		else {
+			glfwGetWindowPos(window, &fullScreen.windowedPosX, &fullScreen.windowedPosY);
+			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
+		}
+
+		fullScreen.on = !fullScreen.on;
 	}
 
 	int GenericWindow::InitWindow()
@@ -121,10 +135,8 @@ namespace sgl
 			case GLFW_PRESS: {
 
 				/* Fullscreen (Alt-Enter) */
-				/*if (key == GLFW_KEY_ENTER && Input::IsKeyPressed(GLFW_KEY_LEFT_ALT)) {
-					auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-					glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
-				}*/
+				if (key == GLFW_KEY_ENTER && Input::IsKeyPressed(GLFW_KEY_LEFT_ALT))
+					win.ToggleFullScreen();
 
 				win.eventCallbackFn(new KeyPressedEvent(key, 0));
 				break;

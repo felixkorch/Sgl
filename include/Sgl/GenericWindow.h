@@ -9,7 +9,17 @@ namespace sgl
 		GLFWwindow* window;
 		WindowProperties props;
 		bool vSyncOn;
+
+		struct FullScreen {
+			int windowedPosX;
+			int windowedPosY;
+			bool on;
+		};
+
+		FullScreen fullScreen;
+
 	public:
+
 		GenericWindow(unsigned int width, unsigned int height, const char* title);
 		~GenericWindow();
 
@@ -18,6 +28,7 @@ namespace sgl
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void SetEventCallback(EventCallbackFn fn) override;
+		virtual void ToggleFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
 		{
