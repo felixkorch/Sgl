@@ -14,6 +14,7 @@ using namespace sgl;
 
 class TestLayer : public Layer {
 private:
+	Window& window;
 	Renderer2D* renderer;
 	Shader shader;
 	Renderable2D rect;
@@ -21,8 +22,8 @@ private:
 	glm::vec2 offset;
 	bool movingRect = false;
 public:
-	TestLayer()
-		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
+	TestLayer(Window& window)
+		: Layer("GameLayer"), shader(VertexShader, FragmentShader), window(window)
 	{
 		renderer = Renderer2D::Create(1280, 720, shader);
 		rect = Renderable2D(glm::vec2(200, 200), glm::vec2(200, 200));
@@ -40,6 +41,12 @@ public:
 
 	void OnUpdate() override
 	{
+		/*if (Input::IsKeyPressed(SGL_KEY_RIGHT)) {
+			auto& cam = renderer->GetCamera();
+			auto& pos = cam.GetPos();
+			pos.x += 1;
+		}*/
+
 		auto mousePos = Input::GetMousePosition();
 		if (movingRect)
 			rect.SetPos(glm::vec2(mousePos.first - offset.x, mousePos.second - offset.y));
@@ -64,12 +71,19 @@ public:
 		renderer->Flush();
 	}
 
+	void ToggleFullScreen()
+	{
+		window.ToggleFullScreen();
+		renderer->SetScreenSize(window.GetWindowWidth(), window.GetWindowHeight());
+	}
+
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::MouseButtonPressed) {
 			auto& c = (MouseButtonPressed&)event;
 			SglTrace(c.ToString());
 			auto mousePos = Input::GetMousePosition();
+			SglInfo("x: {}, y: {}", mousePos.first, mousePos.second);
 			if (rect.bounds.Contains(glm::vec2(mousePos.first, mousePos.second))) {
 				movingRect = true;
 				offset = glm::vec2(mousePos.first - rect.bounds.MinBounds().x, mousePos.second - rect.bounds.MinBounds().y);
@@ -81,6 +95,11 @@ public:
 			auto& c = (MouseButtonReleased&)event;
 			SglTrace(c.ToString());
 			movingRect = false;
+		}
+		else if (event.GetEventType() == EventType::KeyPressed) {
+			auto& e = (KeyPressedEvent&)event;
+			if (e.GetKeyCode() == SGL_KEY_ESCAPE)
+				ToggleFullScreen();
 		}
 	}
 
@@ -97,7 +116,7 @@ public:
 	MouseTest()
 		: Application(1280, 720, "Sandbox")
 	{
-		PushLayer(new TestLayer());
+		PushLayer(new TestLayer(*window));
 	}
 
 	~MouseTest() {}

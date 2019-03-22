@@ -76,8 +76,10 @@ namespace sgl
 			const glm::vec3 boundsMin = glm::vec3(bounds.MinBounds(), 1);
 			const glm::vec3 boundsMax = glm::vec3(bounds.MaxBounds(), 1);
 			return {
-				boundsMin, glm::vec3(boundsMin.x + bounds.size.x, boundsMin.y, 1),
-				boundsMax, glm::vec3(boundsMin.x, boundsMin.y + bounds.size.y, 1)
+				boundsMin,
+				glm::vec3(boundsMin.x + bounds.size.x, boundsMin.y, 1),
+				boundsMax,
+				glm::vec3(boundsMin.x, boundsMin.y + bounds.size.y, 1)
 			};
 		}
 

@@ -20,7 +20,7 @@ namespace sgl
 
 	Application* Application::sInstance = nullptr;
 
-	Application::Application(unsigned int width, unsigned int height, const char* title)
+	Application::Application(int width, int height, const char* title)
 		: layerstack(new LayerStack)
 	{
 		SglAssert(sInstance == nullptr, "Application already exists!");
@@ -67,7 +67,7 @@ namespace sgl
 
 	void Application::Run()
 	{
-		/* Variables used to measure FPS */
+		// Variables used to measure FPS
 		double lastTime = glfwGetTime();
 		int nbFrames = 0;
 
@@ -77,14 +77,14 @@ namespace sgl
 		while (running) {
 			#endif
 
-			/* Measure FPS */
+			// Measure FPS
 			MeasureFPS(nbFrames, lastTime);
 			window->Clear();
 
-			/* Event loop */
+			// Event Loop
 			ProcessEvents();
 
-			/* Update */
+			// Update
 			for (Layer* l : *layerstack) {
 				l->OnUpdate();
 			}
@@ -98,7 +98,7 @@ namespace sgl
 		#endif
 	}
 
-	/*************    Private Helper Functions    **************/
+	/*************************    Private Helper Functions    ********************************************************/
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();

@@ -15,7 +15,7 @@ namespace sgl
 		EventQueue eventQueue;
 		bool running = true;
 	public:
-		Application(unsigned int width, unsigned int height, const char* title);
+		Application(int width, int height, const char* title);
 		virtual ~Application();
 
 		void PushLayer(Layer* layer);
@@ -25,7 +25,7 @@ namespace sgl
 		void Run();
 		Window* GetWindow() { return window; }
 		static Application& Get() { return *sInstance; }
-	public:
+	private:
 		void ProcessEvents();
 		void MeasureFPS(int& nbFrames, double& lastTime);
 	};

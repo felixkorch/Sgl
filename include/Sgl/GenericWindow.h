@@ -9,18 +9,13 @@ namespace sgl
 		GLFWwindow* window;
 		WindowProperties props;
 		bool vSyncOn;
-
-		struct FullScreen {
-			int windowedPosX;
-			int windowedPosY;
-			bool on;
-		};
-
-		FullScreen fullScreen;
+		bool fullScreen;
+		int windowedXPos;
+		int windowedYPos;
 
 	public:
 
-		GenericWindow(unsigned int width, unsigned int height, const char* title);
+		GenericWindow(int width, int height, const char* title);
 		~GenericWindow();
 
 		virtual bool IsClosed() const override;
@@ -35,13 +30,21 @@ namespace sgl
 			return window;
 		}
 
-		unsigned int GetWindowWidth()
+		virtual int GetWindowWidth() override
 		{
+			if (fullScreen) {
+				auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+				return mode->width;
+			}
 			return props.width;
 		}
 
-		unsigned int GetWindowHeight()
+		virtual int GetWindowHeight() override
 		{
+			if (fullScreen) {
+				auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+				return mode->height;
+			}
 			return props.height;
 		}
 

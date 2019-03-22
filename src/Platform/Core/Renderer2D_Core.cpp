@@ -12,7 +12,7 @@
 
 namespace sgl
 {
-	Renderer2D_Core::Renderer2D_Core(unsigned int width, unsigned int height, const Shader& shader)
+	Renderer2D_Core::Renderer2D_Core(int width, int height, const Shader& shader)
 		: Renderer2D(width, height, shader)
 	{
 		Init();
@@ -27,6 +27,7 @@ namespace sgl
 		shader.Bind();
 		vertexBuffer.Bind();
 		vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 	}
 
 	void Renderer2D_Core::Submit(Renderable2D& renderable)
@@ -97,12 +98,6 @@ namespace sgl
 		indexCount = 0;
 	}
 
-	void Renderer2D_Core::MoveCamera(const glm::vec2& val)
-	{
-		camera.Move(glm::vec3(val, 0));
-		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
-	}
-
 	void Renderer2D_Core::SubmitTexture(const Texture2D* texture)
 	{
 		if (textures.size() == MaxTextures) {
@@ -146,7 +141,7 @@ namespace sgl
 
 	}
 
-	Renderer2D* Renderer2D::Create(unsigned int width, unsigned int height, const Shader& shader)
+	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader)
 	{
 		return new Renderer2D_Core(width, height, shader);
 	}

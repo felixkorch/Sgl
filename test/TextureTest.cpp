@@ -1,5 +1,6 @@
 #include <Sgl.h>
 #include <ctime>
+#include <functional>
 
 #ifdef USE_EMSCRIPTEN
 #define VertexShader   Shader::GLES2_Vertex_Shader2D
@@ -19,6 +20,7 @@ using namespace sgl;
 
 class MainLayer : public Layer {
 private:
+	Window& window;
 	Renderer2D* renderer;
 	Shader shader;
 	Texture2D *tex0, *tex1;
@@ -29,8 +31,8 @@ private:
 	static unsigned int nesRGB[64];
 
 public:
-	MainLayer()
-		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
+	MainLayer(Window& window)
+		: Layer("GameLayer"), shader(VertexShader, FragmentShader), window(window)
 	{
 		renderer = Renderer2D::Create(Width, Height, shader);
 		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
@@ -84,11 +86,24 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		renderer->Submit(renderable1);
+		//renderer->Submit(renderable1);
 		renderer->SubmitTexture(tex0);
 		renderer->SubmitTexture(tex1);
 		renderer->End();
 		renderer->Flush();
+	}
+
+	// Logic to scale the frame when entering fullscreen
+	void ToggleFullScreen()
+	{
+		window.ToggleFullScreen();
+		int newWidth = (float)window.GetWindowHeight() * renderable0.bounds.size.x / renderable0.bounds.size.y;
+		int newHeight = window.GetWindowHeight();
+		renderable0 = Renderable2D(glm::vec2(newWidth, newHeight), glm::vec2(0, 0));
+		renderable0.bounds.pos.x = window.GetWindowWidth() / 2 - renderable0.bounds.size.x / 2; // Centralize the texture
+		tex0->SetSize(renderable0.bounds.size.x, renderable0.bounds.size.y);
+		tex0->SetData(pixels);
+		renderer->SetScreenSize(window.GetWindowWidth(), window.GetWindowHeight());
 	}
 
 	void OnEvent(Event& event) override
@@ -98,7 +113,11 @@ public:
 			SglTrace(c.ToString());
 		}
 		else if (event.GetEventType() == EventType::KeyPressed) {
-			SglTrace("Key pressed from Layer");
+			auto& e = (KeyPressedEvent&)event;
+
+			// Fullscreen (Alt-Enter)
+			if (e.GetKeyCode() == SGL_KEY_ENTER && Input::IsKeyPressed(SGL_KEY_LEFT_ALT))
+				ToggleFullScreen();
 		}
 	}
 };
@@ -147,13 +166,15 @@ public:
 };
 
 class NESApp : public Application {
+private:
+	MainLayer* mainLayer;
 public:
 
 	NESApp()
 		: Application(Width, Height, "TextureTest")
 	{
-		PushLayer(new MainLayer());
-		PushOverlay(new OverLayTest());
+		mainLayer = new MainLayer(*window);
+		PushLayer(mainLayer);
 	}
 
 	~NESApp() {}

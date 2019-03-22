@@ -15,7 +15,7 @@ namespace sgl
 	private:
 		std::vector<VertexData> vertexDataBuffer;
 	public:
-		Renderer2D_ES2(unsigned int width, unsigned int height, const Shader& shader);
+		Renderer2D_ES2(int width, int height, const Shader& shader);
 		~Renderer2D_ES2();
 		Renderer2D_ES2(const Renderer2D_ES2&) = delete;
 		virtual void operator=(const Renderer2D_ES2&) = delete;
@@ -26,7 +26,6 @@ namespace sgl
 		virtual void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1)) override;
 		virtual void End() override;
 		virtual void Flush() override;
-		virtual void MoveCamera(const glm::vec2& val) override;
 		void SubmitTexture(const Texture2D* texture) override;
 	private:
 		void Init();

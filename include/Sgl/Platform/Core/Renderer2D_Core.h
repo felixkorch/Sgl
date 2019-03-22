@@ -9,7 +9,7 @@ namespace sgl
 		VertexData* vertexDataBuffer;
 
 	public:
-		Renderer2D_Core(unsigned int width, unsigned int height, const Shader& shader);
+		Renderer2D_Core(int width, int height, const Shader& shader);
 		~Renderer2D_Core();
 		Renderer2D_Core(const Renderer2D_Core&) = delete;
 		void operator=(const Renderer2D_Core&) = delete;
@@ -20,7 +20,6 @@ namespace sgl
 		void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1)) override;
 		void End() override;
 		void Flush() override;
-		void MoveCamera(const glm::vec2& val) override;
 		void SubmitTexture(const Texture2D* texture) override;
 
 	private:

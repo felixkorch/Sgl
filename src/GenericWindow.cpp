@@ -11,8 +11,11 @@
 
 namespace sgl
 {
-	GenericWindow::GenericWindow(unsigned int width, unsigned int height, const char* title)
-		: props{ width, height, title }, vSyncOn(true), fullScreen{ 0, 0, false } {}
+	GenericWindow::GenericWindow(int width, int height, const char* title)
+		: props{ width, height, title }, vSyncOn(true), fullScreen(false)
+	{
+		glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
+	}
 
 	GenericWindow::~GenericWindow()
 	{
@@ -65,15 +68,15 @@ namespace sgl
 	void GenericWindow::ToggleFullScreen()
 	{
 		auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		if (fullScreen.on) {
-			glfwSetWindowMonitor(window, NULL, fullScreen.windowedPosX, fullScreen.windowedPosY, props.width, props.height, GLFW_DONT_CARE);
+		if (fullScreen) {
+			glfwSetWindowMonitor(window, nullptr, windowedXPos, windowedYPos, props.width, props.height, GLFW_DONT_CARE);
 		}
 		else {
-			glfwGetWindowPos(window, &fullScreen.windowedPosX, &fullScreen.windowedPosY);
+			glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
 			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
 		}
 
-		fullScreen.on = !fullScreen.on;
+		fullScreen = !fullScreen;
 	}
 
 	int GenericWindow::InitWindow()
@@ -101,18 +104,18 @@ namespace sgl
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, this);
 
-		/* Mouse Events */
-		/*glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			MouseMoved e(xPos, win.windowHeight - yPos); // Makes the origin in the bottom left
-			win.eventCallbackFn(e);
-		});*/
+		// Callback to set the viewport to match the new size of the window
+		glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+			glViewport(0, 0, width, height);
+		});
 
+		// Drop Event
 		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 			win.eventCallbackFn(new DropEvent(count, paths));
 		});
 
+		// Mouse Events
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 
@@ -127,17 +130,13 @@ namespace sgl
 			}
 			}
 		});
-		/* Key Events */
+
+		// Key Events
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
-
-				/* Fullscreen (Alt-Enter) */
-				if (key == GLFW_KEY_ENTER && Input::IsKeyPressed(GLFW_KEY_LEFT_ALT))
-					win.ToggleFullScreen();
-
 				win.eventCallbackFn(new KeyPressedEvent(key, 0));
 				break;
 			}
@@ -157,19 +156,19 @@ namespace sgl
 			win.eventCallbackFn(new WindowCloseEvent);
 		});
 
-		/* Initialize OpenGL for desktop or embedded */
+		// Initialize OpenGL for desktop or embedded
 		#ifndef USE_EMSCRIPTEN
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			SglCoreError("Failed to initialize Glad");
 			return -1;
 		}
+		glEnable(GL_MULTISAMPLE); // Only in core
 		#endif
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		// glEnable(GL_MULTISAMPLE); Only in core
 
 		return 1;
 	}

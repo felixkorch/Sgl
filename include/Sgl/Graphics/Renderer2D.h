@@ -30,7 +30,7 @@ namespace sgl
 		std::vector<const Texture2D*> textures;
 
 	public:
-        Renderer2D(unsigned int width, unsigned int height, const Shader& shader) :
+        Renderer2D(int width, int height, const Shader& shader) :
             shader(shader),
             screenSize(width, height),
             camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)),
@@ -47,9 +47,25 @@ namespace sgl
 		virtual void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1)) = 0;
 		virtual void End() = 0;
 		virtual void Flush() = 0;
-		virtual void MoveCamera(const glm::vec2& val) = 0;
 		virtual void SubmitTexture(const Texture2D* texture) = 0;
 
-		static Renderer2D* Create(unsigned int width, unsigned int height, const Shader& shader);
+		void SetCamera(const glm::vec2& val)
+		{
+			camera.GetPos() = glm::vec3(val, 0);
+		}
+
+		Camera2D& GetCamera()
+		{
+			return camera;
+		}
+
+		void SetScreenSize(int width, int height)
+		{
+			screenSize.x = width;
+			screenSize.y = height;
+			camera = Camera2D(width, height);
+		}
+
+		static Renderer2D* Create(int width, int height, const Shader& shader);
 	};
 }

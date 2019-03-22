@@ -45,6 +45,7 @@ namespace sgl
 		void operator=(const Texture2D&) = delete;
 
 		void SetData(void* pixels);
+		void SetSize(int _width, int _height);
 		void SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
 		void Bind(unsigned int slot) const;
 		void Unbind() const;

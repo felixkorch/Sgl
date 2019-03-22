@@ -81,6 +81,12 @@ namespace sgl
 	}
 
 
+	void Texture2D::SetSize(int _width, int _height)
+	{
+		width = width;
+		height = height;
+	}
+
 	void Texture2D::SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
 	{
 		auto data = new std::uint8_t[width * height * 4];
