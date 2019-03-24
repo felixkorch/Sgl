@@ -98,7 +98,7 @@ namespace sgl
 		#endif
 	}
 
-	/*************************    Private Helper Functions    ********************************************************/
+	/***************************************    Private Helper Functions    **************************************************/
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();

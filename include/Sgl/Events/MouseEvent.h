@@ -26,7 +26,7 @@ namespace sgl
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "CursorEvent: (" << xPos << ", " << yPos << ")";
+			ss << "Mouse Position: (" << xPos << ", " << yPos << ")";
 			return ss.str();
 		}
 

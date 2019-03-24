@@ -13,18 +13,22 @@ namespace sgl
 	class Window {
 	protected:
 		using EventCallbackFn = std::function<void(Event*)>;
-		EventCallbackFn eventCallbackFn;
+		EventCallbackFn CallEventHandler;
 	public:
 		virtual ~Window() {}
 		virtual bool IsClosed() const = 0;
 		virtual void Clear() const = 0;
 		virtual void Update() const = 0;
 		virtual void SetVSync(bool enabled) = 0;
-		virtual void SetEventCallback(EventCallbackFn fn) = 0;
 		virtual void* GetNativeWindow() const = 0;
 		virtual void ToggleFullScreen() = 0;
 		virtual int GetWindowWidth() = 0;
 		virtual int GetWindowHeight() = 0;
+
+		void SetEventCallback(EventCallbackFn fn)
+		{
+			CallEventHandler = fn;
+		}
 
 		static Window* Create(unsigned int width, unsigned int height, const char* title);
 	};

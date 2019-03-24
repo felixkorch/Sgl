@@ -46,7 +46,7 @@ namespace sgl
 				width, height, 0, GetTextureFormat(params.format), GL_UNSIGNED_BYTE, data);
 		}
 
-		glGenerateMipmap(GL_TEXTURE_2D);
+		//glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
     int Texture2D::GetTextureWrap(TextureWrap wrap)

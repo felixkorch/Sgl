@@ -23,6 +23,38 @@ namespace sgl
 		static EventType GetStaticType() { return EventType::WindowClose; }
 	};
 
+	class WindowResizedEvent : public Event {
+	private:
+		int width, height;
+	public:
+		WindowResizedEvent(int width, int height)
+			: width(width), height(height) {}
+
+		const EventType GetEventType() const override
+		{
+			return EventType::WindowResizedEvent;
+		}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowResizedEvent occured!";
+			return ss.str();
+		}
+
+		int GetWidth()
+		{
+			return width;
+		}
+
+		int GetHeight()
+		{
+			return height;
+		}
+
+		static EventType GetStaticType() { return EventType::WindowResizedEvent; }
+	};
+
 	class DropEvent : public Event {
 	private:
 		std::vector<std::string> paths;

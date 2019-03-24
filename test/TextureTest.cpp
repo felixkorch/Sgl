@@ -10,17 +10,16 @@
 #define FragmentShader Shader::Core_Fragment_Shader2D
 #endif
 
-#define Width 512
-#define Height 480
+#define Width 1280
+#define Height 720
 
-#define TexWidth 32
-#define TexHeight 30
+#define TexWidth 512
+#define TexHeight 480
 
 using namespace sgl;
 
 class MainLayer : public Layer {
 private:
-	Window& window;
 	Renderer2D* renderer;
 	Shader shader;
 	Texture2D *tex0, *tex1;
@@ -29,14 +28,19 @@ private:
 	Renderable2D renderable0, renderable1;
 
 	static unsigned int nesRGB[64];
+	const float aspectRatio = (float)TexWidth / (float)TexHeight;
 
 public:
-	MainLayer(Window& window)
-		: Layer("GameLayer"), shader(VertexShader, FragmentShader), window(window)
+	MainLayer()
+		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
 	{
 		renderer = Renderer2D::Create(Width, Height, shader);
-		renderable0 = Renderable2D(glm::vec2(Width, Height), glm::vec2(0, 0));
-		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0,0));
+
+		const float scaledWidth = (float)Height * aspectRatio;
+		const float xPosition = Width / 2 - scaledWidth / 2;
+
+		renderable0 = Renderable2D(glm::vec2(scaledWidth, Height), glm::vec2(xPosition, 0));
+		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0, 0));
 		renderable1.tid = 1;
 
 		tex0 = new Texture2D(TexWidth, TexHeight);
@@ -93,31 +97,28 @@ public:
 		renderer->Flush();
 	}
 
-	// Logic to scale the frame when entering fullscreen
-	void ToggleFullScreen()
-	{
-		window.ToggleFullScreen();
-		int newWidth = (float)window.GetWindowHeight() * renderable0.bounds.size.x / renderable0.bounds.size.y;
-		int newHeight = window.GetWindowHeight();
-		renderable0 = Renderable2D(glm::vec2(newWidth, newHeight), glm::vec2(0, 0));
-		renderable0.bounds.pos.x = window.GetWindowWidth() / 2 - renderable0.bounds.size.x / 2; // Centralize the texture
-		tex0->SetSize(renderable0.bounds.size.x, renderable0.bounds.size.y);
-		tex0->SetData(pixels);
-		renderer->SetScreenSize(window.GetWindowWidth(), window.GetWindowHeight());
-	}
-
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
-			auto& c = (DropEvent&)event;
-			SglTrace(c.ToString());
+			auto& e = (DropEvent&)event;
+
+			SglTrace(e.ToString());
 		}
+
 		else if (event.GetEventType() == EventType::KeyPressed) {
 			auto& e = (KeyPressedEvent&)event;
+		}
 
-			// Fullscreen (Alt-Enter)
-			if (e.GetKeyCode() == SGL_KEY_ENTER && Input::IsKeyPressed(SGL_KEY_LEFT_ALT))
-				ToggleFullScreen();
+		else if (event.GetEventType() == EventType::WindowResizedEvent) {
+			auto& e = (WindowResizedEvent&)event;
+			// Width according to aspect ratio
+			const float scaledWidth = (float)e.GetHeight() * aspectRatio;
+			// Centralize the frame
+			const float xPosition = e.GetWidth() / 2 - scaledWidth / 2;
+			// Update the renderable
+			renderable0 = Renderable2D(glm::vec2(scaledWidth, e.GetHeight()), glm::vec2(xPosition, 0));
+			// Set size of camera
+			renderer->SetScreenSize(e.GetWidth(), e.GetHeight());
 		}
 	}
 };
@@ -166,15 +167,12 @@ public:
 };
 
 class NESApp : public Application {
-private:
-	MainLayer* mainLayer;
 public:
 
 	NESApp()
 		: Application(Width, Height, "TextureTest")
 	{
-		mainLayer = new MainLayer(*window);
-		PushLayer(mainLayer);
+		PushLayer(new MainLayer);
 	}
 
 	~NESApp() {}

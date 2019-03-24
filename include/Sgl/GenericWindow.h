@@ -5,7 +5,7 @@
 namespace sgl
 {
 	class GenericWindow : public Window {
-	private:
+	protected:
 		GLFWwindow* window;
 		WindowProperties props;
 		bool vSyncOn;
@@ -22,7 +22,6 @@ namespace sgl
 		virtual void Clear() const override;
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
-		virtual void SetEventCallback(EventCallbackFn fn) override;
 		virtual void ToggleFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
@@ -48,6 +47,6 @@ namespace sgl
 			return props.height;
 		}
 
-		int InitWindow();
+		virtual int Init();
 	};
 }

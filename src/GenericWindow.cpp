@@ -1,6 +1,7 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/GenericWindow.h"
 #include "Sgl/Events/KeyEvent.h"
+#include "Sgl/Events/KeyCodes.h"
 #include "Sgl/Events/ApplicationEvent.h"
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Input.h"
@@ -26,7 +27,7 @@ namespace sgl
 	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
 	{
 		auto window = new GenericWindow(width, height, title);
-		if (window->InitWindow() == -1) {
+		if (window->Init() == -1) {
 			delete window;
 			return nullptr;
 		}
@@ -60,11 +61,6 @@ namespace sgl
 		vSyncOn = enabled;
 	}
 
-	void GenericWindow::SetEventCallback(EventCallbackFn fn)
-	{
-		eventCallbackFn = fn;
-	}
-
 	void GenericWindow::ToggleFullScreen()
 	{
 		auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -79,7 +75,7 @@ namespace sgl
 		fullScreen = !fullScreen;
 	}
 
-	int GenericWindow::InitWindow()
+	int GenericWindow::Init()
 	{
 		if (!glfwInit()) {
 			SglCoreError("glfwInit failed!");
@@ -104,6 +100,12 @@ namespace sgl
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, this);
 
+		// Callback when the window gets resized
+		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			win.CallEventHandler(new WindowResizedEvent(width, height));
+		});
+
 		// Callback to set the viewport to match the new size of the window
 		glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
 			glViewport(0, 0, width, height);
@@ -112,7 +114,7 @@ namespace sgl
 		// Drop Event
 		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			win.eventCallbackFn(new DropEvent(count, paths));
+			win.CallEventHandler(new DropEvent(count, paths));
 		});
 
 		// Mouse Events
@@ -121,11 +123,11 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-				win.eventCallbackFn(new MouseButtonPressed(button));
+				win.CallEventHandler(new MouseButtonPressed(button));
 				break;
 			}
 			case GLFW_RELEASE: {
-				win.eventCallbackFn(new MouseButtonReleased(button));
+				win.CallEventHandler(new MouseButtonReleased(button));
 				break;
 			}
 			}
@@ -137,15 +139,20 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-				win.eventCallbackFn(new KeyPressedEvent(key, 0));
+
+				// Fullscreen (Alt-Enter) TODO: Set on client side
+				if (key == SGL_KEY_ENTER && Input::IsKeyPressed(SGL_KEY_LEFT_ALT))
+					win.ToggleFullScreen();
+
+				win.CallEventHandler(new KeyPressedEvent(key, 0));
 				break;
 			}
 			case GLFW_RELEASE: {
-				win.eventCallbackFn(new KeyReleasedEvent(key));
+				win.CallEventHandler(new KeyReleasedEvent(key));
 				break;
 			}
 			case GLFW_REPEAT: {
-				win.eventCallbackFn(new KeyPressedEvent(key, 1));
+				win.CallEventHandler(new KeyPressedEvent(key, 1));
 				break;
 			}
 			}
@@ -153,18 +160,16 @@ namespace sgl
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
 			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
-			win.eventCallbackFn(new WindowCloseEvent);
+			win.CallEventHandler(new WindowCloseEvent);
 		});
 
-		// Initialize OpenGL for desktop or embedded
-		#ifndef USE_EMSCRIPTEN
+		// Initialize OpenGL for desktop
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			SglCoreError("Failed to initialize Glad");
 			return -1;
 		}
-		glEnable(GL_MULTISAMPLE); // Only in core
-		#endif
 
+		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);

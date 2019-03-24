@@ -71,15 +71,11 @@ namespace sgl
 	attribute vec4 color;
 	attribute vec2 uv;
 	attribute float tid;
-
 	varying vec4  f_color;
 	varying vec2  f_uv;
 	varying float f_tid;
-
 	uniform mat4 u_Proj;
-
 	void main() {
-
 		gl_Position = u_Proj * vec4(position, 1.0);
 		f_color = color;
 		f_uv = uv;
@@ -90,31 +86,16 @@ namespace sgl
 	const char* Shader::GLES2_Fragment_Shader2D = R"END(
 	#version 100
 	precision mediump float;
-
 	uniform sampler2D f_Sampler[16];
-
 	varying vec4  f_color;
 	varying vec2  f_uv;
 	varying float f_tid;
-
-	vec4 GetValueFromSamplerArray(float ndx, vec2 uv) { // Temporary solution for indexing the sampler array, only 6 textures allowed atm.
-		if (ndx < .5) {
-			return texture2D(f_Sampler[0], uv);
-		} else if (ndx < 1.5) {
-			return texture2D(f_Sampler[1], uv);
-		} else if (ndx < 2.5) {
-			return texture2D(f_Sampler[2], uv);
-		} else if (ndx < 3.5) {
-			return texture2D(f_Sampler[3], uv);
-		} else if (ndx < 4.5) {
-			return texture2D(f_Sampler[4], uv);
-		} else {
-			return texture2D(f_Sampler[5], uv);
-		}
-	}
-
 	void main() {
-		GetValueFromSamplerArray(f_tid, f_uv);
+		int tid = int(f_tid);
+		for (int i = 0; i < 16; i++) {
+			if (tid == i)
+				gl_FragColor = texture2D(f_Sampler[i], f_uv);
+		}
 	}
 	)END";
 
