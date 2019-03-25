@@ -7,7 +7,6 @@ namespace sgl
 	class GenericWindow : public Window {
 	protected:
 		GLFWwindow* window;
-		WindowProperties props;
 		bool vSyncOn;
 		bool fullScreen;
 		int windowedXPos;
@@ -15,7 +14,7 @@ namespace sgl
 
 	public:
 
-		GenericWindow(int width, int height, const char* title);
+		GenericWindow(WindowProperties props);
 		~GenericWindow();
 
 		virtual bool IsClosed() const override;
@@ -23,6 +22,8 @@ namespace sgl
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
+		virtual bool IsVSync() override;
+		virtual bool IsFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
 		{

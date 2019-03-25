@@ -19,12 +19,11 @@ namespace sgl
 		int fullScreenHeight;
 	protected:
 		GLFWwindow* window;
-		WindowProperties props;
 		bool vSyncOn;
 		bool fullScreen;
 	public:
 
-		WebWindow(int width, int height, const char* title);
+		WebWindow(WindowProperties props);
 		~WebWindow();
 
 		virtual bool IsClosed() const override;
@@ -32,6 +31,8 @@ namespace sgl
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
+		virtual bool IsVSync() override;
+		virtual bool IsFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
 		{

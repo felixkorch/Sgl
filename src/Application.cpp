@@ -20,16 +20,17 @@ namespace sgl
 
 	Application* Application::sInstance = nullptr;
 
-	Application::Application(int width, int height, const char* title)
+	Application::Application(WindowProperties props)
 		: layerstack(new LayerStack)
 	{
 		SglAssert(sInstance == nullptr, "Application already exists!");
 		sInstance = this;
-		window = Window::Create(width, height, title);
+		window = Window::Create(props);
 		if (!window) {
 			running = false;
 			return;
 		}
+
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
 		SglCoreInfo("Sucessfully initialized the app!");

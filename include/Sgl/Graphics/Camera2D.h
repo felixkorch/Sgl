@@ -16,7 +16,7 @@ namespace sgl
 		Camera2D(const glm::vec2& size)
 			: ortho(glm::ortho(0.0f, size.x, 0.0f, size.y, -1.0f, 1.0f)), pos{}
 		{
-			SglCoreTrace("Created a new Camera2D with size ({}, {})", size.x, size.y);
+			//SglCoreTrace("Created a new Camera2D with size ({}, {})", size.x, size.y);
 		}
 
 		Camera2D(int width, int height)

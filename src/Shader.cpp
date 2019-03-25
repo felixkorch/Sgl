@@ -7,108 +7,46 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 namespace sgl
 {
-	/* Some simple shader programs */
-	const char* Shader::Core_Vertex_Shader2D = R"END(
-	#version 330 core
-	layout(location = 0) in vec3 position;
-	layout(location = 1) in vec4 color;
-	layout(location = 2) in vec2 uv;
-	layout(location = 3) in float tid;
+	const char* Shader::Shader2D_Core = {
+		#include "Sgl/Shaders/Simple2D.shader"
+	};
 
-	out vec4  f_color;
-	out vec2  f_uv;
-	out float f_tid;
-
-	uniform mat4 u_Proj;
-
-	void main() {
-		gl_Position = u_Proj * vec4(position, 1.0);
-		f_color = color;
-		f_uv = uv;
-		f_tid = tid;
-	}
-	)END";
-
-	const char* Shader::Core_Fragment_Shader2D = R"END(
-	#version 330 core
-	uniform sampler2D f_Sampler[16];
-
-	out vec4 fragColor;
-
-	in vec4  f_color;
-	in vec2  f_uv;
-	in float f_tid;
-
-	vec4 GetValueFromSamplerArray(float ndx, vec2 uv) { // Temporary solution for indexing the sampler array, only 6 textures allowed atm.
-		for(float f = 0.5; f < 16; f++)
-		if (ndx < .5) {
-			return texture2D(f_Sampler[0], uv);
-		} else if (ndx < 1.5) {
-			return texture2D(f_Sampler[1], uv);
-		} else if (ndx < 2.5) {
-			return texture2D(f_Sampler[2], uv);
-		} else if (ndx < 3.5) {
-			return texture2D(f_Sampler[3], uv);
-		} else if (ndx < 4.5) {
-			return texture2D(f_Sampler[4], uv);
-		} else {
-			return texture2D(f_Sampler[5], uv);
-		}
-	}
-
-	void main() {
-		fragColor = GetValueFromSamplerArray(f_tid, f_uv);
-	}
-
-	)END";
-
-	const char* Shader::GLES2_Vertex_Shader2D = R"END(
-	#version 100
-	attribute vec3 position;
-	attribute vec4 color;
-	attribute vec2 uv;
-	attribute float tid;
-	varying vec4  f_color;
-	varying vec2  f_uv;
-	varying float f_tid;
-	uniform mat4 u_Proj;
-	void main() {
-		gl_Position = u_Proj * vec4(position, 1.0);
-		f_color = color;
-		f_uv = uv;
-		f_tid = tid;
-	}
-	)END";
-
-	const char* Shader::GLES2_Fragment_Shader2D = R"END(
-	#version 100
-	precision mediump float;
-	uniform sampler2D f_Sampler[16];
-	varying vec4  f_color;
-	varying vec2  f_uv;
-	varying float f_tid;
-	void main() {
-		int tid = int(f_tid);
-		for (int i = 0; i < 16; i++) {
-			if (tid == i)
-				gl_FragColor = texture2D(f_Sampler[i], f_uv);
-		}
-	}
-	)END";
+	const char* Shader::Shader2D_ES2 = {
+		#include "Sgl/Shaders/Simple2D.gles.shader"
+	};
 
 	Shader::Shader(const std::string& filepath)
         : rendererID(0), filePath(filepath)
 	{
-		ShaderProgramSource source = ParseShader(filepath);
+		std::ifstream stream(filepath);
+
+		if (!stream.good()) {
+			SglCoreError("Shader not found, path given: {}", filepath);
+			return;
+		}
+
+		std::stringstream str;
+		str << stream.rdbuf();
+
+		ShaderProgramSource source = ParseShader(str);
 		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	}
 
 	Shader::Shader(const char* vertexShader, const char* fragmentShader)
 	{
 		rendererID = CreateShader(vertexShader, fragmentShader);
+	}
+
+	Shader::Shader(const char* shader)
+	{
+		std::stringstream str;
+		str << shader;
+		ShaderProgramSource source = ParseShader(str);
+		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	}
 
 	Shader::~Shader()
@@ -212,14 +150,8 @@ namespace sgl
 		return id;
 	}
 
-	ShaderProgramSource Shader::ParseShader(const std::string& filepath)
+	ShaderProgramSource Shader::ParseShader(std::stringstream& str)
 	{
-		std::ifstream stream(filepath);
-
-		if (!stream.good()) {
-			SglCoreError("Shader not found, path given: {}", filepath);
-		}
-
 		enum class ShaderType {
 			NONE = -1, VERTEX = 0, FRAGMENT = 1
 		};
@@ -228,7 +160,9 @@ namespace sgl
 		std::stringstream ss[2];
 		ShaderType type = ShaderType::NONE;
 
-		while (getline(stream, line)) {
+		while (std::getline(str, line)) {
+			if(line == "")
+				continue;
 			if (line.find("#shader") != std::string::npos) {
 
 				if (line.find("vertex") != std::string::npos)
@@ -238,6 +172,10 @@ namespace sgl
 					type = ShaderType::FRAGMENT;
 			}
 			else {
+				if (type == ShaderType::NONE) {
+					SglCoreError("Invalid shader format. Needs to contain vertex / fragments directives.");
+					return {};
+				}
 				ss[(int)type] << line << '\n';
 			}
 		}

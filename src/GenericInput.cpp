@@ -6,7 +6,7 @@
 
 namespace sgl
 {
-	Input* Input::sInstance = new GenericInput;
+	std::shared_ptr<Input> Input::sInstance = std::make_shared<GenericInput>();
 
 	bool GenericInput::IsKeyPressedImpl(int keycode)
 	{

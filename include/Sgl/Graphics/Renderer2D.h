@@ -67,5 +67,6 @@ namespace sgl
 		}
 
 		static Renderer2D* Create(int width, int height, const Shader& shader);
+		static Renderer2D* Create(int width, int height);
 	};
 }

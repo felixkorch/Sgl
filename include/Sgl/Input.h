@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <vector>
+#include <memory>
 
 namespace sgl
 {
@@ -56,6 +57,7 @@ namespace sgl
 		virtual double GetMousePositionYImpl() = 0;
 		virtual std::pair<double, double> GetMousePositionImpl() = 0;
 	private:
-		static Input* sInstance;
+		// TODO: Is this instance needed?
+		static std::shared_ptr<Input> sInstance;
 	};
 }

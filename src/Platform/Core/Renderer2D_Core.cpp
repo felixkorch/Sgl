@@ -141,8 +141,13 @@ namespace sgl
 
 	}
 
-	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader)
+	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader = Shader(Shader::Shader2D_Core))
 	{
 		return new Renderer2D_Core(width, height, shader);
+	}
+
+	Renderer2D* Renderer2D::Create(int width, int height)
+	{
+		return new Renderer2D_Core(width, height, Shader(Shader::Shader2D_Core));
 	}
 }

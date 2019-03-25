@@ -15,7 +15,7 @@ namespace sgl
 		EventQueue eventQueue;
 		bool running = true;
 	public:
-		Application(int width, int height, const char* title);
+		Application(WindowProperties props);
 		virtual ~Application();
 
 		void PushLayer(Layer* layer);

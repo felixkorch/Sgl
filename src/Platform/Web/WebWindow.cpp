@@ -10,8 +10,8 @@
 namespace sgl
 {
 
-	WebWindow::WebWindow(int width, int height, const char* title)
-		: props{ width, height, title }, vSyncOn(true), fullScreen(false) {}
+	WebWindow::WebWindow(WindowProperties props)
+		: Window(props), vSyncOn(true), fullScreen(false) {}
 
 	WebWindow::~WebWindow()
 	{
@@ -19,9 +19,9 @@ namespace sgl
 		glfwTerminate();
 	}
 
-	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
+	Window* Window::Create(WindowProperties props)
 	{
-		auto window = new WebWindow(width, height, title);
+		auto window = new WebWindow(props);
 		if (window->Init() == -1) {
 			delete window;
 			return nullptr;
@@ -77,6 +77,16 @@ namespace sgl
 		#else
 		ToggleStandardFullScreen();
 		#endif
+	}
+
+	bool WebWindow::IsVSync()
+	{
+		return vSyncOn;
+	}
+
+	bool WebWindow::IsFullScreen()
+	{
+		return fullScreen;
 	}
 
 	int WebWindow::Init()

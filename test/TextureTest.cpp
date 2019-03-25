@@ -2,14 +2,6 @@
 #include <ctime>
 #include <functional>
 
-#ifdef USE_EMSCRIPTEN
-#define VertexShader   Shader::GLES2_Vertex_Shader2D
-#define FragmentShader Shader::GLES2_Fragment_Shader2D
-#else
-#define VertexShader   Shader::Core_Vertex_Shader2D
-#define FragmentShader Shader::Core_Fragment_Shader2D
-#endif
-
 #define Width 1280
 #define Height 720
 
@@ -21,7 +13,6 @@ using namespace sgl;
 class MainLayer : public Layer {
 private:
 	Renderer2D* renderer;
-	Shader shader;
 	Texture2D *tex0, *tex1;
 	std::uint8_t* pixels; // pixels[ x * height * depth + y * depth + z ] = elements[x][y][z] 
 
@@ -32,9 +23,9 @@ private:
 
 public:
 	MainLayer()
-		: Layer("GameLayer"), shader(VertexShader, FragmentShader)
+		: Layer("GameLayer")
 	{
-		renderer = Renderer2D::Create(Width, Height, shader);
+		renderer = Renderer2D::Create(Width, Height);
 
 		const float scaledWidth = (float)Height * aspectRatio;
 		const float xPosition = Width / 2 - scaledWidth / 2;
@@ -166,11 +157,20 @@ public:
 	}
 };
 
+const WindowProperties props {
+		Width,         // WindowWidth
+		Height,        // WindowHeight
+		"TextureTest", // Title
+		false          // Resizable
+};
+
 class NESApp : public Application {
+private:
+
 public:
 
 	NESApp()
-		: Application(Width, Height, "TextureTest")
+		: Application(props)
 	{
 		PushLayer(new MainLayer);
 	}

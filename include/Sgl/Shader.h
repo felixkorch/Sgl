@@ -15,10 +15,8 @@ namespace sgl
 	class Shader {
 	public:
 		/* Some simple shader programs */
-		static const char* Core_Vertex_Shader2D;
-		static const char* Core_Fragment_Shader2D;
-		static const char* GLES2_Vertex_Shader2D;
-		static const char* GLES2_Fragment_Shader2D;
+		static const char* Shader2D_Core;
+		static const char* Shader2D_ES2;
 	private:
 		unsigned int rendererID;
 		std::string filePath;
@@ -26,6 +24,7 @@ namespace sgl
 	public:
 		Shader(const std::string& filepath);
 		Shader(const char* vertexShader, const char* fragmentShader);
+		Shader(const char* shader);
 		~Shader();
 		void Bind() const;
 		void Unbind() const;
@@ -38,7 +37,7 @@ namespace sgl
 		int GetUniformLocation(const std::string& name);
 		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 		unsigned int CompileShader(unsigned int type, const std::string& source);
-		ShaderProgramSource ParseShader(const std::string& filepath);
+		ShaderProgramSource ParseShader(std::stringstream& str);
 		void SetUniformData(UniformHandler& uniformHandler);
 
 		unsigned int GetRendererID()

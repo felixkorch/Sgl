@@ -131,8 +131,13 @@ namespace sgl
 		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
 	}
 
-	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader)
+	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader = Shader(Shader::Shader2D_ES2))
 	{
 		return new Renderer2D_ES2(width, height, shader);
+	}
+
+	Renderer2D* Renderer2D::Create(int width, int height)
+	{
+		return new Renderer2D_ES2(width, height, Shader(Shader::Shader2D_ES2));
 	}
 }

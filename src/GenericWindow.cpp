@@ -12,8 +12,8 @@
 
 namespace sgl
 {
-	GenericWindow::GenericWindow(int width, int height, const char* title)
-		: props{ width, height, title }, vSyncOn(true), fullScreen(false)
+	GenericWindow::GenericWindow(WindowProperties props)
+		: Window(props), vSyncOn(true), fullScreen(false)
 	{
 		glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
 	}
@@ -24,9 +24,9 @@ namespace sgl
 		glfwTerminate();
 	}
 
-	Window* Window::Create(unsigned int width, unsigned int height, const char* title)
+	Window* Window::Create(WindowProperties props)
 	{
-		auto window = new GenericWindow(width, height, title);
+		auto window = new GenericWindow(props);
 		if (window->Init() == -1) {
 			delete window;
 			return nullptr;
@@ -75,6 +75,16 @@ namespace sgl
 		fullScreen = !fullScreen;
 	}
 
+	bool GenericWindow::IsVSync()
+	{
+		return vSyncOn;
+	}
+
+	bool GenericWindow::IsFullScreen()
+	{
+		return fullScreen;
+	}
+
 	int GenericWindow::Init()
 	{
 		if (!glfwInit()) {
@@ -87,7 +97,12 @@ namespace sgl
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_SAMPLES, 4);
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+		if(props.resizable)
+			glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		else
+			glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 		SetVSync(true);
 
 		window = glfwCreateWindow(props.width, props.height, props.title, nullptr, nullptr);
