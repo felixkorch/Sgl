@@ -38,7 +38,7 @@ namespace sgl
 		static TextureParameters DefaultParams;
 
 	public:
-		Texture2D(const std::string& filePath, TextureParameters params = DefaultParams);
+		Texture2D(TextureParameters params = DefaultParams);
         Texture2D(int width, int height, TextureParameters params = DefaultParams);
 		~Texture2D();
 		Texture2D(const Texture2D&) = delete;
@@ -46,6 +46,8 @@ namespace sgl
 
 		void SetData(void* pixels);
 		void SetSize(int _width, int _height);
+		void SetParams(TextureParameters parameters);
+		void LoadFromFile();
 		void SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
 		void Bind(unsigned int slot) const;
 		void Unbind() const;
@@ -53,6 +55,5 @@ namespace sgl
 	private:
         int GetTextureWrap(TextureWrap wrap);
         int GetTextureFormat(TextureFormat format);
-		void SetParams(TextureParameters parameters, const void* data);
 	};
 }

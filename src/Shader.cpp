@@ -1,7 +1,7 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/Shader.h"
 #include "Sgl/ShaderUniform.h"
-#include "Sgl/Common.h"
+#include "Sgl/Log.h"
 #include "glm/glm.hpp"
 
 #include <iostream>

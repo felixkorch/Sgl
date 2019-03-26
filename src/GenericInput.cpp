@@ -1,7 +1,7 @@
 #include "Sgl/GenericInput.h"
 #include "Sgl/GenericWindow.h"
 #include "Sgl/Application.h"
-#include "Sgl/Common.h"
+#include "Sgl/Log.h"
 #include "GLFW/glfw3.h"
 
 namespace sgl

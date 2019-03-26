@@ -1,5 +1,6 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/Common.h"
+#include "Sgl/Log.h"
 #include "Sgl/Application.h"
 #include "Sgl/LayerStack.h"
 #include "Sgl/Window.h"
@@ -86,7 +87,7 @@ namespace sgl
 			ProcessEvents();
 
 			// Update
-			for (Layer* l : *layerstack) {
+			for (auto l : *layerstack) {
 				l->OnUpdate();
 			}
 			window->Update();
@@ -99,7 +100,6 @@ namespace sgl
 		#endif
 	}
 
-	/***************************************    Private Helper Functions    **************************************************/
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();

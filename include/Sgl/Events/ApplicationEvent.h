@@ -42,12 +42,12 @@ namespace sgl
 			return ss.str();
 		}
 
-		int GetWidth()
+		int GetWidth() const
 		{
 			return width;
 		}
 
-		int GetHeight()
+		int GetHeight() const
 		{
 			return height;
 		}
@@ -72,7 +72,7 @@ namespace sgl
 			return EventType::DropEvent;
 		}
 
-		std::vector<std::string> GetPaths()
+		std::vector<std::string> GetPaths() const
 		{
 			return paths;
 		}

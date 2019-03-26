@@ -26,7 +26,7 @@ namespace sgl
 
 	Event* EventQueue::GetNext()
 	{
-		if(!events.empty())
+		if (!events.empty())
 			return events.front();
 		return nullptr;
 	}

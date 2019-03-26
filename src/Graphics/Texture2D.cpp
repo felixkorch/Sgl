@@ -6,47 +6,33 @@
 
 namespace sgl
 {
-	Texture2D::Texture2D(const std::string& filePath, TextureParameters params)
-		: rendererID(0), filePath(filePath), width(0), height(0), bpp(0), texParams(params)
+	Texture2D::Texture2D(TextureParameters params)
+		: rendererID(0), filePath("NULL"), width(0), height(0), bpp(0), texParams(params)
 	{
-		stbi_set_flip_vertically_on_load(1);
-		auto buffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
-
 		glGenTextures(1, &rendererID);
-		glBindTexture(GL_TEXTURE_2D, rendererID);
-
-		SetParams(params, buffer);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		if (buffer)
-			stbi_image_free(buffer);
+		SetParams(params);
 	}
 
     Texture2D::Texture2D(int width, int height, TextureParameters params)
 		: rendererID(0), filePath("NULL"), width(width), height(height), bpp(0), texParams(params)
 	{
 		glGenTextures(1, &rendererID);
-		glBindTexture(GL_TEXTURE_2D, rendererID);
-
-		SetParams(params, nullptr);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
+		SetParams(params);
 	}
 
-	void Texture2D::SetParams(TextureParameters params, const void* data)
+	void Texture2D::SetParams(TextureParameters params)
 	{
+		// Bind the texture
+		glBindTexture(GL_TEXTURE_2D, rendererID);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(params.wrap));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(params.wrap));
-
-		if (data) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format),
-				width, height, 0, GetTextureFormat(params.format), GL_UNSIGNED_BYTE, data);
-		}
-
 		//glGenerateMipmap(GL_TEXTURE_2D);
+
+		// Unbind the texture
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
     int Texture2D::GetTextureWrap(TextureWrap wrap)
@@ -85,6 +71,17 @@ namespace sgl
 	{
 		width = width;
 		height = height;
+	}
+
+	void Texture2D::LoadFromFile()
+	{
+		stbi_set_flip_vertically_on_load(1);
+		auto buffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
+		if (buffer)
+			stbi_image_free(buffer);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format),
+			width, height, 0, GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, buffer);
 	}
 
 	void Texture2D::SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)

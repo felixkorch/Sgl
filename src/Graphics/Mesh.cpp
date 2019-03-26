@@ -4,6 +4,7 @@
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/IndexBuffer.h"
 #include "Sgl/Graphics/Material.h"
+#include "Sgl/Log.h"
 #include "Sgl/Common.h"
 #include "obj_loader/OBJ_Loader.h"
 #include <string>

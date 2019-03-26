@@ -5,7 +5,7 @@
 #include "Sgl/Events/ApplicationEvent.h"
 #include "Sgl/Events/MouseEvent.h"
 #include "Sgl/Input.h"
-#include "Sgl/Common.h"
+#include "Sgl/Log.h"
 
 #include <functional>
 #include <array>

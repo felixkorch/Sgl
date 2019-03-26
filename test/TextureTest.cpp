@@ -12,21 +12,24 @@ using namespace sgl;
 
 class MainLayer : public Layer {
 private:
-	Renderer2D* renderer;
-	Texture2D *tex0, *tex1;
-	std::uint8_t* pixels; // pixels[ x * height * depth + y * depth + z ] = elements[x][y][z] 
+	std::unique_ptr<Renderer2D> renderer;
+	std::unique_ptr<std::uint8_t[]> pixels; // pixels[ x * height * depth + y * depth + z ] = elements[x][y][z] 
 
+	Texture2D tex0, tex1;
 	Renderable2D renderable0, renderable1;
 
 	static unsigned int nesRGB[64];
 	const float aspectRatio = (float)TexWidth / (float)TexHeight;
 
 public:
-	MainLayer()
-		: Layer("GameLayer")
-	{
-		renderer = Renderer2D::Create(Width, Height);
+	MainLayer() :
+		Layer("GameLayer"),
+		renderer(Renderer2D::Create(Width, Height)),
+		pixels(make_unique<std::uint8_t[]>(TexWidth * TexHeight * 4)),
+		tex0(TexWidth, TexHeight),
+		tex1(100, 100)
 
+	{
 		const float scaledWidth = (float)Height * aspectRatio;
 		const float xPosition = Width / 2 - scaledWidth / 2;
 
@@ -34,13 +37,10 @@ public:
 		renderable1 = Renderable2D(glm::vec2(100, 100), glm::vec2(0, 0));
 		renderable1.tid = 1;
 
-		tex0 = new Texture2D(TexWidth, TexHeight);
-		tex1 = new Texture2D(100, 100);
-		tex1->SetColor(255, 150, 150, 255);
+		tex1.SetColor(255, 150, 150, 255);
+
 
 		srand(time(nullptr));
-
-		pixels = new std::uint8_t[TexWidth * TexHeight * 4];
 
 		int i, j;
 
@@ -54,7 +54,7 @@ public:
 			}
 		}
 
-		tex0->SetData(pixels);
+		tex0.SetData(pixels.get());
 	}
 
 	glm::vec4 HexToRgb(unsigned int hexValue)
@@ -71,10 +71,6 @@ public:
 
     ~MainLayer() override
 	{
-		delete pixels;
-		delete tex0;
-		delete tex1;
-		delete renderer;
 	}
 
 	void OnUpdate() override
@@ -82,8 +78,8 @@ public:
 		renderer->Begin();
 		renderer->Submit(renderable0);
 		//renderer->Submit(renderable1);
-		renderer->SubmitTexture(tex0);
-		renderer->SubmitTexture(tex1);
+		renderer->SubmitTexture(&tex0);
+		renderer->SubmitTexture(&tex1);
 		renderer->End();
 		renderer->Flush();
 	}
@@ -92,7 +88,6 @@ public:
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
 			auto& e = (DropEvent&)event;
-
 			SglTrace(e.ToString());
 		}
 
@@ -102,6 +97,7 @@ public:
 
 		else if (event.GetEventType() == EventType::WindowResizedEvent) {
 			auto& e = (WindowResizedEvent&)event;
+
 			// Width according to aspect ratio
 			const float scaledWidth = (float)e.GetHeight() * aspectRatio;
 			// Centralize the frame
