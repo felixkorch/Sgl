@@ -57,7 +57,6 @@ namespace sgl
 		virtual double GetMousePositionYImpl() = 0;
 		virtual std::pair<double, double> GetMousePositionImpl() = 0;
 	private:
-		// TODO: Is this instance needed?
 		static std::shared_ptr<Input> sInstance;
 	};
 }
