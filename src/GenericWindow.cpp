@@ -15,7 +15,7 @@ namespace sgl
 	GenericWindow::GenericWindow(WindowProperties props)
 		: Window(props), vSyncOn(true), fullScreen(false)
 	{
-		glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
+		//glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
 	}
 
 	GenericWindow::~GenericWindow()
