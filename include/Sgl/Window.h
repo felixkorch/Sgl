@@ -5,10 +5,17 @@
 namespace sgl
 {
 	struct WindowProperties {
-		int width = 1280;
-		int height = 720;
-		const char* title = "Default Title";
-		bool resizable = false;
+		int width;
+		int height;
+		bool resizable;
+		const char* title;
+
+		WindowProperties(int width, int height, bool resizable, const char* title = "Default Title") :
+			width(width),
+			height(height),
+			resizable(resizable),
+			title(title)
+		{}
 	};
 
 	class Window {
