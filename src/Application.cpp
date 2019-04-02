@@ -70,7 +70,7 @@ namespace sgl
 	void Application::Run()
 	{
 		// Variables used to measure FPS
-		double lastTime = glfwGetTime();
+		double lastTime, fpsCounter = glfwGetTime();
 		int nbFrames = 0;
 
 		#ifdef USE_EMSCRIPTEN
@@ -91,6 +91,14 @@ namespace sgl
 				l->OnUpdate();
 			}
 			window->Update();
+			
+			if(fps == -1)
+				continue;
+
+			while (glfwGetTime() < fpsCounter + 1.0 / fps) {
+        		// Wait if loop runs faster than given FPS
+    		}
+    		fpsCounter += 1.0 / fps;
 
 			#ifdef USE_EMSCRIPTEN
 		};
@@ -98,6 +106,11 @@ namespace sgl
 		#else
 		}
 		#endif
+	}
+	
+	void Application::ForceFramerate(int fps)
+	{
+		this->fps = fps;
 	}
 
 	void Application::ProcessEvents()
