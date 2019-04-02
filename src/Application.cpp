@@ -70,7 +70,8 @@ namespace sgl
 	void Application::Run()
 	{
 		// Variables used to measure FPS
-		double lastTime, fpsCounter = glfwGetTime();
+		double lastTime = glfwGetTime();
+		double fpsCounter = glfwGetTime();
 		int nbFrames = 0;
 
 		#ifdef USE_EMSCRIPTEN
