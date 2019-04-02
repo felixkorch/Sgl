@@ -93,11 +93,11 @@ namespace sgl
 			}
 			window->Update();
 			
-			if(fps == -1)
-				continue;
-
-			while (glfwGetTime() < fpsCounter + 1.0 / fps) {
-        		// Wait if loop runs faster than given FPS
+			if (fps != -1) {
+				while (glfwGetTime() < fpsCounter + 1.0 / fps) {
+        				// Wait if loop runs faster than given FPS
+    				}
+			}
     		}
     		fpsCounter += 1.0 / fps;
 
