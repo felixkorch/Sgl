@@ -1,6 +1,6 @@
 set(Sgl_TESTS
-	DropTest
-	MouseTest
+	# DropTest
+	# MouseTest
 	TextureTest
 )
 

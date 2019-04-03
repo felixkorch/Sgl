@@ -34,8 +34,34 @@ namespace sgl
 		return glfwWindowShouldClose(window);
 	}
 
-	void WebWindow::Clear() const
+	void WebWindow::SetFPS(int fps)
 	{
+		framesPerSecond = fps;
+	}
+
+	void WebWindow::MeasureFPS(int& nbFrames, double& lastTime)
+	{
+		double currentTime = glfwGetTime();
+		nbFrames++;
+		if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+			// Print and reset timer
+			auto time = 1000.0 / double(nbFrames);
+			SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+			nbFrames = 0;
+			lastTime += 1.0;
+		}
+	}
+
+	void WebWindow::Clear()
+	{
+		if (framesPerSecond != -1) {
+			while (glfwGetTime() < fpsCounter + 1.0 / framesPerSecond);
+			fpsCounter += 1.0 / framesPerSecond;
+		}
+
+		// Measure FPS
+		MeasureFPS(nbFrames, lastTime);
+
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}

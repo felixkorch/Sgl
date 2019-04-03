@@ -12,17 +12,24 @@ namespace sgl
 		int windowedXPos;
 		int windowedYPos;
 
+		// Variables used to measure FPS
+		int framesPerSecond;
+		int nbFrames;
+		double lastTime;
+		double fpsCounter;
+
 	public:
 
 		GenericWindow(WindowProperties props);
 		~GenericWindow();
 
 		virtual bool IsClosed() const override;
-		virtual void Clear() const override;
+		virtual void Clear() override;
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
 		virtual bool IsVSync() override;
+		virtual void SetFPS(int fps) override;
 		virtual bool IsFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
@@ -49,5 +56,8 @@ namespace sgl
 		}
 
 		virtual int Init();
+
+	private:
+		void MeasureFPS(int& nbFrames, double& lastTime);
 	};
 }

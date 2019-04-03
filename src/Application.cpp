@@ -69,19 +69,12 @@ namespace sgl
 
 	void Application::Run()
 	{
-		// Variables used to measure FPS
-		double lastTime = glfwGetTime();
-		double fpsCounter = glfwGetTime();
-		int nbFrames = 0;
-
 		#ifdef USE_EMSCRIPTEN
 		std::function<void()> mainLoop = [&]() {
 			#else
 		while (running) {
 			#endif
 
-			// Measure FPS
-			MeasureFPS(nbFrames, lastTime);
 			window->Clear();
 
 			// Event Loop
@@ -92,16 +85,8 @@ namespace sgl
 				l->OnUpdate();
 			}
 			window->Update();
-			
-			if (fps != -1) {
-				while (glfwGetTime() < fpsCounter + 1.0 / fps) {
-        				// Wait if loop runs faster than given FPS
-    				}
-			}
-    		}
-    		fpsCounter += 1.0 / fps;
 
-			#ifdef USE_EMSCRIPTEN
+		#ifdef USE_EMSCRIPTEN
 		};
 		emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);
 		#else
@@ -109,11 +94,6 @@ namespace sgl
 		#endif
 	}
 	
-	void Application::ForceFramerate(int fps)
-	{
-		this->fps = fps;
-	}
-
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();
@@ -128,19 +108,6 @@ namespace sgl
 			eventQueue.Pop();
 			e = eventQueue.GetNext();
 		}
-	}
-
-	void Application::MeasureFPS(int& nbFrames, double& lastTime)
-	{
-		double currentTime = glfwGetTime();
-			nbFrames++;
-			if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-				// Print and reset timer
-				auto time = 1000.0 / double(nbFrames);
-				SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-				nbFrames = 0;
-				lastTime += 1.0;
-			}
 	}
 
 

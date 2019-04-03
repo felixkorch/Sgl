@@ -116,5 +116,5 @@ namespace sgl
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	TextureParameters Texture2D::DefaultParams = { TextureWrap::REPEAT, TextureFormat::RGBA, TextureFilter::NEAREST };
+	TextureParameters Texture2D::DefaultParams = { TextureWrap::CLAMP_TO_EDGE, TextureFormat::RGBA, TextureFilter::NEAREST };
 }

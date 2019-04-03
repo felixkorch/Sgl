@@ -27,10 +27,11 @@ namespace sgl
 		Window(WindowProperties props) : props(props) {}
 		virtual ~Window() {}
 		virtual bool IsClosed() const = 0;
-		virtual void Clear() const = 0;
+		virtual void Clear() = 0;
 		virtual void Update() const = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() = 0;
+		virtual void SetFPS(int fps) = 0;
 		virtual void ToggleFullScreen() = 0;
 		virtual bool IsFullScreen() = 0;
 		virtual int GetWindowWidth() = 0;

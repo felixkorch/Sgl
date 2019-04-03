@@ -25,7 +25,7 @@ public:
 	MainLayer() :
 		Layer("GameLayer"),
 		renderer(Renderer2D::Create(Width, Height)),
-		pixels(make_unique<std::uint8_t[]>(TexWidth * TexHeight * 4)),
+		pixels(new std::uint8_t[TexWidth * TexHeight * 4]),
 		tex0(TexWidth, TexHeight),
 		tex1(100, 100)
 
@@ -156,8 +156,8 @@ public:
 const WindowProperties props {
 		Width,         // WindowWidth
 		Height,        // WindowHeight
+		false,         // Resizable
 		"TextureTest", // Title
-		false          // Resizable
 };
 
 class NESApp : public Application {
@@ -168,6 +168,7 @@ public:
 	NESApp()
 		: Application(props)
 	{
+		window->SetFPS(60);
 		PushLayer(new MainLayer);
 	}
 

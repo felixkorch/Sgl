@@ -14,7 +14,6 @@ namespace sgl
 		LayerStack* layerstack;
 		EventQueue eventQueue;
 		bool running = true;
-		int fps = -1;
 	public:
 		Application(WindowProperties props);
 		virtual ~Application();
@@ -24,7 +23,6 @@ namespace sgl
 		void OnEvent(Event* e);
 		bool OnWindowClose(Event* e);
 		void Run();
-		void ForceFramerate(int fps);
 		Window* GetWindow() { return window; }
 		static Application& Get() { return *sInstance; }
 	private:

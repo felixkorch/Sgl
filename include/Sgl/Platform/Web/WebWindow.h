@@ -21,13 +21,20 @@ namespace sgl
 		GLFWwindow* window;
 		bool vSyncOn;
 		bool fullScreen;
+
+		// Variables used to measure FPS
+		int framesPerSecond;
+		int nbFrames;
+		double lastTime;
+		double fpsCounter;
 	public:
 
 		WebWindow(WindowProperties props);
 		~WebWindow();
 
 		virtual bool IsClosed() const override;
-		virtual void Clear() const override;
+		virtual void Clear() override;
+		virtual void SetFPS(int fps) override;
 		virtual void Update() const override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
@@ -59,5 +66,6 @@ namespace sgl
 		friend int EmscriptenResizeCallback(int eventType, const EmscriptenFullscreenChangeEvent* fullscreenChangeEvent, void* data);
 		void ToggleSoftFullScreen();
 		void ToggleStandardFullScreen();
+		void MeasureFPS(int& nbFrames, double& lastTime);
 	};
 }
