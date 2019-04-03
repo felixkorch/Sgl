@@ -10,8 +10,11 @@
 namespace sgl
 {
 
-	WebWindow::WebWindow(WindowProperties props)
-		: Window(props), vSyncOn(true), fullScreen(false) {}
+	WebWindow::WebWindow(WindowProperties props) :
+		Window(props),
+		vSyncOn(true),
+		fullScreen(false)
+	{}
 
 	WebWindow::~WebWindow()
 	{
@@ -41,35 +44,36 @@ namespace sgl
 
 	void WebWindow::MeasureFPS(int& nbFrames, double& lastTime)
 	{
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-			// Print and reset timer
-			auto time = 1000.0 / double(nbFrames);
-			SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
+		//double currentTime = glfwGetTime();
+		//nbFrames++;
+		//if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+		//	// Print and reset timer
+		//	auto time = 1000.0 / double(nbFrames);
+		//	SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+		//	nbFrames = 0;
+		//	lastTime += 1.0;
+		//}
 	}
 
 	void WebWindow::Clear()
 	{
-		if (framesPerSecond != -1) {
-			while (glfwGetTime() < fpsCounter + 1.0 / framesPerSecond);
-			fpsCounter += 1.0 / framesPerSecond;
-		}
-
-		// Measure FPS
-		MeasureFPS(nbFrames, lastTime);
-
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void WebWindow::Update() const
+	void WebWindow::Update()
 	{
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		//MeasureFPS(nbFrames, fpsCounter);
+
+		if (framesPerSecond == -1)
+			return;
+
+		// Delay if FPS is fixed
+		//while (glfwGetTime() < delayCounter + 1.0 / framesPerSecond);
+		//delayCounter += 1.0 / framesPerSecond;
 	}
 
 	void WebWindow::SetVSync(bool enabled)
@@ -122,10 +126,10 @@ namespace sgl
 			return -1;
 		}
 
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ES_API);
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		SetVSync(true);
@@ -213,6 +217,9 @@ namespace sgl
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+
+		//fpsCounter = glfwGetTime();
+		//delayCounter = glfwGetTime();
 
 		return 1;
 	}

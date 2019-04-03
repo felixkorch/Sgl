@@ -77,7 +77,7 @@ public:
 	{
 		renderer->Begin();
 		renderer->Submit(renderable0);
-		//renderer->Submit(renderable1);
+		renderer->Submit(renderable1);
 		renderer->SubmitTexture(&tex0);
 		renderer->SubmitTexture(&tex1);
 		renderer->End();
@@ -168,7 +168,7 @@ public:
 	NESApp()
 		: Application(props)
 	{
-		window->SetFPS(60);
+		//window->SetFPS(60);
 		PushLayer(new MainLayer);
 	}
 

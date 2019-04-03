@@ -113,6 +113,10 @@ namespace sgl
 			SglCoreError("Vertex or Fragment shader empty.");
 
 		unsigned int program = glCreateProgram();
+
+		if (program == 0)
+			SglCoreError("Program failed to compile");
+
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 

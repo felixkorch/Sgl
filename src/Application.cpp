@@ -71,9 +71,9 @@ namespace sgl
 	{
 		#ifdef USE_EMSCRIPTEN
 		std::function<void()> mainLoop = [&]() {
-			#else
+		#else
 		while (running) {
-			#endif
+		#endif
 
 			window->Clear();
 
@@ -81,8 +81,8 @@ namespace sgl
 			ProcessEvents();
 
 			// Update
-			for (auto l : *layerstack) {
-				l->OnUpdate();
+			for (auto layer : *layerstack) {
+				layer->OnUpdate();
 			}
 			window->Update();
 

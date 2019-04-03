@@ -12,11 +12,10 @@ namespace sgl
 		int windowedXPos;
 		int windowedYPos;
 
-		// Variables used to measure FPS
 		int framesPerSecond;
 		int nbFrames;
-		double lastTime;
 		double fpsCounter;
+		double delayCounter;
 
 	public:
 
@@ -25,7 +24,7 @@ namespace sgl
 
 		virtual bool IsClosed() const override;
 		virtual void Clear() override;
-		virtual void Update() const override;
+		virtual void Update() override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
 		virtual bool IsVSync() override;

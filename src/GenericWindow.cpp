@@ -18,10 +18,7 @@ namespace sgl
 		fullScreen(false),
 		framesPerSecond(-1),
 		nbFrames(0)
-	{
-		lastTime   = glfwGetTime();
-		fpsCounter = glfwGetTime();
-	}
+	{}
 
 	GenericWindow::~GenericWindow()
 	{
@@ -65,22 +62,23 @@ namespace sgl
 
 	void GenericWindow::Clear()
 	{
-		if (framesPerSecond != -1) {
-			while (glfwGetTime() < fpsCounter + 1.0 / framesPerSecond);
-			fpsCounter += 1.0 / framesPerSecond;
-		}
-
-		// Measure FPS
-		MeasureFPS(nbFrames, lastTime);
-
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void GenericWindow::Update() const
+	void GenericWindow::Update()
 	{
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		MeasureFPS(nbFrames, fpsCounter);
+
+		if (framesPerSecond == -1)
+			return;
+
+		// Delay if FPS is fixed
+		while (glfwGetTime() < delayCounter + 1.0 / framesPerSecond);
+		delayCounter += 1.0 / framesPerSecond;
 	}
 
 	void GenericWindow::SetVSync(bool enabled)
@@ -221,6 +219,9 @@ namespace sgl
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+
+		fpsCounter   = glfwGetTime();
+		delayCounter = glfwGetTime();
 
 		return 1;
 	}

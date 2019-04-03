@@ -22,11 +22,10 @@ namespace sgl
 		bool vSyncOn;
 		bool fullScreen;
 
-		// Variables used to measure FPS
 		int framesPerSecond;
 		int nbFrames;
-		double lastTime;
 		double fpsCounter;
+		double delayCounter;
 	public:
 
 		WebWindow(WindowProperties props);
@@ -35,7 +34,7 @@ namespace sgl
 		virtual bool IsClosed() const override;
 		virtual void Clear() override;
 		virtual void SetFPS(int fps) override;
-		virtual void Update() const override;
+		virtual void Update() override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void ToggleFullScreen() override;
 		virtual bool IsVSync() override;

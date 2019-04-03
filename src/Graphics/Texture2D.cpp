@@ -38,8 +38,6 @@ namespace sgl
     int Texture2D::GetTextureWrap(TextureWrap wrap)
 	{
 		switch (wrap) {
-		//case TextureWrap::CLAMP:            return GL_CLAMP;
-		//case TextureWrap::CLAMP_TO_BORDER:  return GL_CLAMP_TO_BORDER;
 		case TextureWrap::CLAMP_TO_EDGE:	return GL_CLAMP_TO_EDGE;
 		case TextureWrap::REPEAT:			return GL_REPEAT;
 		case TextureWrap::MIRRORED_REPEAT:	return GL_MIRRORED_REPEAT;
@@ -52,7 +50,6 @@ namespace sgl
 		switch (format) {
 		case TextureFormat::RGBA:				return GL_RGBA;
 		case TextureFormat::RGB:				return GL_RGB;
-		//case TextureFormat::RGBA32F:			return GL_RGBA32F;
 		case TextureFormat::LUMINANCE:			return GL_LUMINANCE;
 		case TextureFormat::LUMINANCE_ALPHA:	return GL_LUMINANCE_ALPHA;
 		}

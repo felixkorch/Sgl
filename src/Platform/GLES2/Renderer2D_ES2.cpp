@@ -74,7 +74,6 @@ namespace sgl
 		vertexBuffer.Bind();
 		indexBuffer.Bind();
 		vertexBuffer.BindLayout(layout);
-
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 
 		vertexBuffer.Unbind();
@@ -106,7 +105,7 @@ namespace sgl
 		layout.Push<float>(2); // UV-Coords (Texture coordinates)
 		layout.Push<float>(1); // TID (Texture ID)
 
-		vertexBuffer.BindLayout(layout); // Instead of Vertex Arrays.
+		vertexBuffer.BindLayout(layout); // Instead of Vertex Arrays
 		vertexBuffer.Unbind();
 
 		unsigned int indices[IndicesCount];
