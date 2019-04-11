@@ -65,9 +65,12 @@ namespace sgl
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-
+	
 	void GenericWindow::Update()
 	{
+		if (delay == system_clock::from_time_t(0))
+			delay = system_clock::now() + milliseconds(20);
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -76,9 +79,8 @@ namespace sgl
 		if (framesPerSecond == -1)
 			return;
 
-		// Delay if FPS is fixed
-		while (glfwGetTime() < delayCounter + 1.0 / framesPerSecond);
-		delayCounter += 1.0 / framesPerSecond;
+		std::this_thread::sleep_until(delay);
+		delay += milliseconds(20);
 	}
 
 	void GenericWindow::SetVSync(bool enabled)
