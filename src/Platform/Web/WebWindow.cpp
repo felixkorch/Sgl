@@ -63,17 +63,16 @@ namespace sgl
 
 	void WebWindow::Update()
 	{
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
 
-		//MeasureFPS(nbFrames, fpsCounter);
+        MeasureFPS(nbFrames, fpsCounter);
 
-		if (framesPerSecond == -1)
-			return;
+        if (framesPerSecond == -1)
+            return;
 
-		// Delay if FPS is fixed
-		//while (glfwGetTime() < delayCounter + 1.0 / framesPerSecond);
-		//delayCounter += 1.0 / framesPerSecond;
+        std::this_thread::sleep_until(delay);
+        delay += std::chrono::nanoseconds(1000000000) / framesPerSecond;
 	}
 
 	void WebWindow::SetVSync(bool enabled)
@@ -218,8 +217,8 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		//fpsCounter = glfwGetTime();
-		//delayCounter = glfwGetTime();
+        //fpsCounter = glfwGetTime(); // This may or may not cause problems since its called too early.
+        delay = std::chrono::high_resolution_clock::now();
 
 		return 1;
 	}

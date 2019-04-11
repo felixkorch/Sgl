@@ -22,10 +22,13 @@ namespace sgl
 		bool vSyncOn;
 		bool fullScreen;
 
-		int framesPerSecond;
-		int nbFrames;
-		double fpsCounter;
-		double delayCounter;
+        // Used to force a specific FPS
+        std::chrono::system_clock::time_point delay;
+        int framesPerSecond;
+
+        // Used to keep track of FPS to print to the console
+        int nbFrames;
+        double fpsCounter;
 	public:
 
 		WebWindow(WindowProperties props);

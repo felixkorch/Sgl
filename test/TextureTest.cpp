@@ -168,7 +168,7 @@ public:
 	NESApp()
 		: Application(props)
 	{
-		//window->SetFPS(60);
+		window->SetFPS(60);
 		PushLayer(new MainLayer);
 	}
 

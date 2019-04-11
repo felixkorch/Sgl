@@ -2,6 +2,8 @@
 #include "Sgl/Window.h"
 #include "GLFW/glfw3.h"
 
+#include <chrono>
+
 namespace sgl
 {
 	class GenericWindow : public Window {
@@ -12,10 +14,13 @@ namespace sgl
 		int windowedXPos;
 		int windowedYPos;
 
+        // Used to force a specific FPS
+        std::chrono::steady_clock::time_point delay;
 		int framesPerSecond;
+
+        // Used to keep track of FPS to print to the console
 		int nbFrames;
 		double fpsCounter;
-		double delayCounter;
 
 	public:
 

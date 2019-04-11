@@ -68,9 +68,6 @@ namespace sgl
 	
 	void GenericWindow::Update()
 	{
-		if (delay == system_clock::from_time_t(0))
-			delay = system_clock::now() + milliseconds(20);
-		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -80,7 +77,7 @@ namespace sgl
 			return;
 
 		std::this_thread::sleep_until(delay);
-		delay += milliseconds(20);
+		delay += std::chrono::nanoseconds(1000000000) / framesPerSecond;
 	}
 
 	void GenericWindow::SetVSync(bool enabled)
@@ -222,8 +219,8 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		fpsCounter   = glfwGetTime();
-		delayCounter = glfwGetTime();
+		fpsCounter   = glfwGetTime(); // This may or may not cause problems since its called too early.
+        delay = std::chrono::high_resolution_clock::now();
 
 		return 1;
 	}
