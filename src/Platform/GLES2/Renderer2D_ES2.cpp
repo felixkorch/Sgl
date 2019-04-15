@@ -11,19 +11,17 @@
 
 namespace sgl
 {
-	Renderer2D_ES2::Renderer2D_ES2(int width, int height, const Shader& shader)
-		: Renderer2D(width, height, shader)
-	{
-		Init();
-	}
+	Renderer2D_ES2::Renderer2D_ES2(int width, int height)
+		: Renderer2D(width, height)
+	{}
 
 	Renderer2D_ES2::~Renderer2D_ES2() {}
 
 	void Renderer2D_ES2::Begin()
 	{
-		shader.Bind();
+		shader->Bind();
 		vertexDataBuffer.clear();
-		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 	}
 
 	void Renderer2D_ES2::Submit(Renderable2D& renderable)
@@ -123,20 +121,19 @@ namespace sgl
 		}
 		indexBuffer.Load(indices, IndicesCount);
 
-		shader.Bind();
-		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+		shader->Bind();
+		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 
 		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
-	}
-
-	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader = Shader(Shader::Shader2D_ES2))
-	{
-		return new Renderer2D_ES2(width, height, shader);
+		shader->SetUniform1iv("f_Sampler", MaxTextures, index);
 	}
 
 	Renderer2D* Renderer2D::Create(int width, int height)
 	{
-		return new Renderer2D_ES2(width, height, Shader(Shader::Shader2D_ES2));
+        Renderer2D* renderer = new Renderer2D_ES2(width, height);
+        renderer->CreateShader(Shader::Shader2D_ES2);
+        renderer->Init();
+        return renderer;
 	}
+
 }

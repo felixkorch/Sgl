@@ -218,7 +218,7 @@ namespace sgl
 		glDepthFunc(GL_LEQUAL);
 
         //fpsCounter = glfwGetTime(); // This may or may not cause problems since its called too early.
-        delay = std::chrono::high_resolution_clock::now();
+        delay = std::chrono::steady_clock::now();
 
 		return 1;
 	}

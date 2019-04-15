@@ -12,11 +12,9 @@
 
 namespace sgl
 {
-	Renderer2D_Core::Renderer2D_Core(int width, int height, const Shader& shader)
-		: Renderer2D(width, height, shader)
-	{
-		Init();
-	}
+	Renderer2D_Core::Renderer2D_Core(int width, int height)
+		: Renderer2D(width, height)
+	{}
 
 	Renderer2D_Core::~Renderer2D_Core()
 	{
@@ -24,10 +22,10 @@ namespace sgl
 
 	void Renderer2D_Core::Begin()
 	{
-		shader.Bind();
+		shader->Bind();
 		vertexBuffer.Bind();
 		vertexDataBuffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 	}
 
 	void Renderer2D_Core::Submit(Renderable2D& renderable)
@@ -110,10 +108,10 @@ namespace sgl
 	void Renderer2D_Core::Init()
 	{
 		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
-		layout.Push<float>(3); // Position
-		layout.Push<float>(4); // Color
-		layout.Push<float>(2); // UV-Coords (Texture coordinates)
-		layout.Push<float>(1); // TID (Texture ID)
+        layout.Push<float>(3); // Position
+        layout.Push<float>(4); // Color
+        layout.Push<float>(2); // UV-Coords (Texture coordinates)
+        layout.Push<float>(1); // TID (Texture ID)
 		vertexArray.AddBuffer(vertexBuffer, layout);
 		vertexBuffer.Unbind();
 
@@ -133,21 +131,19 @@ namespace sgl
 		indexBuffer.Load(indices, IndicesCount);
 		vertexArray.Unbind();
 
-		shader.Bind();
-		shader.SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+		shader->Bind();
+		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
 
 		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		shader.SetUniform1iv("f_Sampler", MaxTextures, index);
+		shader->SetUniform1iv("f_Sampler", MaxTextures, index);
 
 	}
 
-	Renderer2D* Renderer2D::Create(int width, int height, const Shader& shader = Shader(Shader::Shader2D_Core))
-	{
-		return new Renderer2D_Core(width, height, shader);
-	}
-
-	Renderer2D* Renderer2D::Create(int width, int height)
-	{
-		return new Renderer2D_Core(width, height, Shader(Shader::Shader2D_Core));
-	}
+    Renderer2D* Renderer2D::Create(int width, int height)
+    {
+        Renderer2D* renderer = new Renderer2D_Core(width, height);
+        renderer->CreateShader(Shader::Shader2D_Core);
+        renderer->Init();
+        return renderer;
+    }
 }

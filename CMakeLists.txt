@@ -25,9 +25,6 @@ set(Sgl_SOURCE
     src/GenericInput.cpp
     src/GenericWindow.cpp
     src/Platform/Core/Renderer2D_Core.cpp
-    src/Graphics/ForwardRenderer.cpp
-    src/Graphics/Material.cpp
-    src/Graphics/Mesh.cpp
     src/Graphics/Texture2D.cpp
 )
 

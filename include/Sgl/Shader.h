@@ -22,10 +22,13 @@ namespace sgl
 		std::string filePath;
 		std::unordered_map<std::string, int> uniformLocationCache;
 	public:
-		Shader(const std::string& filepath);
+		Shader(const std::string& shader);
 		Shader(const char* vertexShader, const char* fragmentShader);
 		Shader(const char* shader);
+        Shader(const Shader& other) = delete;
+        Shader& operator=(const Shader& other) = delete;
 		~Shader();
+
 		void Bind() const;
 		void Unbind() const;
 		void SetUniform1i(const std::string& name, int v0);

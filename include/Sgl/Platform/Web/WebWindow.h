@@ -23,7 +23,7 @@ namespace sgl
 		bool fullScreen;
 
         // Used to force a specific FPS
-        std::chrono::system_clock::time_point delay;
+        std::chrono::steady_clock::time_point delay;
         int framesPerSecond;
 
         // Used to keep track of FPS to print to the console

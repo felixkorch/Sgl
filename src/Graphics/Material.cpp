@@ -7,18 +7,21 @@
 
 namespace sgl
 {
-	Material::Material(const Shader& shader)
-		: shader(shader) {}
-
+	Material::Material() {}
 	Material::~Material() {}
+
+    void Material::SetShader(std::unique_ptr<Shader> _shader)
+    {
+        shader = std::move(_shader);
+    }
 
 	void Material::Bind()
 	{
-		shader.Bind();
+		shader->Bind();
 
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			textures[i]->Bind(i);
-			shader.SetUniform1i("u_Slot", i);
+			shader->SetUniform1i("u_Slot", i);
 		}
 	}
 
@@ -36,7 +39,7 @@ namespace sgl
 
 	void Material::BindUniforms()
 	{
-		shader.SetUniformData(uniformHandler);
+		shader->SetUniformData(uniformHandler);
 	}
 
 }

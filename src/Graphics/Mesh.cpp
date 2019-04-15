@@ -11,15 +11,15 @@
 
 namespace sgl
 {
-	Mesh::Mesh(const std::string& filePath, const Material& material)
-		: material(material)
-	{
-		const auto obj = LoadObj(filePath);
-		Mesh(obj.vertices, obj.indices, material);
-	}
+    Mesh::Mesh(const std::string& filePath)
+    {
+        const auto obj = LoadObj(filePath);
+        Mesh(obj.vertices, obj.indices);
+    }
 
-	Mesh::Mesh(const Vertex* vertices, unsigned int vertexCount, const unsigned int* indices, unsigned int indexCount, const Material& material)
-		: vertexCount(vertexCount), indexCount(indexCount), material(material)
+	Mesh::Mesh(const Vertex* vertices, unsigned int vertexCount, const unsigned int* indices, unsigned int indexCount) :
+        vertexCount(vertexCount),
+        indexCount(indexCount)
 	{
 		vertexBuffer.InitStaticDraw(vertices, vertexCount * sizeof(Vertex));
 		layout.Push<float>(3); // Position
@@ -32,8 +32,9 @@ namespace sgl
 		vertexArray.Unbind();
 	}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
-		: Mesh(vertices.data(), vertices.size(), indices.data(), indices.size(), material) {}
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) :
+        Mesh(vertices.data(), vertices.size(), indices.data(), indices.size())
+    {}
 
 	Mesh::~Mesh() {}
 
@@ -52,7 +53,7 @@ namespace sgl
 
 	void Mesh::Draw()
 	{
-		material.Bind();
+		material->Bind();
 		vertexBuffer.Bind();
 		vertexArray.Bind();
 		indexBuffer.Bind();

@@ -42,6 +42,7 @@ namespace sgl
 	}
 
 	Shader::Shader(const char* shader)
+        : rendererID(0), filePath("NULL")
 	{
 		std::stringstream str;
 		str << shader;

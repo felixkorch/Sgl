@@ -24,12 +24,13 @@ private:
 public:
 	MainLayer() :
 		Layer("GameLayer"),
-		renderer(Renderer2D::Create(Width, Height)),
 		pixels(new std::uint8_t[TexWidth * TexHeight * 4]),
 		tex0(TexWidth, TexHeight),
 		tex1(100, 100)
 
 	{
+        renderer = std::unique_ptr<Renderer2D>(Renderer2D::Create(Width, Height));
+
 		const float scaledWidth = (float)Height * aspectRatio;
 		const float xPosition = Width / 2 - scaledWidth / 2;
 

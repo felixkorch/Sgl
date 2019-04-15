@@ -10,21 +10,25 @@ namespace sgl
 {
 	class Material {
 	private:
-		Shader shader;
+		std::unique_ptr<Shader> shader;
 		std::vector<const Texture2D*> textures;
 		UniformHandler uniformHandler;
 	public:
-		Material(const Shader& shader);
+		Material();
+        Material(const Material& other) = delete;
+        Material& operator=(const Material& other) = delete;
+        Material(Material&& other) = default;
 		~Material();
 
 		void Bind();
 		void Unbind() const;
 		void BindUniforms();
 		void SetTexture(const Texture2D* texture);
+        void SetShader(std::unique_ptr<Shader> _shader);
 
 		Shader& GetShader()
 		{
-			return shader;
+			return *shader;
 		}
 
 		template <class T>

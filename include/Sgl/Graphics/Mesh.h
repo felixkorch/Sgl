@@ -26,24 +26,23 @@ namespace sgl
 		VertexBuffer vertexBuffer;
 		VertexArray vertexArray;
 		IndexBuffer indexBuffer;
-		Material material;
+		std::unique_ptr<Material> material;
 		unsigned int indexCount;
 		unsigned int vertexCount;
 	public:
-
-		Mesh(const std::string& filePath, const Material& material);
-		Mesh(const Vertex* vertices, unsigned int vertexCount, const unsigned int* indices, unsigned int indexCount, const Material& material);
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material);
+		Mesh(const std::string& filePath);
+		Mesh(const Vertex* vertices, unsigned int vertexCount, const unsigned int* indices, unsigned int indexCount);
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 		~Mesh();
 
 		Material& GetMaterial()
 		{
-			return material;
+			return *material;
 		}
 
-		void SetMaterial(const Material& other)
+		void SetMaterial(std::unique_ptr<Material> _material)
 		{
-			material = other;
+			material = std::move(_material);
 		}
 
 		static Obj3D LoadObj(const std::string& filePath);

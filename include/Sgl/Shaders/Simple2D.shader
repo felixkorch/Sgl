@@ -32,7 +32,7 @@ in float f_tid;
 
 // Temporary solution for indexing the sampler array
 vec4 GetValueFromSamplerArray(float ndx, vec2 uv) {
-	if (ndx < .5) { return texture2D(f_Sampler[0], uv); }
+	if (ndx < .5) { return texture(f_Sampler[0], uv); }
 	else if (ndx < 1.5)  { return texture(f_Sampler[1],  uv); }
 	else if (ndx < 2.5)  { return texture(f_Sampler[2],  uv); }
 	else if (ndx < 3.5)  { return texture(f_Sampler[3],  uv); }
