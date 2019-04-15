@@ -76,7 +76,6 @@ namespace sgl
 			camera = Camera2D(width, height);
 		}
 
-		static Renderer2D* Create(int width, int height, const Shader& shader);
 		static Renderer2D* Create(int width, int height);
 	};
 }

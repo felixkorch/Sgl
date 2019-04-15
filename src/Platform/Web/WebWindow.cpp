@@ -44,15 +44,15 @@ namespace sgl
 
 	void WebWindow::MeasureFPS(int& nbFrames, double& lastTime)
 	{
-		//double currentTime = glfwGetTime();
-		//nbFrames++;
-		//if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-		//	// Print and reset timer
-		//	auto time = 1000.0 / double(nbFrames);
-		//	SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-		//	nbFrames = 0;
-		//	lastTime += 1.0;
-		//}
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+            // Print and reset timer
+            auto time = 1000.0 / double(nbFrames);
+            SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
 	}
 
 	void WebWindow::Clear()
@@ -87,6 +87,7 @@ namespace sgl
 
 	static int EmscriptenResizeCallback(int eventType, const EmscriptenFullscreenChangeEvent* event, void* data)
 	{
+        SglCoreTrace("Resized");
 		WebWindow& win = *(WebWindow*)glfwGetWindowUserPointer((GLFWwindow*)data);
 		if (event->isFullscreen) {
 			win.CallEventHandler(new WindowResizedEvent(event->elementWidth, event->elementHeight));
@@ -217,7 +218,7 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-        //fpsCounter = glfwGetTime(); // This may or may not cause problems since its called too early.
+        fpsCounter = glfwGetTime(); // This may or may not cause problems since its called too early.
         delay = std::chrono::steady_clock::now();
 
 		return 1;
