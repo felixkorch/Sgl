@@ -10,7 +10,20 @@ namespace sgl
 		glGenVertexArrays(1, &rendererID);
 	}
 
-	VertexArray::~VertexArray()
+    VertexArray::VertexArray(VertexArray&& other)
+        : rendererID(other.rendererID)
+    {
+        other.rendererID = 0;
+    }
+
+    VertexArray& VertexArray::operator=(VertexArray&& other)
+    {
+        rendererID = other.rendererID;
+        other.rendererID = 0;
+        return *this;
+    }
+
+    VertexArray::~VertexArray()
 	{
 		glDeleteVertexArrays(1, &rendererID);
 	}

@@ -11,17 +11,19 @@
 
 namespace sgl
 {
-	Renderer2D_ES2::Renderer2D_ES2(int width, int height)
-		: Renderer2D(width, height)
-	{}
+	Renderer2D_ES2::Renderer2D_ES2(int width, int height, Shader&& shader)
+		: Renderer2D(width, height, std::move(shader))
+	{
+        Setup();
+    }
 
 	Renderer2D_ES2::~Renderer2D_ES2() {}
 
 	void Renderer2D_ES2::Begin()
 	{
-		shader->Bind();
+		shader.Bind();
 		vertexDataBuffer.clear();
-		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+		shader.SetUniformMat4f("u_Projection", camera.GetViewMatrix());
 	}
 
 	void Renderer2D_ES2::Submit(Renderable2D& renderable)
@@ -66,8 +68,8 @@ namespace sgl
 
 	void Renderer2D_ES2::Flush()
 	{
-		for (int i = 0; i < textures.size(); i++)
-			textures[i]->Bind(i);
+        for (int i = 0; i < textures.size(); i++)
+            textures[i]->Bind(i);
 
 		vertexBuffer.Bind();
 		indexBuffer.Bind();
@@ -94,7 +96,7 @@ namespace sgl
 		textures.push_back(texture);
 	}
 
-	void Renderer2D_ES2::Init()
+	void Renderer2D_ES2::Setup()
 	{
 		vertexDataBuffer.reserve(BufferSize);
 		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
@@ -121,18 +123,18 @@ namespace sgl
 		}
 		indexBuffer.Load(indices, IndicesCount);
 
-		shader->Bind();
-		shader->SetUniformMat4f("u_Proj", camera.GetViewMatrix());
+        shader.Bind();
+        shader.SetUniformMat4f("u_Projection", camera.GetViewMatrix());
 
-		static const int index[MaxTextures] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		shader->SetUniform1iv("f_Sampler", MaxTextures, index);
+        for (int i = 0; i < MaxTextures; i++)
+            shader.SetUniform1i("u_Sampler[" + std::to_string(i) + "]", i);
 	}
 
 	Renderer2D* Renderer2D::Create(int width, int height)
 	{
-        Renderer2D* renderer = new Renderer2D_ES2(width, height);
-        renderer->CreateShader(Shader::Shader2D_ES2);
-        renderer->Init();
+        Shader shader;
+        shader.LoadFromString(Shader::Shader2D_ES2);
+        Renderer2D* renderer = new Renderer2D_ES2(width, height, std::move(shader));
         return renderer;
 	}
 

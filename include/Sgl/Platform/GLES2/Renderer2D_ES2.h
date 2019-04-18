@@ -15,7 +15,7 @@ namespace sgl
 	private:
 		std::vector<VertexData> vertexDataBuffer;
 	public:
-		Renderer2D_ES2(int width, int height);
+		Renderer2D_ES2(int width, int height, Shader&& shader);
 		~Renderer2D_ES2();
 		Renderer2D_ES2(const Renderer2D_ES2&) = delete;
 		virtual void operator=(const Renderer2D_ES2&) = delete;
@@ -27,6 +27,7 @@ namespace sgl
 		virtual void End() override;
 		virtual void Flush() override;
 		void SubmitTexture(const Texture2D* texture) override;
-		void Init();
+    private:
+		void Setup();
 	};
 }

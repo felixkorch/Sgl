@@ -13,7 +13,9 @@ namespace sgl
 	WebWindow::WebWindow(WindowProperties props) :
 		Window(props),
 		vSyncOn(true),
-		fullScreen(false)
+		fullScreen(false),
+		framesPerSecond(-1),
+        nbFrames(0)
 	{}
 
 	WebWindow::~WebWindow()
@@ -25,7 +27,7 @@ namespace sgl
 	Window* Window::Create(WindowProperties props)
 	{
 		auto window = new WebWindow(props);
-		if (window->Init() == -1) {
+		if (window->TryInit() == -1) {
 			delete window;
 			return nullptr;
 		}
@@ -42,7 +44,7 @@ namespace sgl
 		framesPerSecond = fps;
 	}
 
-	void WebWindow::MeasureFPS(int& nbFrames, double& lastTime)
+	void WebWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
 	{
         double currentTime = glfwGetTime();
         nbFrames++;
@@ -66,7 +68,9 @@ namespace sgl
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        MeasureFPS(nbFrames, fpsCounter);
+        #ifndef NDEBUG
+        DebugPrintFPS(nbFrames, fpsCounter);
+        #endif
 
         if (framesPerSecond == -1)
             return;
@@ -119,14 +123,13 @@ namespace sgl
 		return fullScreen;
 	}
 
-	int WebWindow::Init()
+	int WebWindow::TryInit()
 	{
 		if (!glfwInit()) {
 			SglCoreError("glfwInit failed!");
 			return -1;
 		}
 
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ES_API);
@@ -185,14 +188,6 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-
-				// Fullscreen (Alt-Enter) TODO: Set on client side
-				if (key == SGL_KEY_ENTER && Input::IsKeyPressed(SGL_KEY_LEFT_ALT))
-					win.ToggleFullScreen();
-				else if (key == SGL_KEY_ESCAPE && win.fullScreen) {
-					win.ToggleFullScreen();
-					win.fullScreen = false;
-				}
 
 				win.CallEventHandler(new KeyPressedEvent(key, 0));
 				break;

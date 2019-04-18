@@ -9,7 +9,7 @@ namespace sgl
 		VertexData* vertexDataBuffer;
 
 	public:
-		Renderer2D_Core(int width, int height);
+		Renderer2D_Core(int width, int height, Shader&& shader);
 		~Renderer2D_Core();
 		Renderer2D_Core(const Renderer2D_Core&) = delete;
 		void operator=(const Renderer2D_Core&) = delete;
@@ -21,6 +21,7 @@ namespace sgl
 		void End() override;
 		void Flush() override;
 		void SubmitTexture(const Texture2D* texture) override;
-		void Init();
+    private:
+		void Setup();
 	};
 }

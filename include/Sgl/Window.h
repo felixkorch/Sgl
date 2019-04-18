@@ -23,6 +23,7 @@ namespace sgl
 		using EventCallbackFn = std::function<void(Event*)>;
 		EventCallbackFn CallEventHandler;
 		WindowProperties props;
+
 	public:
 		Window(WindowProperties props) : props(props) {}
 		virtual ~Window() {}

@@ -62,12 +62,12 @@ namespace sgl
 			return props.height;
 		}
 
-		int Init();
+		int TryInit();
 
 	private:
 		friend int EmscriptenResizeCallback(int eventType, const EmscriptenFullscreenChangeEvent* fullscreenChangeEvent, void* data);
 		void ToggleSoftFullScreen();
 		void ToggleStandardFullScreen();
-		void MeasureFPS(int& nbFrames, double& lastTime);
+		void DebugPrintFPS(int& nbFrames, double& lastTime);
 	};
 }

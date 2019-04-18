@@ -9,7 +9,22 @@ namespace sgl
 		glGenBuffers(1, &rendererID);
 	}
 
-	IndexBuffer::~IndexBuffer()
+    IndexBuffer::IndexBuffer(IndexBuffer&& other)
+        : rendererID(other.rendererID)
+        , count(other.count)
+    {
+        other.rendererID = 0;
+    }
+
+    IndexBuffer& IndexBuffer::operator=(IndexBuffer&& other)
+    {
+        rendererID = other.rendererID;
+        count = other.count;
+        other.rendererID = 0;
+        return *this;
+    }
+
+    IndexBuffer::~IndexBuffer()
 	{
 		glDeleteBuffers(1, &rendererID);
 	}

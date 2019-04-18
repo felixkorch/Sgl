@@ -59,9 +59,9 @@ namespace sgl
 			return props.height;
 		}
 
-		virtual int Init();
+		int TryInit();
 
 	private:
-		void MeasureFPS(int& nbFrames, double& lastTime);
+		void DebugPrintFPS(int& nbFrames, double& lastTime);
 	};
 }

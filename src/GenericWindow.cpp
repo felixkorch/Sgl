@@ -29,7 +29,7 @@ namespace sgl
 	Window* Window::Create(WindowProperties props)
 	{
 		auto window = new GenericWindow(props);
-		if (window->Init() == -1) {
+		if (window->TryInit() == -1) {
 			delete window;
 			return nullptr;
 		}
@@ -47,7 +47,7 @@ namespace sgl
 		framesPerSecond = fps;
 	}
 
-	void GenericWindow::MeasureFPS(int& nbFrames, double& lastTime)
+	void GenericWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
 	{
 		double currentTime = glfwGetTime();
 		nbFrames++;
@@ -71,7 +71,9 @@ namespace sgl
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		MeasureFPS(nbFrames, fpsCounter);
+        #ifndef NDEBUG
+        DebugPrintFPS(nbFrames, fpsCounter);
+        #endif
 
 		if (framesPerSecond == -1)
 			return;
@@ -114,7 +116,7 @@ namespace sgl
 		return fullScreen;
 	}
 
-	int GenericWindow::Init()
+	int GenericWindow::TryInit()
 	{
 		if (!glfwInit()) {
 			SglCoreError("glfwInit failed!");
@@ -183,11 +185,6 @@ namespace sgl
 
 			switch (action) {
 			case GLFW_PRESS: {
-
-				// Fullscreen (Alt-Enter) TODO: Set on client side
-				if (key == SGL_KEY_ENTER && Input::IsKeyPressed(SGL_KEY_LEFT_ALT))
-					win.ToggleFullScreen();
-
 				win.CallEventHandler(new KeyPressedEvent(key, 0));
 				break;
 			}

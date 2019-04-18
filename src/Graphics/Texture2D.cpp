@@ -20,7 +20,30 @@ namespace sgl
 		SetParams(params);
 	}
 
-	void Texture2D::SetParams(TextureParameters params)
+    Texture2D::Texture2D(Texture2D&& other)
+        : rendererID(other.rendererID)
+        , filePath(other.filePath)
+        , bpp(other.bpp)
+        , width(other.width)
+        , height(other.height)
+        , texParams(other.texParams)
+    {
+        other.rendererID = 0;
+    }
+
+    Texture2D& Texture2D::operator=(Texture2D&& other)
+    {
+        rendererID = other.rendererID;
+        filePath = other.filePath;
+        bpp = other.bpp;
+        width = other.width;
+        height = other.height;
+        texParams = other.texParams;
+        other.rendererID = 0;
+        return *this;
+    }
+
+    void Texture2D::SetParams(TextureParameters params)
 	{
 		// Bind the texture
 		glBindTexture(GL_TEXTURE_2D, rendererID);
@@ -66,14 +89,14 @@ namespace sgl
 
 	void Texture2D::SetSize(int _width, int _height)
 	{
-		width = width;
-		height = height;
+		width = _width;
+		height = _height;
 	}
 
-	void Texture2D::LoadFromFile()
+	void Texture2D::LoadFromFile(const std::string& fp)
 	{
 		stbi_set_flip_vertically_on_load(1);
-		auto buffer = stbi_load(filePath.c_str(), &width, &height, &bpp, 4);
+		auto buffer = stbi_load(fp.c_str(), &width, &height, &bpp, 4);
 		if (buffer)
 			stbi_image_free(buffer);
 

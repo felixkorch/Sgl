@@ -10,7 +10,20 @@ namespace sgl
 		glGenBuffers(1, &rendererID);
 	}
 
-	VertexBuffer::~VertexBuffer()
+    VertexBuffer::VertexBuffer(VertexBuffer&& other)
+        : rendererID(other.rendererID)
+    {
+        other.rendererID = 0;
+    }
+
+    VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
+    {
+        rendererID = other.rendererID;
+        other.rendererID = 0;
+        return *this;
+    }
+
+    VertexBuffer::~VertexBuffer()
 	{
 		glDeleteBuffers(1, &rendererID);
 	}

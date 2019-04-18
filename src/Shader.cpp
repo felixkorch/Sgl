@@ -19,8 +19,29 @@ namespace sgl
 		#include "Sgl/Shaders/Simple2D.gles.shader"
 	};
 
-	Shader::Shader(const std::string& filepath)
-        : rendererID(0), filePath(filepath)
+    Shader::Shader() :
+        rendererID(0),
+        filePath("NULL")
+    {}
+
+    Shader::Shader(Shader&& other)
+        : rendererID(other.rendererID)
+        , filePath(other.filePath)
+        , uniformLocationCache(other.uniformLocationCache)
+    {
+        other.rendererID = 0;
+    }
+
+    Shader& Shader::operator=(Shader&& other)
+    {
+        rendererID = other.rendererID;
+        filePath = other.filePath;
+        uniformLocationCache = other.uniformLocationCache;
+        other.rendererID = 0;
+        return *this;
+    }
+
+	void Shader::LoadFromFile(const std::string& filepath)
 	{
 		std::ifstream stream(filepath);
 
@@ -36,13 +57,12 @@ namespace sgl
 		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	}
 
-	Shader::Shader(const char* vertexShader, const char* fragmentShader)
+	void Shader::LoadFromString(const char* vertexShader, const char* fragmentShader)
 	{
 		rendererID = CreateShader(vertexShader, fragmentShader);
 	}
 
-	Shader::Shader(const char* shader)
-        : rendererID(0), filePath("NULL")
+	void Shader::LoadFromString(const char* shader)
 	{
 		std::stringstream str;
 		str << shader;
@@ -52,6 +72,7 @@ namespace sgl
 
 	Shader::~Shader()
 	{
+        if(rendererID) SglCoreInfo("Shader {} deleted.", rendererID);
 		glDeleteProgram(rendererID);
 	}
 
@@ -114,6 +135,7 @@ namespace sgl
 			SglCoreError("Vertex or Fragment shader empty.");
 
 		unsigned int program = glCreateProgram();
+        SglCoreInfo("Shader({}) created.", program);
 
 		if (program == 0)
 			SglCoreError("Program failed to compile");
