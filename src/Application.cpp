@@ -1,5 +1,4 @@
 #include "Sgl/OpenGL.h"
-#include "Sgl/Common.h"
 #include "Sgl/Log.h"
 #include "Sgl/Application.h"
 #include "Sgl/LayerStack.h"
@@ -24,7 +23,7 @@ namespace sgl
 	Application::Application(WindowProperties props)
 		: layerstack(new LayerStack)
 	{
-		SglAssert(sInstance == nullptr, "Application already exists!");
+		SGL_ASSERT(sInstance == nullptr, "Application already exists!");
 		sInstance = this;
 		window = Window::Create(props);
 		if (!window) {
@@ -34,7 +33,7 @@ namespace sgl
 
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
-		SglCoreInfo("Sucessfully initialized the app!");
+		SGL_CORE_INFO("Sucessfully initialized the app!");
 	}
 
 	Application::~Application()

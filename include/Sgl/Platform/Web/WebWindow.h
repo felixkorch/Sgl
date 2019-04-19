@@ -27,19 +27,18 @@ namespace sgl
         int framesPerSecond;
 
         // Used to keep track of FPS to print to the console
-        int nbFrames;
-        double fpsCounter;
+        int frames;
+        double frameDelay;
 	public:
 
 		WebWindow(WindowProperties props);
 		~WebWindow();
 
 		virtual bool IsClosed() const override;
-		virtual void Clear() override;
 		virtual void SetFPS(int fps) override;
-		virtual void Update() override;
 		virtual void SetVSync(bool enabled) override;
-		virtual void ToggleFullScreen() override;
+		virtual void SetFullscreen() override;
+		virtual void SetWindowed() override;
 		virtual bool IsVSync() override;
 		virtual bool IsFullScreen() override;
 
@@ -48,14 +47,14 @@ namespace sgl
 			return window;
 		}
 
-		virtual int GetWindowWidth() override
+		virtual int GetWidth() override
 		{
 			if (fullScreen)
 				return fullScreenWidth;
 			return props.width;
 		}
 
-		virtual int GetWindowHeight() override
+		virtual int GetHeight() override
 		{
 			if (fullScreen)
 				return fullScreenHeight;
@@ -64,10 +63,16 @@ namespace sgl
 
 		int TryInit();
 
+    protected:
+		virtual void Clear() override;
+		virtual void Update() override;
+
 	private:
 		friend int EmscriptenResizeCallback(int eventType, const EmscriptenFullscreenChangeEvent* fullscreenChangeEvent, void* data);
-		void ToggleSoftFullScreen();
-		void ToggleStandardFullScreen();
+		void SetStandardFullscreen();
+		void SetSoftFullscreen();
+		void ExitStandardFullscreen();
+		void ExitSoftFullscreen();
 		void DebugPrintFPS(int& nbFrames, double& lastTime);
 	};
 }

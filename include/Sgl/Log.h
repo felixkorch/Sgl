@@ -22,15 +22,30 @@ namespace sgl
 		static void Init();
 	};
 
-	#define SglCoreWarn(...)  Log::GetMainLogger()->warn(__VA_ARGS__)
-	#define SglCoreError(...) Log::GetMainLogger()->error(__VA_ARGS__)
-	#define SglCoreTrace(...) Log::GetMainLogger()->trace(__VA_ARGS__)
-	#define SglCoreInfo(...)  Log::GetMainLogger()->info(__VA_ARGS__)
-	#define SglCoreFatal(...) Log::GetMainLogger()->fatal(__VA_ARGS__)
+    #ifndef NDEBUG
+    #define SGL_ASSERT(condition, message) \
+    do { \
+        if (! (condition)) { \
+            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                      << " line " << __LINE__ << ": " << message << std::endl; \
+            std::terminate(); \
+        } \
+    } while (false)
+    #else
+    #define SGL_ASSERT(condition, message)
+    #endif
 
-	#define SglWarn(...)  Log::GetMainLogger()->warn(__VA_ARGS__)
-	#define SglError(...) Log::GetMainLogger()->error(__VA_ARGS__)
-	#define SglTrace(...) Log::GetMainLogger()->trace(__VA_ARGS__)
-	#define SglInfo(...)  Log::GetMainLogger()->info(__VA_ARGS__)
-	#define SglFatal(...) Log::GetMainLogger()->fatal(__VA_ARGS__)
+    #define GLM_ENABLE_EXPERIMENTAL
+
+	#define SGL_CORE_WARN(...)  Log::GetMainLogger()->warn(__VA_ARGS__)
+	#define SGL_CORE_ERROR(...) Log::GetMainLogger()->error(__VA_ARGS__)
+	#define SGL_CORE_TRACE(...) Log::GetMainLogger()->trace(__VA_ARGS__)
+	#define SGL_CORE_INFO(...)  Log::GetMainLogger()->info(__VA_ARGS__)
+	#define SGL_CORE_FATAL(...) Log::GetMainLogger()->fatal(__VA_ARGS__)
+
+	#define SGL_WARN(...)  Log::GetMainLogger()->warn(__VA_ARGS__)
+	#define SGL_ERROR(...) Log::GetMainLogger()->error(__VA_ARGS__)
+	#define SGL_TRACE(...) Log::GetMainLogger()->trace(__VA_ARGS__)
+	#define SGL_INFO(...)  Log::GetMainLogger()->info(__VA_ARGS__)
+	#define SGL_FATAL(...) Log::GetMainLogger()->fatal(__VA_ARGS__)
 }

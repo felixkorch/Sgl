@@ -6,7 +6,7 @@
 
 namespace sgl
 {
-	class GenericWindow : public Window {
+	class BaseWindow : public Window {
 	protected:
 		GLFWwindow* window;
 		bool vSyncOn;
@@ -19,19 +19,18 @@ namespace sgl
 		int framesPerSecond;
 
         // Used to keep track of FPS to print to the console
-		int nbFrames;
-		double fpsCounter;
+		int frames;
+		double frameDelay;
 
 	public:
 
-		GenericWindow(WindowProperties props);
-		~GenericWindow();
+        BaseWindow(WindowProperties props);
+		~BaseWindow();
 
 		virtual bool IsClosed() const override;
-		virtual void Clear() override;
-		virtual void Update() override;
 		virtual void SetVSync(bool enabled) override;
-		virtual void ToggleFullScreen() override;
+		virtual void SetFullscreen() override;
+		virtual void SetWindowed() override;
 		virtual bool IsVSync() override;
 		virtual void SetFPS(int fps) override;
 		virtual bool IsFullScreen() override;
@@ -41,7 +40,7 @@ namespace sgl
 			return window;
 		}
 
-		virtual int GetWindowWidth() override
+		virtual int GetWidth() override
 		{
 			if (fullScreen) {
 				auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -50,7 +49,7 @@ namespace sgl
 			return props.width;
 		}
 
-		virtual int GetWindowHeight() override
+		virtual int GetHeight() override
 		{
 			if (fullScreen) {
 				auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -60,6 +59,10 @@ namespace sgl
 		}
 
 		int TryInit();
+
+    protected:
+        void Clear() override;
+        void Update() override;
 
 	private:
 		void DebugPrintFPS(int& nbFrames, double& lastTime);

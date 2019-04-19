@@ -3,7 +3,7 @@
 
 namespace sgl
 {
-	class GenericInput : public Input {
+	class BaseInput : public Input {
 	protected:
 		virtual bool IsKeyPressedImpl(int keycode) override;
 		virtual bool IsJoystickButtonPressedImpl(int code, int joystick) override;

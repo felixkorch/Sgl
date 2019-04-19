@@ -2,7 +2,6 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/Graphics/Camera2D.h"
-#include "Sgl/Common.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -76,8 +75,10 @@ namespace sgl
 
 	void Renderer2D_Core::Flush()
 	{
-        for (int i = 0; i < textures.size(); i++)
+        for (int i = 0; i < textures.size(); i++) {
             textures[i]->Bind(i);
+            shader.SetUniform1i("u_Sampler[" + std::to_string(i) + "]", i);
+        }
 
 		vertexArray.Bind();
 		indexBuffer.Bind();
@@ -98,8 +99,8 @@ namespace sgl
 
 	void Renderer2D_Core::SubmitTexture(const Texture2D* texture)
 	{
-		if (textures.size() == MaxTextures) {
-			SglCoreWarn("Max Textures exceeded");
+		if (textures.size() == MAX_TEXTURES) {
+			SGL_CORE_WARN("Max Textures exceeded");
 			return;
 		}
 		textures.push_back(texture);
@@ -107,7 +108,7 @@ namespace sgl
 
 	void Renderer2D_Core::Setup()
 	{
-		vertexBuffer.InitDynamicDraw(BufferSize);  // Allocate memory in GPU
+		vertexBuffer.InitDynamicDraw(BUFFER_SIZE);  // Allocate memory in GPU
         layout.Push<float>(3); // Position
         layout.Push<float>(4); // Color
         layout.Push<float>(2); // UV-Coords (Texture coordinates)
@@ -115,10 +116,10 @@ namespace sgl
 		vertexArray.AddBuffer(vertexBuffer, layout);
 		vertexBuffer.Unbind();
 
-		unsigned int indices[IndicesCount];
+		unsigned int indices[INDICES_COUNT];
 
 		int offset = 0;
-		for (int i = 0; i < IndicesCount; i += 6) {
+		for (int i = 0; i < INDICES_COUNT; i += 6) {
 			indices[i + 0] = offset + 0;
 			indices[i + 1] = offset + 1;
 			indices[i + 2] = offset + 2;
@@ -128,14 +129,8 @@ namespace sgl
 
 			offset += 4;
 		}
-		indexBuffer.Load(indices, IndicesCount);
+		indexBuffer.Load(indices, INDICES_COUNT);
 		vertexArray.Unbind();
-
-        shader.Bind();
-        shader.SetUniformMat4f("u_Projection", camera.GetViewMatrix());
-
-        for (int i = 0; i < MaxTextures; i++)
-            shader.SetUniform1i("u_Sampler[" + std::to_string(i) + "]", i);
 	}
 
     Renderer2D* Renderer2D::Create(int width, int height)

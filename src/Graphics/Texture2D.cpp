@@ -1,6 +1,5 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/Texture2D.h"
-#include "Sgl/Common.h"
 #include "stb_image/stb_image.h"
 #include <string>
 
@@ -52,8 +51,8 @@ namespace sgl
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(params.wrap));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(params.wrap));
-		//glGenerateMipmap(GL_TEXTURE_2D);
-
+        glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format), width, height, 0,
+                     GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, nullptr);
 		// Unbind the texture
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -82,8 +81,8 @@ namespace sgl
 	void Texture2D::SetData(void* pixels)
 	{
 		glBindTexture(GL_TEXTURE_2D, rendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format), width, height, 0,
-			GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, pixels);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(texParams.format),
+			            GL_UNSIGNED_BYTE, pixels);
 	}
 
 
@@ -100,8 +99,8 @@ namespace sgl
 		if (buffer)
 			stbi_image_free(buffer);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format),
-			width, height, 0, GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, buffer);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(texParams.format),
+            GL_UNSIGNED_BYTE, buffer);
 	}
 
 	void Texture2D::SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)

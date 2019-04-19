@@ -1,5 +1,4 @@
 #include "Sgl/OpenGL.h"
-#include "Sgl/Common.h"
 #include "Sgl/VertexBuffer.h"
 #include "Sgl/VertexBufferLayout.h"
 

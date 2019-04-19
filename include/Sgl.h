@@ -12,4 +12,3 @@
 #include "Sgl/Log.h"
 #include "Sgl/Input.h"
 #include "Sgl/Entrypoint.h"
-#include "Sgl/Common.h"

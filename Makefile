@@ -9,14 +9,14 @@ INC = -Ideps -Iinclude -Ideps/glm -Ideps/spdlog/include \
 -Ideps/GLFW/include -Ideps/Glad/include -Ideps/obj_loader/include -Ideps/stb_image/include -INemu/include
 
 TARGETS = obj/Application.o obj/IndexBuffer.o obj/LayerStack.o obj/Log.o \
-obj/Shader.o obj/VertexBuffer.o obj/WebWindow.o obj/Renderer2D_ES2.o obj/GenericInput.o obj/EventQueue.o obj/Layer.o obj/Texture2D.o
+obj/Shader.o obj/VertexBuffer.o obj/WebWindow.o obj/Renderer2D_ES2.o obj/BaseInput.o obj/EventQueue.o obj/Layer.o obj/Texture2D.o \
+obj/Main.o
 
-nemu: lib Nemu/src/Main.cpp
-	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) Nemu/src/Main.cpp -L obj -l Sgl -o emscripten/nemu/index.html --shell-file emscripten/layout.html
+nemu: $(TARGETS)
+	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) $(TARGETS) obj/Main.o -o emscripten/nemu/index.html --shell-file emscripten/layout.html
 
-lib: $(TARGETS)
-	ar -rcs obj/Sgl.a \
-	$(TARGETS)
+obj/Main.o: Nemu/src/Main.cpp
+	$(CC) $(FLAGS) $(INC) -c Nemu/src/Main.cpp -o obj/Main.o
 
 obj/Application.o: src/Application.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Application.cpp -o obj/Application.o
@@ -34,8 +34,8 @@ obj/WebWindow.o: src/Platform/Web/WebWindow.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Platform/Web/WebWindow.cpp -o obj/WebWindow.o
 obj/Renderer2D_ES2.o: src/Platform/GLES2/Renderer2D_ES2.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Platform/GLES2/Renderer2D_ES2.cpp -o obj/Renderer2D_ES2.o
-obj/GenericInput.o: src/GenericInput.cpp
-	$(CC) $(FLAGS) $(INC) -c src/GenericInput.cpp -o obj/GenericInput.o
+obj/BaseInput.o: src/BaseInput.cpp
+	$(CC) $(FLAGS) $(INC) -c src/BaseInput.cpp -o obj/BaseInput.o
 obj/EventQueue.o: src/EventQueue.cpp
 	$(CC) $(FLAGS) $(INC) -c src/EventQueue.cpp -o obj/EventQueue.o
 obj/Layer.o: src/Layer.cpp

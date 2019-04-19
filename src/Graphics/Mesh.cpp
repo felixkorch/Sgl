@@ -40,10 +40,10 @@ namespace sgl
 
 	Obj3D Mesh::LoadObj(const std::string& filePath)
 	{
-		SglAssert(false, "NOT IMPEMENTED");
+		SGL_ASSERT(false, "NOT IMPEMENTED");
 		objl::Loader loader;
 		if (!loader.LoadFile(filePath))
-			SglCoreWarn("Couldn't find obj file ({})", filePath);
+			SGL_CORE_WARN("Couldn't find obj file ({})", filePath);
 
 		/*
 		TODO NOT IMPLEMENTED

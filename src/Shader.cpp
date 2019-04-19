@@ -46,7 +46,7 @@ namespace sgl
 		std::ifstream stream(filepath);
 
 		if (!stream.good()) {
-			SglCoreError("Shader not found, path given: {}", filepath);
+			SGL_CORE_ERROR("Shader not found, path given: {}", filepath);
 			return;
 		}
 
@@ -72,7 +72,7 @@ namespace sgl
 
 	Shader::~Shader()
 	{
-        if(rendererID) SglCoreInfo("Shader {} deleted.", rendererID);
+        if(rendererID) SGL_CORE_INFO("Shader(id: {}) deleted.", rendererID);
 		glDeleteProgram(rendererID);
 	}
 
@@ -123,7 +123,7 @@ namespace sgl
 
 		int location = glGetUniformLocation(rendererID, name.c_str());
 		if (location == -1)
-			SglCoreWarn("Unable to set Uniform {}, doesn't exist", name);
+			SGL_CORE_WARN("Unable to set Uniform {}, doesn't exist", name);
 
 		uniformLocationCache[name] = location;
 		return location;
@@ -132,13 +132,13 @@ namespace sgl
 	unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		if (vertexShader.empty() || fragmentShader.empty())
-			SglCoreError("Vertex or Fragment shader empty.");
+			SGL_CORE_ERROR("Vertex or Fragment shader empty.");
 
 		unsigned int program = glCreateProgram();
-        SglCoreInfo("Shader({}) created.", program);
+        SGL_CORE_INFO("Shader(id: {}) created.", program);
 
 		if (program == 0)
-			SglCoreError("Program failed to compile");
+			SGL_CORE_ERROR("Program failed to compile");
 
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -169,7 +169,7 @@ namespace sgl
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)alloca(length * sizeof(char));
 			glGetShaderInfoLog(id, length, &length, message);
-			SglCoreWarn("{}, {}", message, type);
+			SGL_CORE_WARN("{}, {}", message, type);
 			glDeleteShader(id);
 			return 0;
 		}
@@ -200,7 +200,7 @@ namespace sgl
 			}
 			else {
 				if (type == ShaderType::NONE) {
-					SglCoreError("Invalid shader format. Needs to contain vertex / fragments directives.");
+					SGL_CORE_ERROR("Invalid shader format. Needs to contain vertex / fragments directives.");
 					return {};
 				}
 				ss[(int)type] << line << '\n';

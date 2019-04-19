@@ -1,5 +1,5 @@
 #include "Sgl/OpenGL.h"
-#include "Sgl/GenericWindow.h"
+#include "Sgl/BaseWindow.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/KeyCodes.h"
 #include "Sgl/Events/ApplicationEvent.h"
@@ -12,15 +12,15 @@
 
 namespace sgl
 {
-	GenericWindow::GenericWindow(WindowProperties props) :
+	BaseWindow::BaseWindow(WindowProperties props) :
 		Window(props),
 		vSyncOn(true),
 		fullScreen(false),
 		framesPerSecond(-1),
-		nbFrames(0)
+		frames(0)
 	{}
 
-	GenericWindow::~GenericWindow()
+	BaseWindow::~BaseWindow()
 	{
 		glfwDestroyWindow(window);
 		glfwTerminate();
@@ -28,7 +28,7 @@ namespace sgl
 
 	Window* Window::Create(WindowProperties props)
 	{
-		auto window = new GenericWindow(props);
+		auto window = new BaseWindow(props);
 		if (window->TryInit() == -1) {
 			delete window;
 			return nullptr;
@@ -36,43 +36,43 @@ namespace sgl
 		return window;
 	}
 
-	bool GenericWindow::IsClosed() const
+	bool BaseWindow::IsClosed() const
 	{
 		return glfwWindowShouldClose(window);
 	}
 
 
-	void GenericWindow::SetFPS(int fps)
+	void BaseWindow::SetFPS(int fps)
 	{
 		framesPerSecond = fps;
 	}
 
-	void GenericWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
+	void BaseWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
 	{
 		double currentTime = glfwGetTime();
 		nbFrames++;
 		if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
 			// Print and reset timer
 			auto time = 1000.0 / double(nbFrames);
-			SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+			SGL_CORE_TRACE("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
 	}
 
-	void GenericWindow::Clear()
+	void BaseWindow::Clear()
 	{
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
-	void GenericWindow::Update()
+	void BaseWindow::Update()
 	{
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
         #ifndef NDEBUG
-        DebugPrintFPS(nbFrames, fpsCounter);
+        DebugPrintFPS(frames, frameDelay);
         #endif
 
 		if (framesPerSecond == -1)
@@ -82,7 +82,7 @@ namespace sgl
 		delay += std::chrono::nanoseconds(1000000000) / framesPerSecond;
 	}
 
-	void GenericWindow::SetVSync(bool enabled)
+	void BaseWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -92,34 +92,34 @@ namespace sgl
 		vSyncOn = enabled;
 	}
 
-	void GenericWindow::ToggleFullScreen()
+	void BaseWindow::SetFullscreen()
 	{
-		auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		if (fullScreen) {
-			glfwSetWindowMonitor(window, nullptr, windowedXPos, windowedYPos, props.width, props.height, GLFW_DONT_CARE);
-		}
-		else {
-			glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
-			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
-		}
-
-		fullScreen = !fullScreen;
+        auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwGetWindowPos(window, &windowedXPos, &windowedYPos);
+        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
+		fullScreen = true;
 	}
 
-	bool GenericWindow::IsVSync()
+    void BaseWindow::SetWindowed()
+    {
+        glfwSetWindowMonitor(window, nullptr, windowedXPos, windowedYPos, props.width, props.height, GLFW_DONT_CARE);
+        fullScreen = false;
+    }
+
+	bool BaseWindow::IsVSync()
 	{
 		return vSyncOn;
 	}
 
-	bool GenericWindow::IsFullScreen()
+	bool BaseWindow::IsFullScreen()
 	{
 		return fullScreen;
 	}
 
-	int GenericWindow::TryInit()
+	int BaseWindow::TryInit()
 	{
 		if (!glfwInit()) {
-			SglCoreError("glfwInit failed!");
+			SGL_CORE_ERROR("glfwInit failed!");
 			return -1;
 		}
 
@@ -136,10 +136,10 @@ namespace sgl
 
 		SetVSync(true);
 
-		window = glfwCreateWindow(props.width, props.height, props.title, nullptr, nullptr);
+		window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
 		if (!window) {
 			glfwTerminate();
-			SglCoreError("glfwCreateWindow failed!");
+			SGL_CORE_ERROR("glfwCreateWindow failed!");
 			return -1;
 		}
 
@@ -148,7 +148,7 @@ namespace sgl
 
 		// Callback when the window gets resized
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 			win.CallEventHandler(new WindowResizedEvent(width, height));
 		});
 
@@ -159,13 +159,13 @@ namespace sgl
 
 		// Drop Event
 		glfwSetDropCallback(window, [](GLFWwindow* window, int count, const char** paths) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 			win.CallEventHandler(new DropEvent(count, paths));
 		});
 
 		// Mouse Events
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
@@ -181,7 +181,7 @@ namespace sgl
 
 		// Key Events
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
@@ -200,13 +200,13 @@ namespace sgl
 		});
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
-			GenericWindow& win = *(GenericWindow*)glfwGetWindowUserPointer(window);
+			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 			win.CallEventHandler(new WindowCloseEvent);
 		});
 
 		// Initialize OpenGL for desktop
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			SglCoreError("Failed to initialize Glad");
+			SGL_CORE_ERROR("Failed to initialize Glad");
 			return -1;
 		}
 
@@ -216,7 +216,7 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		fpsCounter   = glfwGetTime(); // This may or may not cause problems since its called too early.
+		frameDelay   = glfwGetTime(); // This may or may not cause problems since its called too early.
         delay = std::chrono::steady_clock::now();
 
 		return 1;

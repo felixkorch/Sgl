@@ -13,12 +13,12 @@ namespace sgl
 {
 	class Renderer2D {
 	protected:
-		static constexpr std::size_t MaxSprites = 1000;
-		static constexpr std::size_t VertexSize = sizeof(VertexData);
-		static constexpr std::size_t SpriteSize = (4 * VertexSize);
-		static constexpr std::size_t BufferSize = SpriteSize * MaxSprites;
-		static constexpr std::size_t IndicesCount = (6 * MaxSprites);
-		static constexpr std::size_t MaxTextures = 16;
+		static constexpr std::size_t MAX_SPRITES = 1000;
+		static constexpr std::size_t VERTEX_SIZE = sizeof(VertexData);
+		static constexpr std::size_t SPRITE_SIZE = (4 * VERTEX_SIZE);
+		static constexpr std::size_t BUFFER_SIZE = SPRITE_SIZE * MAX_SPRITES;
+		static constexpr std::size_t INDICES_COUNT = (6 * MAX_SPRITES);
+		static constexpr std::size_t MAX_TEXTURES = 16;
 
 		VertexBufferLayout layout;
 		VertexBuffer vertexBuffer;
@@ -36,7 +36,7 @@ namespace sgl
             camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)),
             indexCount(0)
 		{
-			textures.reserve(MaxTextures);
+			textures.reserve(MAX_TEXTURES);
 		}
 
         virtual ~Renderer2D() = default;

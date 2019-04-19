@@ -22,8 +22,8 @@ set(Sgl_SOURCE
     src/IndexBuffer.cpp
     src/VertexBuffer.cpp
     src/VertexArray.cpp
-    src/GenericInput.cpp
-    src/GenericWindow.cpp
+    src/BaseInput.cpp
+    src/BaseWindow.cpp
     src/Platform/Core/Renderer2D_Core.cpp
     src/Graphics/Texture2D.cpp
 )

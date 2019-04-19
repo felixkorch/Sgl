@@ -89,7 +89,7 @@ public:
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
 			auto& e = (DropEvent&)event;
-			SglTrace(e.ToString());
+			SGL_TRACE(e.ToString());
 		}
 
 		else if (event.GetEventType() == EventType::KeyPressed) {
@@ -138,13 +138,13 @@ public:
 
 	void OnDetach() override
 	{
-		SglTrace("Terminating overlay");
+		SGL_TRACE("Terminating overlay");
 	}
 
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::KeyPressed) {
-			SglTrace("Key pressed from Overlay");
+            SGL_TRACE("Key pressed from Overlay");
 		}
 	}
 

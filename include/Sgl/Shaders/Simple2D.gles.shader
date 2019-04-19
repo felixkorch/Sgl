@@ -25,7 +25,9 @@ void main() {
 
 precision mediump float;
 
-uniform sampler2D u_Sampler[16];
+const int MAX_TEXTURES = 16;
+
+uniform sampler2D u_Sampler[MAX_TEXTURES];
 
 varying vec4  f_color;
 varying vec2  f_uv;
@@ -33,7 +35,7 @@ varying float f_tid;
 
 void main() {
 	int tid = int(f_tid);
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < MAX_TEXTURES; i++) {
 		if (tid == i)
 			gl_FragColor = texture2D(u_Sampler[i], f_uv);
 	}

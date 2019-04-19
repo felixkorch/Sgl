@@ -15,7 +15,7 @@ namespace sgl
 		vSyncOn(true),
 		fullScreen(false),
 		framesPerSecond(-1),
-        nbFrames(0)
+        frames(0)
 	{}
 
 	WebWindow::~WebWindow()
@@ -51,7 +51,7 @@ namespace sgl
         if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
             // Print and reset timer
             auto time = 1000.0 / double(nbFrames);
-            SglCoreTrace("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
+            SGL_CORE_TRACE("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
             nbFrames = 0;
             lastTime += 1.0;
         }
@@ -69,7 +69,7 @@ namespace sgl
         glfwPollEvents();
 
         #ifndef NDEBUG
-        DebugPrintFPS(nbFrames, fpsCounter);
+        DebugPrintFPS(frames, frameDelay);
         #endif
 
         if (framesPerSecond == -1)
@@ -91,7 +91,7 @@ namespace sgl
 
 	static int EmscriptenResizeCallback(int eventType, const EmscriptenFullscreenChangeEvent* event, void* data)
 	{
-        SglCoreTrace("Resized");
+        SGL_CORE_TRACE("Resized");
 		WebWindow& win = *(WebWindow*)glfwGetWindowUserPointer((GLFWwindow*)data);
 		if (event->isFullscreen) {
 			win.CallEventHandler(new WindowResizedEvent(event->elementWidth, event->elementHeight));
@@ -104,14 +104,23 @@ namespace sgl
 		return EMSCRIPTEN_RESULT_SUCCESS;
 	}
 
-	void WebWindow::ToggleFullScreen()
+	void WebWindow::SetFullscreen()
 	{
 		#ifdef WEB_SOFT_FULLSCREEN
-		ToggleSoftFullScreen();
+		SetSoftFullscreen();
 		#else
-		ToggleStandardFullScreen();
+		SetStandardFullscreen();
 		#endif
 	}
+
+    void WebWindow::SetWindowed()
+    {
+        #ifdef WEB_SOFT_FULLSCREEN
+        ExitSoftFullscreen();
+        #else
+        ExitStandardFullscreen();
+        #endif
+    }
 
 	bool WebWindow::IsVSync()
 	{
@@ -126,7 +135,7 @@ namespace sgl
 	int WebWindow::TryInit()
 	{
 		if (!glfwInit()) {
-			SglCoreError("glfwInit failed!");
+			SGL_CORE_ERROR("glfwInit failed!");
 			return -1;
 		}
 
@@ -137,10 +146,10 @@ namespace sgl
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		SetVSync(true);
 
-		window = glfwCreateWindow(props.width, props.height, props.title, nullptr, nullptr);
+		window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
 		if (!window) {
 			glfwTerminate();
-			SglCoreError("glfwCreateWindow failed!");
+			SGL_CORE_ERROR("glfwCreateWindow failed!");
 			return -1;
 		}
 
@@ -213,47 +222,46 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-        fpsCounter = glfwGetTime(); // This may or may not cause problems since its called too early.
+        frameDelay = glfwGetTime(); // This may or may not cause problems since its called too early.
         delay = std::chrono::steady_clock::now();
 
 		return 1;
 	}
 
-	void WebWindow::ToggleSoftFullScreen()
+	void WebWindow::SetSoftFullscreen()
 	{
-		if (fullScreen) {
-			emscripten_exit_soft_fullscreen();
-		}
-		else {
-			EmscriptenFullscreenStrategy strategy = {
-				.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT,
-				.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF,
-				.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT
-			};
-			emscripten_enter_soft_fullscreen(NULL, &strategy);
-		}
-
-		fullScreen = !fullScreen;
+        EmscriptenFullscreenStrategy strategy = {
+                .scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT,
+                .canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF,
+                .filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT
+        };
+        emscripten_enter_soft_fullscreen(NULL, &strategy);
+        fullScreen = false;
 	}
 
-	void WebWindow::ToggleStandardFullScreen()
-	{
-		if (fullScreen) {
-			emscripten_exit_fullscreen();
-		}
-		else {
-			emscripten_exit_soft_fullscreen();
-			EM_ASM(JSEvents.inEventHandler = true);
-			EM_ASM(JSEvents.currentEventHandler = { allowsDeferredCalls:true });
-			EmscriptenFullscreenStrategy strategy = {
-				.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT,
-				.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF,
-				.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT
-			};
-			emscripten_request_fullscreen_strategy(NULL, EM_FALSE, &strategy);
-		}
+    void WebWindow::ExitSoftFullscreen()
+    {
+        emscripten_exit_soft_fullscreen();
+    }
 
-		fullScreen = !fullScreen;
+    void WebWindow::ExitStandardFullscreen()
+    {
+        emscripten_exit_fullscreen();
+        fullScreen = false;
+    }
+
+	void WebWindow::SetStandardFullscreen()
+	{
+        emscripten_exit_soft_fullscreen();
+        EM_ASM(JSEvents.inEventHandler = true);
+        EM_ASM(JSEvents.currentEventHandler = { allowsDeferredCalls:true });
+        EmscriptenFullscreenStrategy strategy = {
+            .scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT,
+            .canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF,
+            .filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT
+        };
+        emscripten_request_fullscreen_strategy(NULL, EM_FALSE, &strategy);
+        fullScreen = true;
 	}
 
 }
