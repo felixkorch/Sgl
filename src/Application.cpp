@@ -9,7 +9,7 @@
 
 namespace sgl
 {
-	#ifdef USE_EMSCRIPTEN
+	#ifdef PLATFORM_WEB
 
 	static void CallMain(void* fp)
 	{
@@ -68,7 +68,7 @@ namespace sgl
 
 	void Application::Run()
 	{
-		#ifdef USE_EMSCRIPTEN
+		#ifdef PLATFORM_WEB
 		std::function<void()> mainLoop = [&]() {
 		#else
 		while (running) {
@@ -85,7 +85,7 @@ namespace sgl
 			}
 			window->Update();
 
-		#ifdef USE_EMSCRIPTEN
+		#ifdef PLATFORM_WEB
 		};
 		emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);
 		#else

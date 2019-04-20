@@ -24,7 +24,7 @@ set(Sgl_SOURCE
     src/VertexArray.cpp
     src/BaseInput.cpp
     src/BaseWindow.cpp
-    src/Platform/Core/Renderer2D_Core.cpp
+    src/Graphics/Renderer2D.cpp
     src/Graphics/Texture2D.cpp
 )
 

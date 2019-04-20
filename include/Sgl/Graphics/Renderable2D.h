@@ -1,9 +1,9 @@
 #pragma once
-#include "Sgl/Graphics/Transform.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <array>
+#include <vector>
 
 namespace sgl
 {
@@ -54,17 +54,30 @@ namespace sgl
 	class Renderable2D {
 	public:
 		Rectangle bounds;
-		glm::vec4 color = glm::vec4(1);
-		std::vector<glm::vec2> uv = GetStandardUVs();
-		float tid = 0;
+		glm::vec4 color;
+		std::vector<glm::vec2> uv;
+		float tid;
 
-		Renderable2D() {}
+		Renderable2D()
+            : bounds()
+            , color(glm::vec4(1))
+            , uv(GetStandardUVs())
+            , tid(0)
+        {}
 
 		Renderable2D(const glm::vec2& size, const glm::vec2& pos)
-			: bounds(size, pos) {}
+			: bounds(size, pos)
+            , color(glm::vec4(1))
+            , uv(GetStandardUVs())
+            , tid(0)
+        {}
 
 		Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
-			: bounds(size, pos), color(color) {}
+			: bounds(size, pos)
+            , color(color)
+            , uv(GetStandardUVs())
+            , tid(0)
+        {}
 
 		void SetPos(const glm::vec2& pos)
 		{

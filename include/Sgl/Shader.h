@@ -1,6 +1,5 @@
 #pragma once
 #include "Sgl/ShaderUniform.h"
-#include "Sgl/Graphics/Light.h"
 #include <string>
 #include <unordered_map>
 #include <vector>

@@ -1,5 +1,5 @@
 #include "Sgl/OpenGL.h"
-#include "Sgl/Platform/GLES2/Renderer2D_ES2.h"
+#include "Sgl/Graphics/Renderer2D.h"
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/Graphics/Camera2D.h"
 
@@ -10,22 +10,45 @@
 
 namespace sgl
 {
-	Renderer2D_ES2::Renderer2D_ES2(int width, int height, Shader&& shader)
-		: Renderer2D(width, height, std::move(shader))
-	{
+    Renderer2D::Renderer2D(int width, int height, Shader&& shader)
+        : shader(std::move(shader))
+        , screenSize(width, height)
+        , camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f))
+    {
+        textures.reserve(MAX_TEXTURES);
         Setup();
     }
 
-	Renderer2D_ES2::~Renderer2D_ES2() {}
+    void Renderer2D::SetCamera(const glm::vec2& val)
+    {
+        camera.GetPos() = glm::vec3(val, 0);
+    }
 
-	void Renderer2D_ES2::Begin()
+    void Renderer2D::SetShader(Shader&& _shader)
+    {
+        shader = std::move(_shader);
+    }
+
+    Camera2D& Renderer2D::GetCamera()
+    {
+        return camera;
+    }
+
+    void Renderer2D::SetScreenSize(int width, int height)
+    {
+        screenSize.x = width;
+        screenSize.y = height;
+        camera = Camera2D(width, height);
+    }
+
+	void Renderer2D::Begin()
 	{
 		shader.Bind();
 		vertexDataBuffer.clear();
 		shader.SetUniformMat4f("u_Projection", camera.GetViewMatrix());
 	}
 
-	void Renderer2D_ES2::Submit(Renderable2D& renderable)
+	void Renderer2D::Submit(Renderable2D& renderable)
 	{
 		auto vertices = renderable.GetVertices();
 
@@ -33,11 +56,9 @@ namespace sgl
 		vertexDataBuffer.emplace_back(VertexData{ vertices[1], renderable.color, renderable.uv[1], renderable.tid });
 		vertexDataBuffer.emplace_back(VertexData{ vertices[2], renderable.color, renderable.uv[2], renderable.tid });
 		vertexDataBuffer.emplace_back(VertexData{ vertices[3], renderable.color, renderable.uv[3], renderable.tid });
-
-		indexCount += 6;
 	}
 
-	void Renderer2D_ES2::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
 		const auto uvs = Renderable2D::GetStandardUVs();
 
@@ -45,11 +66,9 @@ namespace sgl
 		vertexDataBuffer.emplace_back(VertexData{ p1, color, uvs[1], 0 });
 		vertexDataBuffer.emplace_back(VertexData{ p2, color, uvs[2], 0 });
 		vertexDataBuffer.emplace_back(VertexData{ p3, color, uvs[3], 0 });
-
-		indexCount += 6;
 	}
 
-	void Renderer2D_ES2::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
+	void Renderer2D::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
 	{
 		const glm::vec3 v1 = glm::vec3(pos, 1);
 		const glm::vec3 v2 = glm::vec3(pos.x + size.x, pos.y, 1);
@@ -58,14 +77,14 @@ namespace sgl
 		DrawQuad(v1, v2, v3, v4, color);
 	}
 
-	void Renderer2D_ES2::End()
+	void Renderer2D::End()
 	{
 		vertexBuffer.Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, BUFFER_SIZE, (void*)(vertexDataBuffer.data()));
 		vertexBuffer.Unbind();
 	}
 
-	void Renderer2D_ES2::Flush()
+	void Renderer2D::Flush()
 	{
         for (int i = 0; i < textures.size(); i++) {
             textures[i]->Bind(i);
@@ -75,7 +94,7 @@ namespace sgl
 		vertexBuffer.Bind();
 		indexBuffer.Bind();
 		vertexBuffer.BindLayout(layout);
-		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, vertexDataBuffer.size() * 4 * 6, GL_UNSIGNED_INT, nullptr);
 
 		vertexBuffer.Unbind();
 		indexBuffer.Unbind();
@@ -84,11 +103,9 @@ namespace sgl
 			textures[i]->Unbind();
 
 		textures.clear();
-
-		indexCount = 0;
 	}
 
-	void Renderer2D_ES2::SubmitTexture(const Texture2D* texture)
+	void Renderer2D::SubmitTexture(const Texture2D* texture)
 	{
 		if (textures.size() == MAX_TEXTURES) {
 			SGL_CORE_WARN("Max Textures exceeded");
@@ -97,7 +114,7 @@ namespace sgl
 		textures.push_back(texture);
 	}
 
-	void Renderer2D_ES2::Setup()
+	void Renderer2D::Setup()
 	{
 		vertexDataBuffer.reserve(BUFFER_SIZE);
 		vertexBuffer.InitDynamicDraw(BUFFER_SIZE);  // Allocate memory in GPU
@@ -106,7 +123,12 @@ namespace sgl
 		layout.Push<float>(2); // UV-Coords (Texture coordinates)
 		layout.Push<float>(1); // TID (Texture ID)
 
+        #ifndef PLATFORM_WEB
+        vertexArray.Bind();
+        vertexArray.AddBuffer(vertexBuffer, layout);
+        #else
 		vertexBuffer.BindLayout(layout); // Instead of Vertex Arrays
+        #endif
 		vertexBuffer.Unbind();
 
 		unsigned int indices[INDICES_COUNT];
@@ -127,9 +149,15 @@ namespace sgl
 
 	Renderer2D* Renderer2D::Create(int width, int height)
 	{
+        #ifndef PLATFORM_WEB
+        const char* shaderProgram = Shader::Shader2D_Core;
+        #else
+        const char* shaderProgram = Shader::Shader2D_ES2;
+        #endif
+
         Shader shader;
-        shader.LoadFromString(Shader::Shader2D_ES2);
-        Renderer2D* renderer = new Renderer2D_ES2(width, height, std::move(shader));
+        shader.LoadFromString(shaderProgram);
+        Renderer2D* renderer = new Renderer2D(width, height, std::move(shader));
         return renderer;
 	}
 

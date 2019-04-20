@@ -1,5 +1,5 @@
 #pragma once
-#ifdef USE_EMSCRIPTEN
+#ifdef PLATFORM_WEB
 #include "emscripten/emscripten.h"
 #include "emscripten/html5.h"
 #define GLFW_INCLUDE_NONE
