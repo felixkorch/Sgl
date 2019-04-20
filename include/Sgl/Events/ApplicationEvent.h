@@ -32,7 +32,7 @@ namespace sgl
 
 		const EventType GetEventType() const override
 		{
-			return EventType::WindowResizedEvent;
+			return EventType::WindowResized;
 		}
 
 		std::string ToString() const override
@@ -52,7 +52,7 @@ namespace sgl
 			return height;
 		}
 
-		static EventType GetStaticType() { return EventType::WindowResizedEvent; }
+		static EventType GetStaticType() { return EventType::WindowResized; }
 	};
 
 	class DropEvent : public Event {

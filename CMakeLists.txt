@@ -11,6 +11,7 @@ endif()
 add_subdirectory(deps/GLFW)
 add_subdirectory(deps/Glad)
 add_subdirectory(deps/stb_image)
+add_subdirectory(deps/imgui)
 
 set(Sgl_SOURCE
     src/Application.cpp
@@ -26,9 +27,11 @@ set(Sgl_SOURCE
     src/BaseWindow.cpp
     src/Graphics/Renderer2D.cpp
     src/Graphics/Texture2D.cpp
+    src/ImGuiLayer.cpp
+    src/ImGuiRenderer.cpp
 )
 
-list(APPEND Sgl_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image)
+list(APPEND Sgl_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image imgui)
 
 add_library(${PROJECT_NAME} ${Sgl_SOURCE})
 target_include_directories(${PROJECT_NAME}
@@ -37,6 +40,7 @@ target_include_directories(${PROJECT_NAME}
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/spdlog/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/glm>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/obj_loader/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/imgui>
 )
 
 target_link_libraries(${PROJECT_NAME} ${Sgl_LIBRARIES})

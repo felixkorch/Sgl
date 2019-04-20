@@ -164,6 +164,11 @@ namespace sgl
 		});
 
 		// Mouse Events
+        glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+            BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
+            win.CallEventHandler(new MouseMovedEvent(xpos, ypos));
+        });
+
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 
@@ -216,7 +221,7 @@ namespace sgl
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		frameDelay   = glfwGetTime(); // This may or may not cause problems since its called too early.
+		frameDelay = glfwGetTime(); // This may or may not cause problems since its called too early.
         delay = std::chrono::steady_clock::now();
 
 		return 1;

@@ -96,7 +96,7 @@ public:
 			auto& e = (KeyPressedEvent&)event;
 		}
 
-		else if (event.GetEventType() == EventType::WindowResizedEvent) {
+		else if (event.GetEventType() == EventType::WindowResized) {
 			auto& e = (WindowResizedEvent&)event;
 
 			// Width according to aspect ratio
@@ -169,8 +169,9 @@ public:
 	NESApp()
 		: Application(props)
 	{
-		window->SetFPS(60);
-		PushLayer(new MainLayer);
+		//window->SetFPS(60);
+		PushOverlay(new sgl::ImGuiLayer);
+		//PushLayer(new MainLayer);
 	}
 
 	~NESApp() {}

@@ -4,9 +4,11 @@
 
 namespace sgl
 {
+    #define SGL_BIND_EVENT(X) std::bind(&X, this, std::placeholders::_1)
+
 	enum class EventType {
 		WindowClose, KeyPressed, KeyReleased, KeyRepeat, MouseMoved, MouseButtonPressed, MouseButtonReleased,
-		JoystickButtonPressed, JoystickButtonReleased, DropEvent, WindowResizedEvent
+		JoystickButtonPressed, JoystickButtonReleased, DropEvent, WindowResized
 	};
 
 	class Event {

@@ -50,8 +50,8 @@ namespace sgl
 
 	void Application::PushOverlay(Layer* overlay)
 	{
-		overlay->OnAttach();
 		layerstack->PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event* e)
@@ -98,7 +98,7 @@ namespace sgl
 		Event* e = eventQueue.GetNext();
 		while (e) {
 			EventDispatcher dispatcher(e);
-			dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+			dispatcher.Dispatch<WindowCloseEvent>(SGL_BIND_EVENT(Application::OnWindowClose));
 			for (auto it = layerstack->end(); it != layerstack->begin();) {
 				(*--it)->OnEvent(*e);
 				if (e->handled)

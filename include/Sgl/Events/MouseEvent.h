@@ -6,11 +6,11 @@ namespace sgl
 	class MouseEvent : public Event {
 	};
 
-	class MouseMoved : public MouseEvent {
+	class MouseMovedEvent : public MouseEvent {
 	protected:
 		double xPos, yPos;
 	public:
-		MouseMoved(double xPos, double yPos)
+		MouseMovedEvent(double xPos, double yPos)
 			: xPos(xPos), yPos(yPos) {}
 		
 		double GetXPos()
