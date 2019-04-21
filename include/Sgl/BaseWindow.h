@@ -33,6 +33,7 @@ namespace sgl
 		virtual void SetWindowed() override;
 		virtual bool IsVSync() override;
 		virtual void SetFPS(int fps) override;
+		virtual int& GetFPS() override;
 		virtual bool IsFullScreen() override;
 
 		virtual void* GetNativeWindow() const override

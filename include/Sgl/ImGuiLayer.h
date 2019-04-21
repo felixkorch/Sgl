@@ -1,3 +1,4 @@
+#pragma once
 #include "Sgl/Layer.h"
 #include "Sgl/Events/Event.h"
 #include "Sgl/Events/MouseEvent.h"
@@ -15,14 +16,16 @@ namespace sgl {
         void OnEvent(Event& event) override;
         void OnAttach() override;
         void OnDetach() override;
+        void Begin();
+        void End();
     private:
         bool OnMouseButtonPressedEvent(MouseButtonPressed* e);
         bool OnMouseButtonReleasedEvent(MouseButtonReleased* e);
         bool OnMouseMovedEvent(MouseMovedEvent* e);
-        //bool OnMouseScrolledEvent(MouseScrolledEvent* e);
+        bool OnMouseScrolledEvent(MouseScrolledEvent* e);
         bool OnKeyPressedEvent(KeyPressedEvent* e);
         bool OnKeyReleasedEvent(KeyReleasedEvent* e);
-        //bool OnKeyTypedEvent(KeyTypedEvent* e);
+        bool OnKeyTypedEvent(KeyTypedEvent* e);
         bool OnWindowResizeEvent(WindowResizedEvent* e);
     };
 }

@@ -12,39 +12,30 @@ namespace sgl
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		layers.push_front(layer);
+        layers.emplace(layers.begin() + layerInsertIndex, layer);
+        layerInsertIndex++;
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		layers.push_back(overlay);
+        layers.emplace_back(overlay);
 	}
 
 	void LayerStack::PopLayer(Layer* layer)
 	{
-		auto it = std::find(layers.begin(), layers.end(), layer);
-		if (it != layers.end()) {
-			delete *it;
-			layers.erase(it);
-		}
+        auto it = std::find(layers.begin(), layers.end(), layer);
+        if (it != layers.end())
+        {
+            layers.erase(it);
+            layerInsertIndex--;
+        }
 	}
 
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
-		auto it = std::find(layers.begin(), layers.end(), overlay);
-		if (it != layers.end()) {
-			delete *it;
-			layers.erase(it);
-		}
+        auto it = std::find(layers.begin(), layers.end(), overlay);
+        if (it != layers.end())
+            layers.erase(it);
 	}
 
-	std::deque<Layer*>::iterator LayerStack::begin()
-	{
-		return layers.begin();
-	}
-
-	std::deque<Layer*>::iterator LayerStack::end()
-	{
-		return layers.end();
-	}
 }

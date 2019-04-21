@@ -40,6 +40,26 @@ namespace sgl
 		static EventType GetStaticType() { return EventType::KeyPressed; }
 	};
 
+    class KeyTypedEvent : public KeyEvent {
+    public:
+        KeyTypedEvent(int keycode)
+            : KeyEvent(keycode) {}
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "KeyTypedEvent: " << keyCode;
+            return ss.str();
+        }
+
+        const EventType GetEventType() const override
+        {
+            return EventType::KeyTyped;
+        }
+
+        static EventType GetStaticType() { return EventType::KeyTyped; }
+    };
+
 	class KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keycode)

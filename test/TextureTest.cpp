@@ -21,12 +21,17 @@ private:
 	static unsigned int nesRGB[64];
 	const float aspectRatio = (float)TexWidth / (float)TexHeight;
 
+    ImGuiLayer* settings;
+    bool showSettings;
+
 public:
 	MainLayer() :
 		Layer("GameLayer"),
 		pixels(new std::uint8_t[TexWidth * TexHeight * 4]),
 		tex0(TexWidth, TexHeight),
-		tex1(100, 100)
+		tex1(100, 100),
+        settings(new ImGuiLayer),
+        showSettings(false)
 
 	{
         renderer = std::unique_ptr<Renderer2D>(Renderer2D::Create(Width, Height));
@@ -85,6 +90,43 @@ public:
 		renderer->Flush();
 	}
 
+    void OnImGuiRender() override
+    {
+        auto& app = Application::Get();
+        static int counter = 0;
+
+        ImGui::ShowDemoWindow();
+
+        if (showSettings) {
+            bool show = ImGui::Begin("Settings", &showSettings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+            if (!show) {
+                ImGui::End();
+            }
+            else {
+                ImGui::SetWindowSize(ImVec2((float)app.GetWindow()->GetWidth() * 0.75, (float)app.GetWindow()->GetHeight() * 0.75));
+                ImGui::SetWindowPos(ImVec2((float)app.GetWindow()->GetWidth() * 0.125, (float)app.GetWindow()->GetHeight() * 0.125));
+
+                ImGui::Columns(2, "Columns", false);
+                ImGui::Separator();
+
+                ImGui::Text("Set Frames per second.");
+                ImGui::SameLine();
+                ImGui::SliderInt("FPS", &app.GetWindow()->GetFPS(), 30, 144);
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+                ImGui::NextColumn();
+
+                if (ImGui::Button("Save State"))
+                    counter++;
+                ImGui::SameLine();
+                ImGui::Text("counter = %d", counter);
+
+                ImGui::End();
+            }
+        }
+    }
+
 	void OnEvent(Event& event) override
 	{
 		if (event.GetEventType() == EventType::DropEvent) {
@@ -93,7 +135,10 @@ public:
 		}
 
 		else if (event.GetEventType() == EventType::KeyPressed) {
-			auto& e = (KeyPressedEvent&)event;
+            KeyPressedEvent& e = (KeyPressedEvent&)event;
+            if (e.GetKeyCode() == SGL_KEY_ESCAPE) {
+                showSettings = !showSettings;
+            }
 		}
 
 		else if (event.GetEventType() == EventType::WindowResized) {
@@ -169,9 +214,7 @@ public:
 	NESApp()
 		: Application(props)
 	{
-		//window->SetFPS(60);
-		PushOverlay(new sgl::ImGuiLayer);
-		//PushLayer(new MainLayer);
+		PushLayer(new MainLayer);
 	}
 
 	~NESApp() {}

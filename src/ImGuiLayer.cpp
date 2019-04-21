@@ -25,31 +25,15 @@ void ImGuiLayer::OnEvent(Event& event)
     dispatcher.Dispatch<MouseButtonPressed>(SGL_BIND_EVENT(ImGuiLayer::OnMouseButtonPressedEvent));
     dispatcher.Dispatch<MouseButtonReleased>(SGL_BIND_EVENT(ImGuiLayer::OnMouseButtonReleasedEvent));
     dispatcher.Dispatch<MouseMovedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnMouseMovedEvent));
-    //dispatcher.Dispatch<MouseScrolledEvent>(SGL_BIND_EVENT(ImGuiLayer::OnMouseScrolledEvent));
+    dispatcher.Dispatch<MouseScrolledEvent>(SGL_BIND_EVENT(ImGuiLayer::OnMouseScrolledEvent));
     dispatcher.Dispatch<KeyPressedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnKeyPressedEvent));
-    //dispatcher.Dispatch<KeyTypedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnKeyTypedEvent));
+    dispatcher.Dispatch<KeyTypedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnKeyTypedEvent));
     dispatcher.Dispatch<KeyReleasedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnKeyReleasedEvent));
     dispatcher.Dispatch<WindowResizedEvent>(SGL_BIND_EVENT(ImGuiLayer::OnWindowResizeEvent));
 }
 
 void ImGuiLayer::OnUpdate()
 {
-    ImGuiIO& io = ImGui::GetIO();
-    Application& app = Application::Get();
-    io.DisplaySize = ImVec2(app.GetWindow()->GetWidth(), app.GetWindow()->GetHeight());
-
-    float currentTime = (float)glfwGetTime();
-    io.DeltaTime = time > 0.0f ? (currentTime - time) : (1.0f / 60.0f);
-    time = currentTime;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
-
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImGuiLayer::OnAttach()
@@ -114,15 +98,14 @@ bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent* e)
     return false;
 }
 
-/*
-bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& e)
+bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent* e)
 {
     ImGuiIO& io = ImGui::GetIO();
-    io.MouseWheelH += e.GetXOffset();
-    io.MouseWheel += e.GetYOffset();
+    io.MouseWheelH += e->GetXOffset();
+    io.MouseWheel += e->GetYOffset();
 
     return false;
-}*/
+}
 
 bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent* e)
 {
@@ -144,16 +127,15 @@ bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent* e)
     return false;
 }
 
-/*
-bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
+bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent* e)
 {
     ImGuiIO& io = ImGui::GetIO();
-    int keycode = e.GetKeyCode();
+    int keycode = e->GetKeyCode();
     if (keycode > 0 && keycode < 0x10000)
         io.AddInputCharacter((unsigned short)keycode);
 
     return false;
-}*/
+}
 
 bool ImGuiLayer::OnWindowResizeEvent(WindowResizedEvent* e)
 {
@@ -168,6 +150,25 @@ bool ImGuiLayer::OnWindowResizeEvent(WindowResizedEvent* e)
 void ImGuiLayer::OnDetach()
 {
 
+}
+
+void ImGuiLayer::Begin()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    Application& app = Application::Get();
+    io.DisplaySize = ImVec2(app.GetWindow()->GetWidth(), app.GetWindow()->GetHeight());
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui::NewFrame();
+
+    float currentTime = (float)glfwGetTime();
+    io.DeltaTime = time > 0.0f ? (currentTime - time) : (1.0f / 60.0f);
+    time = currentTime;
+}
+
+void ImGuiLayer::End()
+{
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 }

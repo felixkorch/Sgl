@@ -6,6 +6,38 @@ namespace sgl
 	class MouseEvent : public Event {
 	};
 
+    class MouseScrolledEvent : public MouseEvent {
+    protected:
+        double xOffset, yOffset;
+    public:
+        MouseScrolledEvent(double xOffset, double yOffset)
+            : xOffset(xOffset), yOffset(yOffset) {}
+
+        double GetXOffset()
+        {
+            return xOffset;
+        }
+
+        double GetYOffset()
+        {
+            return yOffset;
+        }
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "Mouse Scroll: (" << xOffset << ", " << yOffset << ")";
+            return ss.str();
+        }
+
+        const EventType GetEventType() const override
+        {
+            return EventType::MouseScrolled;
+        }
+
+        static EventType GetStaticType() { return EventType::MouseScrolled; }
+    };
+
 	class MouseMovedEvent : public MouseEvent {
 	protected:
 		double xPos, yPos;

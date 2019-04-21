@@ -34,6 +34,7 @@ namespace sgl
 		virtual bool IsFullScreen() = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual void SetFPS(int fps) = 0;
+		virtual int& GetFPS() = 0;
 		virtual void SetWindowed() = 0;
 		virtual void SetFullscreen() = 0;
 		virtual void* GetNativeWindow() const = 0;

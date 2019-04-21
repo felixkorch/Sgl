@@ -47,7 +47,12 @@ namespace sgl
 		framesPerSecond = fps;
 	}
 
-	void BaseWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
+    int& BaseWindow::GetFPS()
+    {
+        return framesPerSecond;
+    }
+
+    void BaseWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
 	{
 		double currentTime = glfwGetTime();
 		nbFrames++;
@@ -164,6 +169,11 @@ namespace sgl
 		});
 
 		// Mouse Events
+        glfwSetScrollCallback(window, [](GLFWwindow* window, double xOffset, double yOffset) {
+            BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
+            win.CallEventHandler(new MouseScrolledEvent(xOffset, yOffset));
+        });
+
         glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
             BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
             win.CallEventHandler(new MouseMovedEvent(xpos, ypos));
@@ -185,6 +195,11 @@ namespace sgl
 		});
 
 		// Key Events
+        glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int keycode) {
+            BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
+            win.CallEventHandler(new KeyTypedEvent(keycode));
+        });
+
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			BaseWindow& win = *(BaseWindow*)glfwGetWindowUserPointer(window);
 

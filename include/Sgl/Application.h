@@ -3,15 +3,16 @@
 #include "Sgl/Window.h"
 #include "Sgl/Events/Event.h"
 #include "Sgl/Events/EventQueue.h"
+#include "Sgl/ImGuiLayer.h"
 
 namespace sgl
 {
 	class Application {
-	private:
 		static Application* sInstance;
 	protected:
 		Window* window;
 		LayerStack* layerstack;
+        ImGuiLayer* imGuiLayer;
 		EventQueue eventQueue;
 		bool running = true;
 	public:
@@ -20,6 +21,8 @@ namespace sgl
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
+		void PopLayer(Layer* layer);
+		void PopOverlay(Layer* overlay);
 		void OnEvent(Event* e);
 		bool OnWindowClose(Event* e);
 		void Run();
@@ -27,7 +30,6 @@ namespace sgl
 		static Application& Get() { return *sInstance; }
 	private:
 		void ProcessEvents();
-		void MeasureFPS(int& nbFrames, double& lastTime);
 	};
 
 	// To be defined in client.

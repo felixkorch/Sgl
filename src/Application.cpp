@@ -30,10 +30,12 @@ namespace sgl
 			running = false;
 			return;
 		}
-
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Log::Init();
 		SGL_CORE_INFO("Sucessfully initialized the app!");
+
+        imGuiLayer = new ImGuiLayer;
+        PushOverlay(imGuiLayer);
 	}
 
 	Application::~Application()
@@ -54,7 +56,19 @@ namespace sgl
 		overlay->OnAttach();
 	}
 
-	void Application::OnEvent(Event* e)
+    void Application::PopLayer(Layer* layer)
+    {
+        layerstack->PopLayer(layer);
+        layer->OnDetach();
+    }
+
+    void Application::PopOverlay(Layer* overlay)
+    {
+        layerstack->PopOverlay(overlay);
+        overlay->OnDetach();
+    }
+
+    void Application::OnEvent(Event* e)
 	{
 		// Add to event queue
 		eventQueue.PushEvent(e);
@@ -80,9 +94,14 @@ namespace sgl
 			ProcessEvents();
 
 			// Update
-			for (auto layer : *layerstack) {
+			for (auto layer : layerstack->GetLayers())
 				layer->OnUpdate();
-			}
+
+            imGuiLayer->Begin();
+            for (auto layer : layerstack->GetLayers())
+                layer->OnImGuiRender();
+            imGuiLayer->End();
+
 			window->Update();
 
 		#ifdef PLATFORM_WEB
@@ -96,10 +115,11 @@ namespace sgl
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();
+        auto layers = layerstack->GetLayers();
 		while (e) {
 			EventDispatcher dispatcher(e);
 			dispatcher.Dispatch<WindowCloseEvent>(SGL_BIND_EVENT(Application::OnWindowClose));
-			for (auto it = layerstack->end(); it != layerstack->begin();) {
+            for (auto it = layers.end(); it != layers.begin();) {
 				(*--it)->OnEvent(*e);
 				if (e->handled)
 					break;
