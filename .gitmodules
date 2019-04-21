@@ -7,6 +7,3 @@
 [submodule "deps/spdlog"]
 	path = deps/spdlog
 	url = https://github.com/felixkorch/spdlog.git
-[submodule "deps/imgui"]
-	path = deps/imgui
-	url = https://github.com/felixkorch/imgui.git
