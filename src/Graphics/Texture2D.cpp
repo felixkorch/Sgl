@@ -124,7 +124,7 @@ namespace sgl
 		glDeleteTextures(1, &rendererID);
 	}
 
-	void Texture2D::Bind(unsigned int slot) const
+	void Texture2D::Bind(unsigned int slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, rendererID);

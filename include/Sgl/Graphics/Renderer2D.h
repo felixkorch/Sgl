@@ -18,38 +18,37 @@ namespace sgl
 		static constexpr std::size_t SPRITE_SIZE = (4 * VERTEX_SIZE);
 		static constexpr std::size_t BUFFER_SIZE = SPRITE_SIZE * MAX_SPRITES;
 		static constexpr std::size_t INDICES_COUNT = (6 * MAX_SPRITES);
-		static constexpr std::size_t MAX_TEXTURES = 16;
+		static constexpr std::size_t MAX_TEXTURES = 32 - 1;
 
 		VertexBufferLayout layout;
+        VertexArray vertexArray;
 		VertexBuffer vertexBuffer;
 		IndexBuffer indexBuffer;
         Shader shader;
-		glm::vec2 screenSize;
-		Camera2D camera;
-		std::vector<const Texture2D*> textures;
+		std::unique_ptr<Camera2D> camera;
+		std::vector<Texture2D*> textures;
         std::vector<VertexData> vertexDataBuffer;
-
-        #ifndef PLATFORM_WEB
-        VertexArray vertexArray;
-        #endif
+        std::vector<glm::mat4> transformationStack;
+        glm::mat4* transformationBack;
+        int screenWidth, screenHeight;
 
 	public:
         Renderer2D(int width, int height, Shader&& shader);
 
+        void Push(const glm::mat4& matrix, bool override);
+        void Pop();
         void Begin();
-        void Submit(Renderable2D& renderable);
+        void Submit(Renderable2D* renderable);
         void DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color);
         void DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
         void End();
         void Flush();
-        void SubmitTexture(const Texture2D* texture);
-        void SetCamera(const glm::vec2& val);
+        void SetCamera(std::unique_ptr<Camera2D>&& _camera);
         void SetShader(Shader&& _shader);
-        void SetScreenSize(int width, int height);
-        Camera2D& GetCamera();
 		static Renderer2D* Create(int width, int height);
 
     private:
+        float SubmitTexture(Texture2D* texture);
         void Setup();
 	};
 }

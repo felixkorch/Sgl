@@ -7,6 +7,8 @@
 #include "Sgl/Log.h"
 #include "Sgl/Input.h"
 
+#include "GLFW/glfw3.h"
+
 namespace sgl
 {
 
@@ -44,7 +46,12 @@ namespace sgl
 		framesPerSecond = fps;
 	}
 
-	void WebWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
+    int& WebWindow::GetFPS()
+    {
+        return framesPerSecond;
+    }
+
+    void WebWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
 	{
         double currentTime = glfwGetTime();
         nbFrames++;
@@ -176,6 +183,16 @@ namespace sgl
 		});
 
 		// Mouse Events
+        glfwSetScrollCallback(window, [](GLFWwindow* window, double xOffset, double yOffset) {
+            WebWindow& win = *(WebWindow*)glfwGetWindowUserPointer(window);
+            win.CallEventHandler(new MouseScrolledEvent(xOffset, yOffset));
+        });
+
+        glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+            WebWindow& win = *(WebWindow*)glfwGetWindowUserPointer(window);
+            win.CallEventHandler(new MouseMovedEvent(xpos, ypos));
+        });
+
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
 			WebWindow& win = *(WebWindow*)glfwGetWindowUserPointer(window);
 

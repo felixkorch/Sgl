@@ -70,7 +70,7 @@ void ImGuiLayer::OnAttach()
     #ifndef PLATFORM_WEB
     ImGui_ImplOpenGL3_Init("#version 330");
     #else
-    ImGui_ImplOpenGL3_Init("#version 100");
+    ImGui_ImplOpenGL3_Init("#version 300 es");
     #endif
 }
 

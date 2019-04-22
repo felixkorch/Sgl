@@ -26,7 +26,11 @@ set(Sgl_SOURCE
     src/BaseInput.cpp
     src/BaseWindow.cpp
     src/Graphics/Renderer2D.cpp
+    src/Graphics/Renderable2D.cpp
     src/Graphics/Texture2D.cpp
+    src/Graphics/Sprite.cpp
+    src/Graphics/Camera2D.cpp
+    src/Graphics/Group.cpp
     src/ImGuiLayer.cpp
     src/ImGuiRenderer.cpp
 )

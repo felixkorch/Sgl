@@ -1,17 +1,17 @@
 CC = em++
 
-FLAGS = -O3 -g -Wall -fpermissive -std=c++11 -D PLATFORM_WEB -D WEB_SOFT_FULLSCREEN -D NDEBUG
+FLAGS = -g -Wall -fpermissive -std=c++11 -D PLATFORM_WEB -D WEB_SOFT_FULLSCREEN -s DEMANGLE_SUPPORT=1
 
-EM_FLAGS = -s FULL_ES2=1 -s USE_GLFW=3 -s \
+EM_FLAGS = -s FULL_ES3=1 -s USE_GLFW=3 -s \
 WASM=1 -s USE_WEBGL2=1 -s --memory-init-file 0 -lglfw3 -lGL -s ERROR_ON_UNDEFINED_SYMBOLS=0
 
 INC = -Ideps -Iinclude -Ideps/glm -Ideps/spdlog/include \
--Ideps/GLFW/include -Ideps/Glad/include -Ideps/obj_loader/include -Ideps/stb_image/include -INemu/include \
--Ideps/imgui
+-Ideps/GLFW/include -Ideps/obj_loader/include -Ideps/stb_image/include -INemu/include -Ideps/imgui
 
-TARGETS = obj/Application.o obj/IndexBuffer.o obj/LayerStack.o obj/Log.o \
+TARGETS = obj/Application.o obj/IndexBuffer.o obj/LayerStack.o obj/Log.o obj/VertexArray.o \
 obj/Shader.o obj/VertexBuffer.o obj/WebWindow.o obj/Renderer2D.o obj/BaseInput.o obj/EventQueue.o obj/Layer.o obj/Texture2D.o \
-obj/Main.o obj/ImGuiLayer.o obj/ImGuiRenderer.o obj/imgui.o obj/imgui_demo.o obj/imgui_draw.o obj/imgui_widgets.o
+obj/Main.o obj/ImGuiLayer.o obj/ImGuiRenderer.o obj/imgui.o obj/imgui_demo.o obj/imgui_draw.o obj/imgui_widgets.o \
+obj/Sprite.o obj/Camera2D.o obj/Group.o
 
 nemu: $(TARGETS)
 	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) $(TARGETS) obj/Main.o -o emscripten/nemu/index.html --shell-file emscripten/layout.html
@@ -19,6 +19,12 @@ nemu: $(TARGETS)
 obj/Main.o: Nemu/src/Main.cpp
 	$(CC) $(FLAGS) $(INC) -c Nemu/src/Main.cpp -o obj/Main.o
 
+obj/Sprite.o: src/Graphics/Sprite.cpp
+	$(CC) $(FLAGS) $(INC) -c src/Graphics/Sprite.cpp -o obj/Sprite.o
+obj/Camera2D.o: src/Graphics/Camera2D.cpp
+	$(CC) $(FLAGS) $(INC) -c src/Graphics/Camera2D.cpp -o obj/Camera2D.o
+obj/Group.o: src/Graphics/Group.cpp
+	$(CC) $(FLAGS) $(INC) -c src/Graphics/Group.cpp -o obj/Group.o
 obj/Application.o: src/Application.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Application.cpp -o obj/Application.o
 obj/IndexBuffer.o: src/IndexBuffer.cpp
@@ -31,6 +37,8 @@ obj/Shader.o: src/Shader.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Shader.cpp -o obj/Shader.o
 obj/VertexBuffer.o: src/VertexBuffer.cpp
 	$(CC) $(FLAGS) $(INC) -c src/VertexBuffer.cpp -o obj/VertexBuffer.o
+obj/VertexArray.o: src/VertexArray.cpp
+	$(CC) $(FLAGS) $(INC) -c src/VertexArray.cpp -o obj/VertexArray.o
 obj/WebWindow.o: src/Platform/Web/WebWindow.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Platform/Web/WebWindow.cpp -o obj/WebWindow.o
 obj/Renderer2D.o: src/Graphics/Renderer2D.cpp

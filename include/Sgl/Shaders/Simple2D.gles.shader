@@ -25,7 +25,7 @@ void main() {
 
 precision mediump float;
 
-const int MAX_TEXTURES = 16;
+const int MAX_TEXTURES = 32 - 1;
 
 uniform sampler2D u_Sampler[MAX_TEXTURES];
 

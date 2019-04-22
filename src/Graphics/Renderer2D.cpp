@@ -12,16 +12,36 @@ namespace sgl
 {
     Renderer2D::Renderer2D(int width, int height, Shader&& shader)
         : shader(std::move(shader))
-        , screenSize(width, height)
-        , camera(glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f))
+        , camera(new Camera2D(glm::ortho(0.0f, (float)width, 0.0f, (float)height, -1.0f, 1.0f)))
+        , screenWidth(width)
+        , screenHeight(height)
     {
         textures.reserve(MAX_TEXTURES);
         Setup();
     }
 
-    void Renderer2D::SetCamera(const glm::vec2& val)
+    void Renderer2D::Push(const glm::mat4& matrix, bool override)
     {
-        camera.GetPos() = glm::vec3(val, 0);
+        if (override)
+            transformationStack.push_back(matrix);
+        else
+            transformationStack.push_back(transformationStack.back() * matrix);
+
+        transformationBack = &transformationStack.back();
+
+    }
+
+    void Renderer2D::Pop()
+    {
+        if (transformationStack.size() > 1)
+            transformationStack.pop_back();
+
+        transformationBack = &transformationStack.back();
+    }
+
+    void Renderer2D::SetCamera(std::unique_ptr<Camera2D>&& _camera)
+    {
+        camera = std::move(_camera);
     }
 
     void Renderer2D::SetShader(Shader&& _shader)
@@ -29,43 +49,28 @@ namespace sgl
         shader = std::move(_shader);
     }
 
-    Camera2D& Renderer2D::GetCamera()
-    {
-        return camera;
-    }
-
-    void Renderer2D::SetScreenSize(int width, int height)
-    {
-        screenSize.x = width;
-        screenSize.y = height;
-        camera = Camera2D(width, height);
-    }
-
-	void Renderer2D::Begin()
+	void Renderer2D::Submit(Renderable2D* renderable)
 	{
-		shader.Bind();
-		vertexDataBuffer.clear();
-		shader.SetUniformMat4f("u_Projection", camera.GetViewMatrix());
-	}
+		const auto minBounds = renderable->GetMinBounds();
+		const auto maxBounds = renderable->GetMaxBounds();
+		const auto& uvs      = renderable->GetUVs();
+        Texture2D* texture   = renderable->GetTexture();
 
-	void Renderer2D::Submit(Renderable2D& renderable)
-	{
-		auto vertices = renderable.GetVertices();
+        float textureSlot = 0;
+        if (texture)
+            textureSlot = SubmitTexture(texture);
 
-		vertexDataBuffer.emplace_back(VertexData{ vertices[0], renderable.color, renderable.uv[0], renderable.tid });
-		vertexDataBuffer.emplace_back(VertexData{ vertices[1], renderable.color, renderable.uv[1], renderable.tid });
-		vertexDataBuffer.emplace_back(VertexData{ vertices[2], renderable.color, renderable.uv[2], renderable.tid });
-		vertexDataBuffer.emplace_back(VertexData{ vertices[3], renderable.color, renderable.uv[3], renderable.tid });
+        vertexDataBuffer.emplace_back(VertexData{ minBounds, renderable->GetColor(), uvs[0], textureSlot });
+        vertexDataBuffer.emplace_back(VertexData{ glm::vec3(maxBounds.x, minBounds.y, 1) , renderable->GetColor(), uvs[1], textureSlot });
+        vertexDataBuffer.emplace_back(VertexData{ maxBounds, renderable->GetColor(), uvs[2], textureSlot });
+        vertexDataBuffer.emplace_back(VertexData{ glm::vec3(minBounds.x, maxBounds.y, 1), renderable->GetColor(), uvs[3], textureSlot });
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
 		const auto uvs = Renderable2D::GetStandardUVs();
-
-		vertexDataBuffer.emplace_back(VertexData{ p0, color, uvs[0], 0 });
-		vertexDataBuffer.emplace_back(VertexData{ p1, color, uvs[1], 0 });
-		vertexDataBuffer.emplace_back(VertexData{ p2, color, uvs[2], 0 });
-		vertexDataBuffer.emplace_back(VertexData{ p3, color, uvs[3], 0 });
+        for(int i = 0; i < 4; i++)
+            vertexDataBuffer.emplace_back(VertexData{ p0, color, uvs[i], 0 });
 	}
 
 	void Renderer2D::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
@@ -76,6 +81,13 @@ namespace sgl
 		const glm::vec3 v4 = glm::vec3(pos.x, pos.y + size.y, 1);
 		DrawQuad(v1, v2, v3, v4, color);
 	}
+
+    void Renderer2D::Begin()
+    {
+        shader.Bind();
+        vertexDataBuffer.clear();
+        shader.SetUniformMat4f("u_Projection", camera->GetViewMatrix());
+    }
 
 	void Renderer2D::End()
 	{
@@ -105,13 +117,18 @@ namespace sgl
 		textures.clear();
 	}
 
-	void Renderer2D::SubmitTexture(const Texture2D* texture)
+	float Renderer2D::SubmitTexture(Texture2D* texture)
 	{
 		if (textures.size() == MAX_TEXTURES) {
-			SGL_CORE_WARN("Max Textures exceeded");
-			return;
+			SGL_CORE_WARN("Max textures exceeded!");
+			return textures.size();
 		}
+        if (texture->GetID() == 0) {
+            SGL_CORE_WARN("Invalid texture submitted!");
+            return textures.size();
+        }
 		textures.push_back(texture);
+        return textures.size();
 	}
 
 	void Renderer2D::Setup()
@@ -123,12 +140,8 @@ namespace sgl
 		layout.Push<float>(2); // UV-Coords (Texture coordinates)
 		layout.Push<float>(1); // TID (Texture ID)
 
-        #ifndef PLATFORM_WEB
         vertexArray.Bind();
         vertexArray.AddBuffer(vertexBuffer, layout);
-        #else
-		vertexBuffer.BindLayout(layout); // Instead of Vertex Arrays
-        #endif
 		vertexBuffer.Unbind();
 
 		unsigned int indices[INDICES_COUNT];
@@ -145,6 +158,9 @@ namespace sgl
 			offset += 4;
 		}
 		indexBuffer.Load(indices, INDICES_COUNT);
+
+        transformationStack.push_back(glm::mat4(1));
+        transformationBack = &transformationStack.back();
 	}
 
 	Renderer2D* Renderer2D::Create(int width, int height)
@@ -152,7 +168,7 @@ namespace sgl
         #ifndef PLATFORM_WEB
         const char* shaderProgram = Shader::Shader2D_Core;
         #else
-        const char* shaderProgram = Shader::Shader2D_ES2;
+        const char* shaderProgram = Shader::Shader2D_ES3;
         #endif
 
         Shader shader;

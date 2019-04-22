@@ -1,5 +1,6 @@
 #pragma once
 #include "Sgl/Graphics/Renderer2D.h"
+#include "Sgl/Graphics/Sprite.h"
 #include "Sgl/Graphics/Texture2D.h"
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"

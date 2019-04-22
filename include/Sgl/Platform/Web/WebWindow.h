@@ -1,6 +1,6 @@
 #pragma once
 #include "Sgl/Window.h"
-#include "GLFW/glfw3.h"
+#include <chrono>
 
 // Nessescary to debug emscripten stuff
 #ifdef _MSC_VER
@@ -36,6 +36,7 @@ namespace sgl
 
 		virtual bool IsClosed() const override;
 		virtual void SetFPS(int fps) override;
+        virtual int& GetFPS() override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void SetFullscreen() override;
 		virtual void SetWindowed() override;

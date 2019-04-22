@@ -1,4 +1,5 @@
 #pragma once
+#include "Sgl/Graphics/Texture2D.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -13,6 +14,8 @@ namespace sgl
 		glm::vec2 uv;
 		float tid;
 	};
+
+    class Renderer2D;
 
 	class Rectangle {
 	public:
@@ -40,66 +43,47 @@ namespace sgl
 			return true;
 		}
 
-		const glm::vec2 MinBounds()
+		const glm::vec2 MinBounds() const
 		{
 			return pos;
 		}
 
-		const glm::vec2 MaxBounds()
+		const glm::vec2 MaxBounds() const
 		{
 			return glm::vec2(pos.x + size.x, pos.y + size.y);
 		}
 	};
 
 	class Renderable2D {
-	public:
+    protected:
 		Rectangle bounds;
 		glm::vec4 color;
-		std::vector<glm::vec2> uv;
-		float tid;
+		std::array<glm::vec2, 4> uvs;
+        Texture2D* texture;
+    public:
+        Renderable2D();
+        Renderable2D(const glm::vec2& size, const glm::vec2& pos);
+        Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color);
+        Renderable2D(const glm::vec2& pos, Texture2D* texture);
+        virtual ~Renderable2D() = default;
 
-		Renderable2D()
-            : bounds()
-            , color(glm::vec4(1))
-            , uv(GetStandardUVs())
-            , tid(0)
-        {}
+        // Getters
+        Texture2D* GetTexture();
+        const std::array<glm::vec2, 4>& GetUVs();
+        const glm::vec4& GetColor() { return color; }
+        const glm::vec3 GetMinBounds();
+        const glm::vec3 GetMaxBounds();
 
-		Renderable2D(const glm::vec2& size, const glm::vec2& pos)
-			: bounds(size, pos)
-            , color(glm::vec4(1))
-            , uv(GetStandardUVs())
-            , tid(0)
-        {}
+        // Setters
+        void SetPos(const glm::vec2& _pos);
+        void SetPos(float x, float y);
+        void SetColor(const glm::vec4& _color);
+        void SetUVs(const std::array<glm::vec2, 4>& _uvs);
+        void SetSize(float width, float height);
 
-		Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
-			: bounds(size, pos)
-            , color(color)
-            , uv(GetStandardUVs())
-            , tid(0)
-        {}
+        void Submit(Renderer2D* renderer);
 
-		void SetPos(const glm::vec2& pos)
-		{
-			bounds.pos = pos;
-		}
-
-		const std::array<glm::vec3, 4> GetVertices()
-		{
-			const glm::vec3 boundsMin = glm::vec3(bounds.MinBounds(), 1);
-			const glm::vec3 boundsMax = glm::vec3(bounds.MaxBounds(), 1);
-			return {
-				boundsMin,
-				glm::vec3(boundsMin.x + bounds.size.x, boundsMin.y, 1),
-				boundsMax,
-				glm::vec3(boundsMin.x, boundsMin.y + bounds.size.y, 1)
-			};
-		}
-
-		static std::vector<glm::vec2> GetStandardUVs()
-		{
-			return { glm::vec2(0, 0), glm::vec2(1, 0), glm::vec2(1, 1), glm::vec2(0, 1) };
-		}
+        static std::array<glm::vec2, 4> GetStandardUVs();
 	};
 
 }

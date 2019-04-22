@@ -44,8 +44,12 @@ namespace sgl
 		void SetParams(TextureParameters parameters);
         void LoadFromFile(const std::string& fp);
 		void SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
-		void Bind(unsigned int slot) const;
-		void Unbind() const;
+        void Bind(unsigned int slot);
+        void Unbind() const;
+
+        unsigned int GetID() { return rendererID; }
+        int GetWidth() { return width; }
+        int GetHeight() { return height; }
 
 	private:
         int GetTextureWrap(TextureWrap wrap);

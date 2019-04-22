@@ -16,6 +16,7 @@ namespace sgl
 		/* Some simple shader programs */
 		static const char* Shader2D_Core;
 		static const char* Shader2D_ES2;
+		static const char* Shader2D_ES3;
 	private:
 		unsigned int rendererID;
 		std::string filePath;

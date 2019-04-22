@@ -19,6 +19,10 @@ namespace sgl
 		#include "Sgl/Shaders/Simple2D.gles.shader"
 	};
 
+    const char* Shader::Shader2D_ES3 = {
+        #include "Sgl/Shaders/Simple2D.gles3.shader"
+    };
+
     Shader::Shader() :
         rendererID(0),
         filePath("NULL")

@@ -6,23 +6,16 @@
 namespace sgl
 {
 	class Camera2D {
-	private:
 		glm::mat4 ortho;
 		glm::vec3 pos;
 	public:
-		constexpr Camera2D(const glm::mat4& ortho)
-			: ortho(ortho), pos{} {}
-
-		Camera2D(const glm::vec2& size)
-			: ortho(glm::ortho(0.0f, size.x, 0.0f, size.y, -1.0f, 1.0f))
-            , pos{}
-		{}
-
-		Camera2D(int width, int height)
-			: Camera2D(glm::vec2(width, height))
-        {}
+        constexpr Camera2D(const glm::mat4& ortho);
+        Camera2D(const glm::vec2& size);
+        Camera2D(int width, int height);
 
 		const glm::mat4 GetViewMatrix() const { return ortho * glm::translate(glm::mat4(1.0f), pos); }
 		glm::vec3& GetPos() { return pos; }
+
+        static std::unique_ptr<Camera2D> Create(int width, int height);
 	};
 }
