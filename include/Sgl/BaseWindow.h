@@ -14,14 +14,6 @@ namespace sgl
 		int windowedXPos;
 		int windowedYPos;
 
-        // Used to force a specific FPS
-        std::chrono::steady_clock::time_point delay;
-		int framesPerSecond;
-
-        // Used to keep track of FPS to print to the console
-		int frames;
-		double frameDelay;
-
 	public:
 
         BaseWindow(WindowProperties props);
@@ -32,8 +24,6 @@ namespace sgl
 		virtual void SetFullscreen() override;
 		virtual void SetWindowed() override;
 		virtual bool IsVSync() override;
-		virtual void SetFPS(int fps) override;
-		virtual int& GetFPS() override;
 		virtual bool IsFullScreen() override;
 
 		virtual void* GetNativeWindow() const override
@@ -64,8 +54,5 @@ namespace sgl
     protected:
         void Clear() override;
         void Update() override;
-
-	private:
-		void DebugPrintFPS(int& nbFrames, double& lastTime);
 	};
 }

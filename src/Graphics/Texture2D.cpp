@@ -5,54 +5,18 @@
 
 namespace sgl
 {
-	Texture2D::Texture2D(TextureParameters params)
-		: rendererID(0), filePath("NULL"), width(0), height(0), bpp(0), texParams(params)
+	Texture2D::Texture2D(int width, int height, TextureParameters params)
+		: textureHandle(0), params(params), width(width), height(height), bpp(0)
 	{
-		glGenTextures(1, &rendererID);
-		SetParams(params);
-	}
-
-    Texture2D::Texture2D(int width, int height, TextureParameters params)
-		: rendererID(0), filePath("NULL"), width(width), height(height), bpp(0), texParams(params)
-	{
-		glGenTextures(1, &rendererID);
-		SetParams(params);
-	}
-
-    Texture2D::Texture2D(Texture2D&& other)
-        : rendererID(other.rendererID)
-        , filePath(other.filePath)
-        , bpp(other.bpp)
-        , width(other.width)
-        , height(other.height)
-        , texParams(other.texParams)
-    {
-        other.rendererID = 0;
-    }
-
-    Texture2D& Texture2D::operator=(Texture2D&& other)
-    {
-        rendererID = other.rendererID;
-        filePath = other.filePath;
-        bpp = other.bpp;
-        width = other.width;
-        height = other.height;
-        texParams = other.texParams;
-        other.rendererID = 0;
-        return *this;
-    }
-
-    void Texture2D::SetParams(TextureParameters params)
-	{
-		// Bind the texture
-		glBindTexture(GL_TEXTURE_2D, rendererID);
+		glGenTextures(1, &textureHandle);
+		glBindTexture(GL_TEXTURE_2D, textureHandle);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(params.wrap));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(params.wrap));
-        glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(texParams.format), width, height, 0,
-                     GetTextureFormat(texParams.format), GL_UNSIGNED_BYTE, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format), width, height, 0,
+			GetTextureFormat(params.format), GL_UNSIGNED_BYTE, nullptr);
 		// Unbind the texture
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -80,16 +44,18 @@ namespace sgl
 
 	void Texture2D::SetData(void* pixels)
 	{
-		glBindTexture(GL_TEXTURE_2D, rendererID);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(texParams.format),
+		glBindTexture(GL_TEXTURE_2D, textureHandle);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(params.format),
 			            GL_UNSIGNED_BYTE, pixels);
 	}
 
 
-	void Texture2D::SetSize(int _width, int _height)
+	void Texture2D::Resize(int _width, int _height)
 	{
 		width = _width;
 		height = _height;
+		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format), width, height, 0,
+			GetTextureFormat(params.format), GL_UNSIGNED_BYTE, nullptr);
 	}
 
 	void Texture2D::LoadFromFile(const std::string& fp)
@@ -99,7 +65,7 @@ namespace sgl
 		if (buffer)
 			stbi_image_free(buffer);
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(texParams.format),
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(params.format),
             GL_UNSIGNED_BYTE, buffer);
 	}
 
@@ -115,24 +81,37 @@ namespace sgl
 				data[i * height * 4 + j * 4 + 3] = a;
 			}
 		}
-		SetData(data);
-        delete[] data;
+		SetData(data); // Send pixel-data to the GPU
+		delete[] data; // Free the temporary memory
 	}
 
 	Texture2D::~Texture2D()
 	{
-		glDeleteTextures(1, &rendererID);
+		glDeleteTextures(1, &textureHandle);
 	}
 
 	void Texture2D::Bind(unsigned int slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, rendererID);
+		glBindTexture(GL_TEXTURE_2D, textureHandle);
 	}
 
 	void Texture2D::Unbind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	Texture2D* Texture2D::CreateFromFile(int width, int height, const std::string& filePath, TextureParameters params)
+	{
+		Texture2D* tex = new Texture2D(width, height, params);
+		tex->LoadFromFile(filePath);
+		return tex;
+	}
+
+	Texture2D* Texture2D::Create(int width, int height, TextureParameters params)
+	{
+		Texture2D* tex = new Texture2D(width, height, params);
+		return tex;
 	}
 
 	TextureParameters Texture2D::DefaultParams = { TextureWrap::CLAMP_TO_EDGE, TextureFormat::RGBA, TextureFilter::NEAREST };

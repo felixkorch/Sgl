@@ -1,6 +1,6 @@
 #pragma once
 #include "Sgl/Window.h"
-#include <chrono>
+#include "GLFW/glfw3.h"
 
 // Nessescary to debug emscripten stuff
 #ifdef _MSC_VER
@@ -21,22 +21,12 @@ namespace sgl
 		GLFWwindow* window;
 		bool vSyncOn;
 		bool fullScreen;
-
-        // Used to force a specific FPS
-        std::chrono::steady_clock::time_point delay;
-        int framesPerSecond;
-
-        // Used to keep track of FPS to print to the console
-        int frames;
-        double frameDelay;
 	public:
 
 		WebWindow(WindowProperties props);
 		~WebWindow();
 
 		virtual bool IsClosed() const override;
-		virtual void SetFPS(int fps) override;
-        virtual int& GetFPS() override;
 		virtual void SetVSync(bool enabled) override;
 		virtual void SetFullscreen() override;
 		virtual void SetWindowed() override;
@@ -74,6 +64,5 @@ namespace sgl
 		void SetSoftFullscreen();
 		void ExitStandardFullscreen();
 		void ExitSoftFullscreen();
-		void DebugPrintFPS(int& nbFrames, double& lastTime);
 	};
 }

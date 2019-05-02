@@ -2,6 +2,8 @@
 #include "Sgl/Graphics/Renderer2D.h"
 #include "Sgl/VertexBufferLayout.h"
 #include "Sgl/Graphics/Camera2D.h"
+#include "Sgl/Log.h"
+#include "Sgl/Application.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -10,14 +12,31 @@
 
 namespace sgl
 {
-    Renderer2D::Renderer2D(int width, int height, Shader&& shader)
-        : shader(std::move(shader))
-        , camera(new Camera2D(glm::ortho(0.0f, (float)width, 0.0f, (float)height, -1.0f, 1.0f)))
-        , screenWidth(width)
-        , screenHeight(height)
+
+    ///
+    /// TODO: Complete implementation
+    ///
+    ///
+
+	Renderer2D::Renderer2D(int width, int height)
+		: vertexArray()
+		, indexBuffer()
+		, shader()
+		, camera(glm::ortho(0.0f, (float)width, 0.0f, (float)height, -1.0f, 1.0f))
+		, textures()
+		, dataBuffer(nullptr)
+		, transformationStack()
+		, transformationBack(nullptr)
+		, frameBuffer(width, height)
+		, renderTarget(RenderTarget::SCREEN)
+		, screenWidth(width)
+		, screenHeight(height)
+		, indexCount(0)
+		, screnQuad(CreateScreenQuad(width, height))
+		, fxShader()
     {
         textures.reserve(MAX_TEXTURES);
-        Setup();
+		Setup();
     }
 
     void Renderer2D::Push(const glm::mat4& matrix, bool override)
@@ -39,15 +58,21 @@ namespace sgl
         transformationBack = &transformationStack.back();
     }
 
-    void Renderer2D::SetCamera(std::unique_ptr<Camera2D>&& _camera)
+    void Renderer2D::SetCamera(const Camera2D& _camera)
     {
-        camera = std::move(_camera);
+        camera = _camera;
     }
 
-    void Renderer2D::SetShader(Shader&& _shader)
-    {
-        shader = std::move(_shader);
-    }
+	// Testing post-effects (NOT final implementation)
+	void Renderer2D::SetPostEffectsShader(Shader* shader)
+	{
+		if (shader == nullptr) {
+			renderTarget = RenderTarget::SCREEN;
+			return;
+		}
+		renderTarget = RenderTarget::BUFFER;
+		fxShader = std::unique_ptr<Shader>(shader);
+	}
 
 	void Renderer2D::Submit(Renderable2D* renderable)
 	{
@@ -60,17 +85,22 @@ namespace sgl
         if (texture)
             textureSlot = SubmitTexture(texture);
 
-        vertexDataBuffer.emplace_back(VertexData{ minBounds, renderable->GetColor(), uvs[0], textureSlot });
-        vertexDataBuffer.emplace_back(VertexData{ glm::vec3(maxBounds.x, minBounds.y, 1) , renderable->GetColor(), uvs[1], textureSlot });
-        vertexDataBuffer.emplace_back(VertexData{ maxBounds, renderable->GetColor(), uvs[2], textureSlot });
-        vertexDataBuffer.emplace_back(VertexData{ glm::vec3(minBounds.x, maxBounds.y, 1), renderable->GetColor(), uvs[3], textureSlot });
+        *dataBuffer++ = { *transformationBack * minBounds, renderable->GetColor(), uvs[0], textureSlot };
+		*dataBuffer++ = { *transformationBack * glm::vec4(maxBounds.x, minBounds.y, 1, 1), renderable->GetColor(), uvs[1], textureSlot };
+		*dataBuffer++ = { *transformationBack * maxBounds, renderable->GetColor(), uvs[2], textureSlot };
+		*dataBuffer++ = { *transformationBack * glm::vec4(minBounds.x, maxBounds.y, 1, 1), renderable->GetColor(), uvs[3], textureSlot };
+
+		indexCount += 6;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec4& color)
 	{
 		const auto uvs = Renderable2D::GetStandardUVs();
-        for(int i = 0; i < 4; i++)
-            vertexDataBuffer.emplace_back(VertexData{ p0, color, uvs[i], 0 });
+		for (int i = 0; i < 4; i++) {
+			*dataBuffer = { p0, color, uvs[i], 0 };
+			++dataBuffer;
+		}
+		indexCount += 6;
 	}
 
 	void Renderer2D::DrawRectangle(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color)
@@ -84,37 +114,51 @@ namespace sgl
 
     void Renderer2D::Begin()
     {
-        shader.Bind();
-        vertexDataBuffer.clear();
-        shader.SetUniformMat4f("u_Projection", camera->GetViewMatrix());
+		if (renderTarget == RenderTarget::BUFFER) {
+			frameBuffer.Bind();
+			frameBuffer.Clear();
+		}
+		vertexArray.Bind();
+		dataBuffer = (VertexData*)vertexArray.GetBuffer().GetInternalPointer();
+
     }
 
 	void Renderer2D::End()
 	{
-		vertexBuffer.Bind();
-		glBufferSubData(GL_ARRAY_BUFFER, 0, BUFFER_SIZE, (void*)(vertexDataBuffer.data()));
-		vertexBuffer.Unbind();
+		vertexArray.GetBuffer().ReleasePointer();
 	}
 
 	void Renderer2D::Flush()
 	{
-        for (int i = 0; i < textures.size(); i++) {
+		shader->Bind();
+		shader->SetUniformMat4f("u_Projection", camera.GetViewMatrix());
+        for (int i = 0; i < textures.size(); i++)
             textures[i]->Bind(i);
-            shader.SetUniform1i("u_Sampler[" + std::to_string(i) + "]", i);
-        }
 
-		vertexBuffer.Bind();
-		indexBuffer.Bind();
-		vertexBuffer.BindLayout(layout);
-		glDrawElements(GL_TRIANGLES, vertexDataBuffer.size() * 4 * 6, GL_UNSIGNED_INT, nullptr);
-
-		vertexBuffer.Unbind();
-		indexBuffer.Unbind();
+		vertexArray.Bind();
+		indexBuffer->Bind();
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+		indexBuffer->Unbind();
+		vertexArray.Unbind();
 
 		for (int i = 0; i < textures.size(); i++)
 			textures[i]->Unbind();
 
 		textures.clear();
+		indexCount = 0;
+
+		if (renderTarget == RenderTarget::BUFFER) {
+			frameBuffer.Unbind();
+			fxShader->Bind();
+			fxShader->SetUniformMat4f("u_Projection", camera.GetViewMatrix());
+			frameBuffer.GetTexture()->Bind(0);
+
+			screnQuad.vao->Bind();
+			screnQuad.ibo->Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			screnQuad.ibo->Unbind();
+			screnQuad.vao->Unbind();
+		}
 	}
 
 	float Renderer2D::SubmitTexture(Texture2D* texture)
@@ -123,7 +167,7 @@ namespace sgl
 			SGL_CORE_WARN("Max textures exceeded!");
 			return textures.size();
 		}
-        if (texture->GetID() == 0) {
+        if (texture->GetHandle() == 0) {
             SGL_CORE_WARN("Invalid texture submitted!");
             return textures.size();
         }
@@ -133,18 +177,17 @@ namespace sgl
 
 	void Renderer2D::Setup()
 	{
-		vertexDataBuffer.reserve(BUFFER_SIZE);
-		vertexBuffer.InitDynamicDraw(BUFFER_SIZE);  // Allocate memory in GPU
+		VertexBuffer* vbo = VertexBuffer::Create<BufferUsage::DYNAMIC>(BUFFER_SIZE);
+
+		VertexBufferLayout layout;
 		layout.Push<float>(3); // Position
 		layout.Push<float>(4); // Color
 		layout.Push<float>(2); // UV-Coords (Texture coordinates)
 		layout.Push<float>(1); // TID (Texture ID)
 
-        vertexArray.Bind();
-        vertexArray.AddBuffer(vertexBuffer, layout);
-		vertexBuffer.Unbind();
+        vertexArray.AddBuffer(vbo, layout);
 
-		unsigned int indices[INDICES_COUNT];
+		std::vector<unsigned int> indices(INDICES_COUNT);
 
 		int offset = 0;
 		for (int i = 0; i < INDICES_COUNT; i += 6) {
@@ -157,24 +200,55 @@ namespace sgl
 
 			offset += 4;
 		}
-		indexBuffer.Load(indices, INDICES_COUNT);
+		indexBuffer = std::unique_ptr<IndexBuffer>(new IndexBuffer(indices.data(), INDICES_COUNT));
 
-        transformationStack.push_back(glm::mat4(1));
+        transformationStack.push_back(glm::mat4(1)); // Push identity matrix as default
         transformationBack = &transformationStack.back();
+
+		shader = std::unique_ptr<Shader>(Shader::CreateFromString(Shader::Renderer2D));
+
 	}
 
-	Renderer2D* Renderer2D::Create(int width, int height)
+	// Will be moved to a mesh class eventually
+	ScreenQuad Renderer2D::CreateScreenQuad(int width, int height)
 	{
-        #ifndef PLATFORM_WEB
-        const char* shaderProgram = Shader::Shader2D_Core;
-        #else
-        const char* shaderProgram = Shader::Shader2D_ES3;
-        #endif
+		struct QuadData
+		{
+			glm::vec3 position;
+			glm::vec2 uv;
+		};
 
-        Shader shader;
-        shader.LoadFromString(shaderProgram);
-        Renderer2D* renderer = new Renderer2D(width, height, std::move(shader));
-        return renderer;
+		QuadData vertices[4];
+
+		vertices[0].position = glm::vec3(0, 0, 1);
+		vertices[0].uv = glm::vec2(0, 0);
+		vertices[1].position = glm::vec3(width, 0, 1);
+		vertices[1].uv = glm::vec2(1, 0);
+		vertices[2].position = glm::vec3(width, height, 1);
+		vertices[2].uv = glm::vec2(1, 1);
+		vertices[3].position = glm::vec3(0, height, 1);
+		vertices[3].uv = glm::vec2(0, 1);
+
+		unsigned int indices[6];
+
+		indices[0] = 0;
+		indices[1] = 1;
+		indices[2] = 2;
+		indices[3] = 2;
+		indices[4] = 3;
+		indices[5] = 0;
+
+		VertexArray* vao = VertexArray::Create();
+		VertexBuffer* vbo = VertexBuffer::Create<BufferUsage::STATIC>(vertices, 4 * sizeof(QuadData));
+		VertexBufferLayout layout;
+		layout.Push<float>(3); // Position
+		layout.Push<float>(2); // UV
+
+		vao->AddBuffer(vbo, layout);
+
+		IndexBuffer* ibo = IndexBuffer::Create(indices, 6);
+
+		return { std::unique_ptr<IndexBuffer>(ibo), std::unique_ptr<VertexArray>(vao) };
 	}
 
 }

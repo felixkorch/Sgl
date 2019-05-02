@@ -1,6 +1,5 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/Shader.h"
-#include "Sgl/ShaderUniform.h"
 #include "Sgl/Log.h"
 #include "glm/glm.hpp"
 
@@ -11,68 +10,27 @@
 
 namespace sgl
 {
-	const char* Shader::Shader2D_Core = {
-		#include "Sgl/Shaders/Simple2D.shader"
-	};
-
-	const char* Shader::Shader2D_ES2 = {
-		#include "Sgl/Shaders/Simple2D.gles.shader"
-	};
-
-    const char* Shader::Shader2D_ES3 = {
-        #include "Sgl/Shaders/Simple2D.gles3.shader"
+#ifdef SGL_PLATFORM_WEB
+    const char* Shader::Renderer2D = {
+        #include "Sgl/Shaders/Renderer2D.gles3.shader"
     };
+	const char* Shader::GreyScaleShader = {
+		#include "Sgl/Shaders/GreyScale.gles3.shader"
+	};
+#else
+    const char* Shader::GreyScaleShader = {
+        #include "Sgl/Shaders/GreyScale.shader"
+    };
+	const char* Shader::Renderer2D = {
+		#include "Sgl/Shaders/Renderer2D.shader"
+	};
+#endif
 
-    Shader::Shader() :
-        rendererID(0),
-        filePath("NULL")
+
+    Shader::Shader()
+		: rendererID(0)
+        , filePath("NULL")
     {}
-
-    Shader::Shader(Shader&& other)
-        : rendererID(other.rendererID)
-        , filePath(other.filePath)
-        , uniformLocationCache(other.uniformLocationCache)
-    {
-        other.rendererID = 0;
-    }
-
-    Shader& Shader::operator=(Shader&& other)
-    {
-        rendererID = other.rendererID;
-        filePath = other.filePath;
-        uniformLocationCache = other.uniformLocationCache;
-        other.rendererID = 0;
-        return *this;
-    }
-
-	void Shader::LoadFromFile(const std::string& filepath)
-	{
-		std::ifstream stream(filepath);
-
-		if (!stream.good()) {
-			SGL_CORE_ERROR("Shader not found, path given: {}", filepath);
-			return;
-		}
-
-		std::stringstream str;
-		str << stream.rdbuf();
-
-		ShaderProgramSource source = ParseShader(str);
-		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
-	}
-
-	void Shader::LoadFromString(const char* vertexShader, const char* fragmentShader)
-	{
-		rendererID = CreateShader(vertexShader, fragmentShader);
-	}
-
-	void Shader::LoadFromString(const char* shader)
-	{
-		std::stringstream str;
-		str << shader;
-		ShaderProgramSource source = ParseShader(str);
-		rendererID = CreateShader(source.VertexSource, source.FragmentSource);
-	}
 
 	Shader::~Shader()
 	{
@@ -133,7 +91,7 @@ namespace sgl
 		return location;
 	}
 
-	unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+	void Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		if (vertexShader.empty() || fragmentShader.empty())
 			SGL_CORE_ERROR("Vertex or Fragment shader empty.");
@@ -155,7 +113,7 @@ namespace sgl
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 
-		return program;
+		rendererID = program;
 	}
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
@@ -214,25 +172,40 @@ namespace sgl
 		return { ss[0].str(), ss[1].str() };
 	}
 
-	void Shader::SetUniformData(UniformHandler& uHandler)
+	Shader* Shader::CreateFromFile(const std::string& path)
 	{
-		Bind();
+		Shader* shader = new Shader;
+		std::ifstream stream(path);
 
-		for (auto& u : uHandler) {
-			switch (u.type) {
-			case UniformType::Int:
-				SetUniform1i(uHandler.GetName<int>(u), uHandler.GetValue<int>(u));
-                break;
-			case UniformType::Vec3:
-				SetUniform3f(uHandler.GetName<glm::vec3>(u), uHandler.GetValue<glm::vec3>(u));
-                break;
-			case UniformType::Mat4:
-				SetUniformMat4f(uHandler.GetName<glm::mat4>(u), uHandler.GetValue<glm::mat4>(u));
-                break;
-			case UniformType::Float:
-				SetUniform1f(uHandler.GetName<float>(u), uHandler.GetValue<float>(u));
-                break;
-			}
+		if (!stream.good()) {
+			SGL_CORE_ERROR("Shader not found, path given: {}", path);
+			return nullptr;
 		}
+
+		std::stringstream str;
+		str << stream.rdbuf();
+
+		ShaderProgramSource source = shader->ParseShader(str);
+		shader->CreateShader(source.VertexSource, source.FragmentSource);
+
+		return shader;
 	}
+
+	Shader* Shader::CreateFromString(const char* vertexShader, const char* fragmentShader)
+	{
+		Shader* shader = new Shader;
+		shader->CreateShader(vertexShader, fragmentShader);
+		return shader;
+	}
+
+	Shader* Shader::CreateFromString(const char* program)
+	{
+		Shader* shader = new Shader;
+		std::stringstream str;
+		str << program;
+		ShaderProgramSource source = shader->ParseShader(str);
+		shader->CreateShader(source.VertexSource, source.FragmentSource);
+		return shader;
+	}
+
 }

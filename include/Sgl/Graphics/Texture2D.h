@@ -22,37 +22,30 @@ namespace sgl
 	};
 
 	class Texture2D {
-	private:
-		unsigned int rendererID;
-		std::string filePath;
+		unsigned int textureHandle;
 		int width, height, bpp;
-		TextureParameters texParams;
-
+		TextureParameters params;
 		static TextureParameters DefaultParams;
 
-	public:
-		Texture2D(TextureParameters params = DefaultParams);
+	protected:
         Texture2D(int width, int height, TextureParameters params = DefaultParams);
-        Texture2D(Texture2D&& other);
-        Texture2D& operator=(Texture2D&& other);
-        Texture2D(const Texture2D& other) = delete;
-        Texture2D& operator=(const Texture2D& other) = delete;
-        ~Texture2D();
 
-		void SetData(void* pixels);
-		void SetSize(int _width, int _height);
-		void SetParams(TextureParameters parameters);
         void LoadFromFile(const std::string& fp);
+		int GetTextureWrap(TextureWrap wrap);
+		int GetTextureFormat(TextureFormat format);
+	public:
+        ~Texture2D();
 		void SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
+		void SetData(void* pixels);
+		void Resize(int _width, int _height);
         void Bind(unsigned int slot);
         void Unbind() const;
 
-        unsigned int GetID() { return rendererID; }
+        unsigned int GetHandle() { return textureHandle; }
         int GetWidth() { return width; }
         int GetHeight() { return height; }
 
-	private:
-        int GetTextureWrap(TextureWrap wrap);
-        int GetTextureFormat(TextureFormat format);
+		static Texture2D* CreateFromFile(int width, int height, const std::string& filePath, TextureParameters params = DefaultParams);
+		static Texture2D* Create(int width, int height, TextureParameters params = DefaultParams);
 	};
 }

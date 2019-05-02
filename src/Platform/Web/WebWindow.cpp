@@ -12,12 +12,10 @@
 namespace sgl
 {
 
-	WebWindow::WebWindow(WindowProperties props) :
-		Window(props),
-		vSyncOn(true),
-		fullScreen(false),
-		framesPerSecond(-1),
-        frames(0)
+	WebWindow::WebWindow(WindowProperties props)
+		: Window(props)
+		, vSyncOn(true)
+		, fullScreen(false)
 	{}
 
 	WebWindow::~WebWindow()
@@ -41,29 +39,6 @@ namespace sgl
 		return glfwWindowShouldClose(window);
 	}
 
-	void WebWindow::SetFPS(int fps)
-	{
-		framesPerSecond = fps;
-	}
-
-    int& WebWindow::GetFPS()
-    {
-        return framesPerSecond;
-    }
-
-    void WebWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
-	{
-        double currentTime = glfwGetTime();
-        nbFrames++;
-        if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-            // Print and reset timer
-            auto time = 1000.0 / double(nbFrames);
-            SGL_CORE_TRACE("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-            nbFrames = 0;
-            lastTime += 1.0;
-        }
-	}
-
 	void WebWindow::Clear()
 	{
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -74,16 +49,6 @@ namespace sgl
 	{
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-        #ifndef NDEBUG
-        DebugPrintFPS(frames, frameDelay);
-        #endif
-
-        if (framesPerSecond == -1)
-            return;
-
-        std::this_thread::sleep_until(delay);
-        delay += std::chrono::nanoseconds(1000000000) / framesPerSecond;
 	}
 
 	void WebWindow::SetVSync(bool enabled)
@@ -113,7 +78,7 @@ namespace sgl
 
 	void WebWindow::SetFullscreen()
 	{
-		#ifdef WEB_SOFT_FULLSCREEN
+		#ifdef SGL_SOFT_FULLSCREEN
 		SetSoftFullscreen();
 		#else
 		SetStandardFullscreen();
@@ -122,7 +87,7 @@ namespace sgl
 
     void WebWindow::SetWindowed()
     {
-        #ifdef WEB_SOFT_FULLSCREEN
+        #ifdef SGL_SOFT_FULLSCREEN
         ExitSoftFullscreen();
         #else
         ExitStandardFullscreen();
@@ -238,9 +203,6 @@ namespace sgl
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-
-        frameDelay = glfwGetTime(); // This may or may not cause problems since its called too early.
-        delay = std::chrono::steady_clock::now();
 
 		return 1;
 	}

@@ -28,11 +28,11 @@ set(Sgl_SOURCE
     src/Graphics/Renderer2D.cpp
     src/Graphics/Renderable2D.cpp
     src/Graphics/Texture2D.cpp
-    src/Graphics/Sprite.cpp
+    src/Graphics/FrameBuffer2D.cpp
     src/Graphics/Camera2D.cpp
     src/Graphics/Group.cpp
-    src/ImGuiLayer.cpp
-    src/ImGuiRenderer.cpp
+    src/ImGui/ImGuiLayer.cpp
+    src/ImGui/ImGuiRenderer.cpp
 )
 
 list(APPEND Sgl_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image imgui)

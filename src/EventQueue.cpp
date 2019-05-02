@@ -2,6 +2,10 @@
 
 namespace sgl
 {
+    /// The EventQueue is a FIFO queue and stores all the events temporary.
+    /// Each update loop the Application will run through it, handle the event and pop them.
+    /// This class owns the memory of the events and will free the memory when popped / destructor gets called.
+    ///
 
 	EventQueue::EventQueue() {}
 

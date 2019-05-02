@@ -1,6 +1,7 @@
 CC = em++
 
-FLAGS = -g -Wall -fpermissive -std=c++11 -D PLATFORM_WEB -D WEB_SOFT_FULLSCREEN -s DEMANGLE_SUPPORT=1
+FLAGS = -g -Wall -fpermissive -std=c++11 -D SGL_PLATFORM_WEB -D SGL_SOFT_FULLSCREEN -s DEMANGLE_SUPPORT=1 -s ASSERTIONS \
+-s ALLOW_MEMORY_GROWTH=1
 
 EM_FLAGS = -s FULL_ES3=1 -s USE_GLFW=3 -s \
 WASM=1 -s USE_WEBGL2=1 -s --memory-init-file 0 -lglfw3 -lGL -s ERROR_ON_UNDEFINED_SYMBOLS=0
@@ -11,7 +12,7 @@ INC = -Ideps -Iinclude -Ideps/glm -Ideps/spdlog/include \
 TARGETS = obj/Application.o obj/IndexBuffer.o obj/LayerStack.o obj/Log.o obj/VertexArray.o \
 obj/Shader.o obj/VertexBuffer.o obj/WebWindow.o obj/Renderer2D.o obj/BaseInput.o obj/EventQueue.o obj/Layer.o obj/Texture2D.o \
 obj/Main.o obj/ImGuiLayer.o obj/ImGuiRenderer.o obj/imgui.o obj/imgui_demo.o obj/imgui_draw.o obj/imgui_widgets.o \
-obj/Sprite.o obj/Camera2D.o obj/Group.o
+obj/Camera2D.o obj/Group.o obj/Renderable2D.o obj/FrameBuffer2D.o
 
 nemu: $(TARGETS)
 	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) $(TARGETS) obj/Main.o -o emscripten/nemu/index.html --shell-file emscripten/layout.html
@@ -19,8 +20,11 @@ nemu: $(TARGETS)
 obj/Main.o: Nemu/src/Main.cpp
 	$(CC) $(FLAGS) $(INC) -c Nemu/src/Main.cpp -o obj/Main.o
 
-obj/Sprite.o: src/Graphics/Sprite.cpp
-	$(CC) $(FLAGS) $(INC) -c src/Graphics/Sprite.cpp -o obj/Sprite.o
+
+obj/FrameBuffer2D.o: src/Graphics/FrameBuffer2D.cpp
+	$(CC) $(FLAGS) $(INC) -c src/Graphics/FrameBuffer2D.cpp -o obj/FrameBuffer2D.o
+obj/Renderable2D.o: src/Graphics/Renderable2D.cpp
+	$(CC) $(FLAGS) $(INC) -c src/Graphics/Renderable2D.cpp -o obj/Renderable2D.o
 obj/Camera2D.o: src/Graphics/Camera2D.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Graphics/Camera2D.cpp -o obj/Camera2D.o
 obj/Group.o: src/Graphics/Group.cpp
@@ -51,10 +55,10 @@ obj/Layer.o: src/Layer.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Layer.cpp -o obj/Layer.o
 obj/Texture2D.o: src/Graphics/Texture2D.cpp
 	$(CC) $(FLAGS) $(INC) -c src/Graphics/Texture2D.cpp -o obj/Texture2D.o
-obj/ImGuiLayer.o: src/ImGuiLayer.cpp
-	$(CC) $(FLAGS) $(INC) -c src/ImGuiLayer.cpp -o obj/ImGuiLayer.o
-obj/ImGuiRenderer.o: src/ImGuiRenderer.cpp
-	$(CC) $(FLAGS) $(INC) -c src/ImGuiRenderer.cpp -o obj/ImGuiRenderer.o
+obj/ImGuiLayer.o: src/ImGui/ImGuiLayer.cpp
+	$(CC) $(FLAGS) $(INC) -c src/ImGui/ImGuiLayer.cpp -o obj/ImGuiLayer.o
+obj/ImGuiRenderer.o: src/ImGui/ImGuiRenderer.cpp
+	$(CC) $(FLAGS) $(INC) -c src/ImGui/ImGuiRenderer.cpp -o obj/ImGuiRenderer.o
 obj/imgui.o: deps/imgui/imgui.cpp
 	$(CC) $(FLAGS) $(INC) -c deps/imgui/imgui.cpp -o obj/imgui.o
 obj/imgui_demo.o: deps/imgui/imgui_demo.cpp

@@ -12,12 +12,13 @@
 
 namespace sgl
 {
-	BaseWindow::BaseWindow(WindowProperties props) :
-		Window(props),
-		vSyncOn(true),
-		fullScreen(false),
-		framesPerSecond(-1),
-		frames(0)
+	BaseWindow::BaseWindow(WindowProperties props)
+		: Window(props)
+		, window(nullptr)
+		, vSyncOn(true)
+		, fullScreen(false)
+		, windowedXPos(0)
+		, windowedYPos(0)
 	{}
 
 	BaseWindow::~BaseWindow()
@@ -41,30 +42,6 @@ namespace sgl
 		return glfwWindowShouldClose(window);
 	}
 
-
-	void BaseWindow::SetFPS(int fps)
-	{
-		framesPerSecond = fps;
-	}
-
-    int& BaseWindow::GetFPS()
-    {
-        return framesPerSecond;
-    }
-
-    void BaseWindow::DebugPrintFPS(int& nbFrames, double& lastTime)
-	{
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-			// Print and reset timer
-			auto time = 1000.0 / double(nbFrames);
-			SGL_CORE_TRACE("{} ms/frame ({} FPS)", time, 1000 * (1 / time));
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
-	}
-
 	void BaseWindow::Clear()
 	{
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -75,16 +52,6 @@ namespace sgl
 	{
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-        #ifndef NDEBUG
-        DebugPrintFPS(frames, frameDelay);
-        #endif
-
-		if (framesPerSecond == -1)
-			return;
-
-		std::this_thread::sleep_until(delay);
-		delay += std::chrono::nanoseconds(1000000000) / framesPerSecond;
 	}
 
 	void BaseWindow::SetVSync(bool enabled)
@@ -235,9 +202,6 @@ namespace sgl
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-
-		frameDelay = glfwGetTime(); // This may or may not cause problems since its called too early.
-        delay = std::chrono::steady_clock::now();
 
 		return 1;
 	}

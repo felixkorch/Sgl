@@ -1,7 +1,7 @@
 #pragma once
 #include "Sgl/Graphics/Renderer2D.h"
-#include "Sgl/Graphics/Sprite.h"
 #include "Sgl/Graphics/Texture2D.h"
+#include "Sgl/Graphics/Group.h"
 #include "Sgl/Shader.h"
 #include "Sgl/Events/KeyEvent.h"
 #include "Sgl/Events/MouseEvent.h"
@@ -13,5 +13,5 @@
 #include "Sgl/Log.h"
 #include "Sgl/Input.h"
 #include "Sgl/Entrypoint.h"
-#include "Sgl/ImGuiLayer.h"
+#include "Sgl/ImGui/ImGuiLayer.h"
 #include "imgui.h"

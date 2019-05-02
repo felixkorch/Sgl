@@ -1,8 +1,8 @@
 #pragma once
-#include "Sgl/ShaderUniform.h"
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "glm/glm.hpp"
 
 namespace sgl
 {
@@ -14,24 +14,21 @@ namespace sgl
 	class Shader {
 	public:
 		/* Some simple shader programs */
-		static const char* Shader2D_Core;
-		static const char* Shader2D_ES2;
-		static const char* Shader2D_ES3;
+        static const char* Renderer2D;
+        static const char* GreyScaleShader;
 	private:
 		unsigned int rendererID;
 		std::string filePath;
 		std::unordered_map<std::string, int> uniformLocationCache;
-	public:
+	protected:
         Shader();
         Shader(Shader&& other);
         Shader& operator=(Shader&& other);
-        Shader(const Shader& other) = delete;
-        Shader& operator=(const Shader& other) = delete;
-		~Shader();
+        Shader(const Shader& other);
+        Shader& operator=(const Shader& other);
 
-		void LoadFromString(const char* vertexShader, const char* fragmentShader);
-		void LoadFromString(const char* shader);
-		void LoadFromFile(const std::string& shader);
+	public:
+		~Shader();
 		void Bind() const;
 		void Unbind() const;
 		void SetUniform1i(const std::string& name, int v0);
@@ -41,14 +38,17 @@ namespace sgl
 		void SetUniform1f(const std::string& name, float v0);
 		void SetUniform3f(const std::string& name, const glm::vec3& vec3);
 		int GetUniformLocation(const std::string& name);
-		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+		void CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 		unsigned int CompileShader(unsigned int type, const std::string& source);
 		ShaderProgramSource ParseShader(std::stringstream& str);
-		void SetUniformData(UniformHandler& uniformHandler);
 
 		unsigned int GetRendererID()
 		{
 			return rendererID;
 		}
+
+		static Shader* CreateFromFile(const std::string& path);
+		static Shader* CreateFromString(const char* program);
+		static Shader* CreateFromString(const char* vertexShader, const char* fragmentShader);
 	};
 }

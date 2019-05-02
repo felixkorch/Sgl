@@ -5,11 +5,10 @@
 #include "Sgl/Window.h"
 #include "Sgl/Events/Event.h"
 #include "Sgl/Events/ApplicationEvent.h"
-#include "GLFW/glfw3.h"
 
 namespace sgl
 {
-	#ifdef PLATFORM_WEB
+	#ifdef SGL_PLATFORM_WEB
 
 	static void CallMain(void* fp)
 	{
@@ -21,7 +20,11 @@ namespace sgl
 	Application* Application::sInstance = nullptr;
 
 	Application::Application(WindowProperties props)
-		: layerstack(new LayerStack)
+        : window(nullptr)
+        , layerStack(new LayerStack)
+        , imGuiLayer(nullptr)
+        , eventQueue()
+        , running(true)
 	{
 		SGL_ASSERT(sInstance == nullptr, "Application already exists!");
 		sInstance = this;
@@ -30,7 +33,7 @@ namespace sgl
 			running = false;
 			return;
 		}
-		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		window->SetEventCallback(SGL_BIND(Application::OnEvent));
 		Log::Init();
 		SGL_CORE_INFO("Sucessfully initialized the app!");
 
@@ -40,32 +43,28 @@ namespace sgl
 
 	Application::~Application()
 	{
-		delete layerstack;
+        delete layerStack;
 		if(window) delete window;
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
-		layerstack->PushLayer(layer);
-		layer->OnAttach();
+		layerStack->PushLayer(layer);
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
-		layerstack->PushOverlay(overlay);
-		overlay->OnAttach();
+		layerStack->PushOverlay(overlay);
 	}
 
     void Application::PopLayer(Layer* layer)
     {
-        layerstack->PopLayer(layer);
-        layer->OnDetach();
+        layerStack->PopLayer(layer);
     }
 
     void Application::PopOverlay(Layer* overlay)
     {
-        layerstack->PopOverlay(overlay);
-        overlay->OnDetach();
+        layerStack->PopOverlay(overlay);
     }
 
     void Application::OnEvent(Event* e)
@@ -74,7 +73,7 @@ namespace sgl
 		eventQueue.PushEvent(e);
 	}
 
-	bool Application::OnWindowClose(Event* e)
+	bool Application::OnWindowClose(Event& e)
 	{
 		running = false;
 		return true;
@@ -82,7 +81,7 @@ namespace sgl
 
 	void Application::Run()
 	{
-		#ifdef PLATFORM_WEB
+		#ifdef SGL_PLATFORM_WEB
 		std::function<void()> mainLoop = [&]() {
 		#else
 		while (running) {
@@ -94,17 +93,17 @@ namespace sgl
 			ProcessEvents();
 
 			// Update
-			for (auto layer : layerstack->GetLayers())
+			for (Layer* layer : *layerStack)
 				layer->OnUpdate();
 
             imGuiLayer->Begin();
-            for (auto layer : layerstack->GetLayers())
+            for (Layer* layer : *layerStack)
                 layer->OnImGuiRender();
             imGuiLayer->End();
 
 			window->Update();
 
-		#ifdef PLATFORM_WEB
+		#ifdef SGL_PLATFORM_WEB
 		};
 		emscripten_set_main_loop_arg(CallMain, &mainLoop, 0, 1);
 		#else
@@ -115,16 +114,15 @@ namespace sgl
 	void Application::ProcessEvents()
 	{
 		Event* e = eventQueue.GetNext();
-        auto layers = layerstack->GetLayers();
 		while (e) {
-			EventDispatcher dispatcher(e);
-			dispatcher.Dispatch<WindowCloseEvent>(SGL_BIND_EVENT(Application::OnWindowClose));
-            for (auto it = layers.end(); it != layers.begin();) {
+			EventDispatcher dispatcher(*e);
+			dispatcher.Dispatch<WindowCloseEvent>(SGL_BIND(Application::OnWindowClose));
+            for (auto it = layerStack->end(); it != layerStack->begin();) {
 				(*--it)->OnEvent(*e);
 				if (e->handled)
 					break;
 			}
-			eventQueue.Pop();
+			eventQueue.Pop(); // Deletes the event
 			e = eventQueue.GetNext();
 		}
 	}

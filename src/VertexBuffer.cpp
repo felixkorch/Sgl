@@ -5,38 +5,40 @@
 namespace sgl
 {
 	VertexBuffer::VertexBuffer()
+		: rendererID(0)
+		, bufferSize(0)
 	{
 		glGenBuffers(1, &rendererID);
 	}
-
-    VertexBuffer::VertexBuffer(VertexBuffer&& other)
-        : rendererID(other.rendererID)
-    {
-        other.rendererID = 0;
-    }
-
-    VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
-    {
-        rendererID = other.rendererID;
-        other.rendererID = 0;
-        return *this;
-    }
 
     VertexBuffer::~VertexBuffer()
 	{
 		glDeleteBuffers(1, &rendererID);
 	}
 
-	void VertexBuffer::InitStaticDraw(const void* data, std::size_t size)
+	void VertexBuffer::InitStaticBufferUsage(const void* data, std::size_t size)
 	{
+		bufferSize = size;
 		glBindBuffer(GL_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 
-	void VertexBuffer::InitDynamicDraw(std::size_t bufferSize)
+	void VertexBuffer::InitDynamicBufferUsage(std::size_t size)
 	{
+		bufferSize = size;
 		glBindBuffer(GL_ARRAY_BUFFER, rendererID);
-		glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
+	void* VertexBuffer::GetInternalPointer()
+	{
+		//return glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		return glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	}
+
+	void VertexBuffer::ReleasePointer()
+	{
+		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
 	void VertexBuffer::BindLayout(const VertexBufferLayout& layout)

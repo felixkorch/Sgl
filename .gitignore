@@ -11,6 +11,7 @@ bin-int
 bin
 Sgl/libs/Glad/bin-int
 build*
+Nemu
 
 
 .gitattributes

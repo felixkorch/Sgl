@@ -3,34 +3,26 @@
 
 namespace sgl
 {
-	IndexBuffer::IndexBuffer()
-		: rendererID(0), count(0)
+	IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
+		: rendererID(0)
+		, count(0)
 	{
-		glGenBuffers(1, &rendererID);
+		Load(data, count);
 	}
 
-    IndexBuffer::IndexBuffer(IndexBuffer&& other)
-        : rendererID(other.rendererID)
-        , count(other.count)
-    {
-        other.rendererID = 0;
-    }
+	IndexBuffer::IndexBuffer()
+		: rendererID(0)
+		, count(0)
+	{}
 
-    IndexBuffer& IndexBuffer::operator=(IndexBuffer&& other)
-    {
-        rendererID = other.rendererID;
-        count = other.count;
-        other.rendererID = 0;
-        return *this;
-    }
-
-    IndexBuffer::~IndexBuffer()
+	IndexBuffer::~IndexBuffer()
 	{
 		glDeleteBuffers(1, &rendererID);
 	}
 
 	void IndexBuffer::Load(const unsigned int* data, unsigned int count)
 	{
+		glGenBuffers(1, &rendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 	}
@@ -44,4 +36,10 @@ namespace sgl
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+
+	IndexBuffer* IndexBuffer::Create(const unsigned int* data, unsigned int count)
+	{
+		return new IndexBuffer(data, count);
+	}
+
 }

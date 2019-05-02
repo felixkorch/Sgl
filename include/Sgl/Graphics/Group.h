@@ -1,3 +1,4 @@
+#pragma once
 #include "Sgl/Graphics/Renderable2D.h"
 
 namespace sgl {

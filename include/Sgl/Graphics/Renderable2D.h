@@ -65,20 +65,21 @@ namespace sgl
         Renderable2D(const glm::vec2& size, const glm::vec2& pos);
         Renderable2D(const glm::vec2& size, const glm::vec2& pos, const glm::vec4& color);
         Renderable2D(const glm::vec2& pos, Texture2D* texture);
+        Renderable2D(float x, float y, Texture2D* texture);
         virtual ~Renderable2D() = default;
 
         // Getters
         Texture2D* GetTexture();
         const std::array<glm::vec2, 4>& GetUVs();
         const glm::vec4& GetColor() { return color; }
-        const glm::vec3 GetMinBounds();
-        const glm::vec3 GetMaxBounds();
+        const glm::vec4 GetMinBounds();
+        const glm::vec4 GetMaxBounds();
 
         // Setters
         void SetPos(const glm::vec2& _pos);
         void SetPos(float x, float y);
         void SetColor(const glm::vec4& _color);
-        void SetUVs(const std::array<glm::vec2, 4>& _uvs);
+        void SetUV(const std::array<glm::vec2, 4>& _uvs);
         void SetSize(float width, float height);
 
         void Submit(Renderer2D* renderer);

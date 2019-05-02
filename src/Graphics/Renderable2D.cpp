@@ -38,7 +38,14 @@ namespace sgl
         , texture(texture)
     {}
 
-    Texture2D* Renderable2D::GetTexture()
+	Renderable2D::Renderable2D(float x, float y, Texture2D* texture)
+		: bounds(glm::vec2(texture->GetWidth(), texture->GetHeight()), glm::vec2(x, y))
+		, color(glm::vec4(1))
+		, uvs(GetStandardUVs())
+		, texture(texture)
+	{}
+
+	Texture2D* Renderable2D::GetTexture()
     {
         return texture;
     }
@@ -53,14 +60,14 @@ namespace sgl
         return uvs;
     }
 
-    const glm::vec3 Renderable2D::GetMinBounds()
+    const glm::vec4 Renderable2D::GetMinBounds()
     {
-        return glm::vec3(bounds.MinBounds(), 1);
+        return glm::vec4(bounds.MinBounds(), 1, 1);
     }
 
-    const glm::vec3 Renderable2D::GetMaxBounds()
+    const glm::vec4 Renderable2D::GetMaxBounds()
     {
-        return glm::vec3(bounds.MaxBounds(), 1);
+        return glm::vec4(bounds.MaxBounds(), 1, 1);
     }
 
     void Renderable2D::SetPos(const glm::vec2& _pos)
@@ -78,7 +85,7 @@ namespace sgl
         color = _color;
     }
 
-    void Renderable2D::SetUVs(const std::array<glm::vec2, 4>& _uvs)
+    void Renderable2D::SetUV(const std::array<glm::vec2, 4>& _uvs)
     {
         uvs = _uvs;
     }

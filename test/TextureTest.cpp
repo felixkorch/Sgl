@@ -12,34 +12,38 @@ using namespace sgl;
 
 class MainLayer : public Layer {
 private:
-	std::unique_ptr<Renderer2D> renderer;
-
-	Texture2D tex0, tex1;
-	Sprite sprite0, sprite1;
-
+    Renderer2D renderer;
+	std::unique_ptr<Texture2D> tex0, tex1;
+    Group group0;
+	Renderable2D sprite0, sprite1, sprite2;
 	const float aspectRatio = (float)TexWidth / (float)TexHeight;
 
     bool showSettings;
 
 public:
-	MainLayer() :
-		Layer("GameLayer"),
-		tex0(TexWidth, TexHeight),
-		tex1(100, 100),
-        showSettings(false)
+	MainLayer()
+        : Layer("GameLayer")
+        , tex0(Texture2D::Create(TexWidth, TexHeight))
+        , tex1(Texture2D::Create(100, 100))
+        , group0(glm::translate(glm::mat4(1), glm::vec3(300, 0, 0)))
+        , showSettings(false)
+        , renderer(Width, Height)
 
 	{
-        renderer = std::unique_ptr<Renderer2D>(Renderer2D::Create(Width, Height));
+		renderer.SetPostEffectsShader(Shader::CreateFromString(Shader::GreyScaleShader));
+		tex1->SetColor(120, 120, 160, 255);
+		tex1->SetColor(255, 150, 150, 255);
 
 		const float scaledWidth = (float)Height * aspectRatio;
 		const float xPosition = Width / 2 - scaledWidth / 2;
 
-        tex0.SetColor(120, 120, 160, 255);
-		tex1.SetColor(255, 150, 150, 255);
+        sprite0 = Renderable2D(glm::vec2(100, 100), glm::vec2(0, 0), glm::vec4(0.5, 0.5, 0.5, 0.5));
+        sprite1 = Renderable2D(0, 0, tex1.get());
+        sprite1.SetPos(200, 0);
+        sprite2 = Renderable2D(0, 0, tex1.get());
 
-		sprite0 = Sprite(0, 0, &tex0);
-		sprite1 = Sprite(0, 0, &tex1);
-        sprite1.SetPos(Width - 100, Height - 100);
+        group0.Add(&sprite0);
+        group0.Add(&sprite1);
 	}
 
     ~MainLayer() override
@@ -48,11 +52,11 @@ public:
 
 	void OnUpdate() override
 	{
-		renderer->Begin();
-        sprite0.Submit(renderer.get());
-        sprite1.Submit(renderer.get());
-		renderer->End();
-		renderer->Flush();
+		renderer.Begin();
+        group0.Submit(&renderer);
+        sprite2.Submit(&renderer);
+		renderer.End();
+		renderer.Flush();
 	}
 
     void OnImGuiRender() override
@@ -77,7 +81,7 @@ public:
 
                 ImGui::Text("Set Frames per second.");
                 ImGui::SameLine();
-                ImGui::SliderInt("FPS", &app.GetWindow()->GetFPS(), 30, 144);
+                //ImGui::SliderInt("FPS", &app.GetWindow()->GetFPS(), 30, 144);
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
                 ImGui::NextColumn();
@@ -113,11 +117,8 @@ public:
 			const float scaledWidth = (float)e.GetHeight() * aspectRatio;
 			// Centralize the frame
 			const float xPosition = e.GetWidth() / 2 - scaledWidth / 2;
-			// Update the renderable
-            sprite0.SetSize(scaledWidth, e.GetHeight());
-            sprite0.SetPos(xPosition, 0);
 			// Set new camera
-			renderer->SetCamera(Camera2D::Create(e.GetWidth(), e.GetHeight()));
+			renderer.SetCamera(Camera2D::Create(e.GetWidth(), e.GetHeight()));
 		}
 	}
 };
@@ -140,7 +141,9 @@ public:
 		PushLayer(new MainLayer);
 	}
 
-	~NESApp() {}
+	~NESApp()
+    {
+    }
 
 };
 

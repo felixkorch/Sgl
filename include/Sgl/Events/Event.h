@@ -4,7 +4,7 @@
 
 namespace sgl
 {
-    #define SGL_BIND_EVENT(X) std::bind(&X, this, std::placeholders::_1)
+    #define SGL_BIND(X) std::bind(&X, this, std::placeholders::_1)
 
 	enum class EventType {
 		WindowClose, KeyPressed, KeyReleased, KeyRepeat, MouseMoved, MouseButtonPressed, MouseButtonReleased,
@@ -22,27 +22,22 @@ namespace sgl
 
 	class EventDispatcher {
 	private:
-		Event* event;
+		Event& event;
 
 		template<class T>
-		using EventFn = std::function<bool(T*)>;
+		using EventFn = std::function<bool(T&)>;
 	public:
-		EventDispatcher(Event* e)
+		EventDispatcher(Event& e)
 			: event(e) {}
 
 		template<class T>
 		bool Dispatch(EventFn<T> func)
 		{
-			if (event->GetEventType() == T::GetStaticType()) {
-				event->handled = func((T*)event);
+			if (event.GetEventType() == T::GetStaticType()) {
+				event.handled = func((T&)event);
 				return true;
 			}
 			return false;
 		}
 	};
-
-	/*std::ostream& operator<<(std::ostream& os, const Event& e)
-	{
-		return os << e.ToString();
-	}*/
 }

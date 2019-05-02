@@ -9,28 +9,17 @@ namespace sgl
 		glGenVertexArrays(1, &rendererID);
 	}
 
-    VertexArray::VertexArray(VertexArray&& other)
-        : rendererID(other.rendererID)
-    {
-        other.rendererID = 0;
-    }
-
-    VertexArray& VertexArray::operator=(VertexArray&& other)
-    {
-        rendererID = other.rendererID;
-        other.rendererID = 0;
-        return *this;
-    }
-
     VertexArray::~VertexArray()
 	{
 		glDeleteVertexArrays(1, &rendererID);
+		for (VertexBuffer* vbo : buffers)
+			delete vbo;
 	}
 
-	void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+	void VertexArray::AddBuffer(VertexBuffer* vb, const VertexBufferLayout& layout)
 	{
 		Bind();
-		vb.Bind();
+		vb->Bind();
 		const auto& elements = layout.GetElements();
 		std::size_t offset = 0;
 		for (unsigned int i = 0; i < elements.size(); i++) {
@@ -39,6 +28,9 @@ namespace sgl
 			glEnableVertexAttribArray(i);
 			offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 		}
+
+		buffers.push_back(vb);
+		Unbind();
 	}
 
 	void VertexArray::Bind() const
@@ -50,4 +42,10 @@ namespace sgl
 	{
 		glBindVertexArray(0);
 	}
+
+	VertexArray* VertexArray::Create()
+	{
+		return new VertexArray;
+	}
+
 }

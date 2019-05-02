@@ -6,16 +6,20 @@ namespace sgl
 	private:
 		unsigned int rendererID;
 		unsigned int count;
+	protected:
+		IndexBuffer(IndexBuffer&& other);
+		IndexBuffer& operator=(IndexBuffer&& other);
+		IndexBuffer(const IndexBuffer& other);
+		IndexBuffer& operator=(const IndexBuffer& other);
 	public:
+        IndexBuffer(const unsigned int* data, unsigned int count);
         IndexBuffer();
-        IndexBuffer(IndexBuffer&& other);
-        IndexBuffer& operator=(IndexBuffer&& other);
-        IndexBuffer(const IndexBuffer& other) = delete;
-        IndexBuffer& operator=(const IndexBuffer& other) = delete;
         ~IndexBuffer();
 
-		void Load(const unsigned int* data, unsigned int count);
 		void Bind() const;
 		void Unbind() const;
+		void Load(const unsigned int* data, unsigned int count);
+
+		static IndexBuffer* Create(const unsigned int* data, unsigned int count);
 	};
 }
