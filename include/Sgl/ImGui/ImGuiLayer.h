@@ -7,7 +7,7 @@
 
 namespace sgl {
     class ImGuiLayer : public Layer {
-        float time = 0.0f;
+        //float time = 0.0f;
     public:
         ImGuiLayer();
         ~ImGuiLayer();

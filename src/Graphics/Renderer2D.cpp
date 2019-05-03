@@ -209,16 +209,15 @@ namespace sgl
 
 	}
 
-	// Will be moved to a mesh class eventually
 	ScreenQuad Renderer2D::CreateScreenQuad(int width, int height)
 	{
-		struct QuadData
+		struct QuadVertex
 		{
 			glm::vec3 position;
 			glm::vec2 uv;
 		};
 
-		QuadData vertices[4];
+		QuadVertex vertices[4];
 
 		vertices[0].position = glm::vec3(0, 0, 1);
 		vertices[0].uv = glm::vec2(0, 0);
@@ -239,7 +238,7 @@ namespace sgl
 		indices[5] = 0;
 
 		VertexArray* vao = VertexArray::Create();
-		VertexBuffer* vbo = VertexBuffer::Create<BufferUsage::STATIC>(vertices, 4 * sizeof(QuadData));
+		VertexBuffer* vbo = VertexBuffer::Create<BufferUsage::STATIC>(vertices, 4 * sizeof(QuadVertex));
 		VertexBufferLayout layout;
 		layout.Push<float>(3); // Position
 		layout.Push<float>(2); // UV

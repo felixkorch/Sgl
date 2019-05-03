@@ -46,7 +46,6 @@ namespace sgl {
 		// Post-FX implementation not complete, just one pass atm.
 		ScreenQuad screnQuad;
 		std::unique_ptr<Shader> fxShader;
-		bool postEffectsEnabled;
 
 	public:
         Renderer2D(int width, int height);

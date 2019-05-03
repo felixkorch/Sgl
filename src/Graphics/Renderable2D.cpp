@@ -1,4 +1,3 @@
-#pragma once
 #include "Sgl/Graphics/Texture2D.h"
 #include "Sgl/Graphics/Renderable2D.h"
 #include "Sgl/Graphics/Renderer2D.h"

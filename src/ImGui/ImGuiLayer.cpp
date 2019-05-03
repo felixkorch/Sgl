@@ -161,9 +161,9 @@ void ImGuiLayer::Begin()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
 
-    float currentTime = (float)glfwGetTime();
+    /*float currentTime = (float)glfwGetTime();
     io.DeltaTime = time > 0.0f ? (currentTime - time) : (1.0f / 60.0f);
-    time = currentTime;
+    time = currentTime;*/
 }
 
 void ImGuiLayer::End()

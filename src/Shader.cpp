@@ -24,6 +24,9 @@ namespace sgl
 	const char* Shader::Renderer2D = {
 		#include "Sgl/Shaders/Renderer2D.shader"
 	};
+	const char* Shader::ScanlineShader = {
+		#include "Sgl/Shaders/Scanline.shader"
+	};
 #endif
 
 
