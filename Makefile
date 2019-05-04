@@ -1,10 +1,11 @@
 CC = em++
 
-FLAGS = -O3 -g -Wall -fpermissive -std=c++11 -D SGL_PLATFORM_WEB -D SGL_SOFT_FULLSCREEN -s DEMANGLE_SUPPORT=1 -s ASSERTIONS \
--s ALLOW_MEMORY_GROWTH=1
+FLAGS = -g4 -Wall -fpermissive -std=c++11 -D SGL_PLATFORM_WEB -D SGL_SOFT_FULLSCREEN
 
-EM_FLAGS = -s FULL_ES3=1 -s USE_GLFW=3 -s \
-WASM=1 -s USE_WEBGL2=1 -s --memory-init-file 0 -lglfw3 -lGL -s ERROR_ON_UNDEFINED_SYMBOLS=0
+EM_FLAGS = -s FULL_ES3=1 -s USE_GLFW=3 -s DEMANGLE_SUPPORT=1 \
+-s WASM=1 -s USE_WEBGL2=1 -lglfw3 -lGL
+# -s DEMANGLE_SUPPORT=1 -s ASSERTIONS \
+-s ALLOW_MEMORY_GROWTH=1 -s --memory-init-file 0 -s ERROR_ON_UNDEFINED_SYMBOLS=0
 
 INC = -Ideps -Iinclude -Ideps/glm -Ideps/spdlog/include \
 -Ideps/GLFW/include -Ideps/obj_loader/include -Ideps/stb_image/include -INemu/include -Ideps/imgui
@@ -18,7 +19,7 @@ nemu: $(TARGETS)
 	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) $(TARGETS) obj/Main.o -o emscripten/nemu/index.html --shell-file emscripten/layout.html
 
 obj/Main.o: Nemu/src/Main.cpp
-	$(CC) $(FLAGS) $(INC) -c Nemu/src/Main.cpp -o obj/Main.o
+	$(CC) $(FLAGS) $(EM_FLAGS) $(INC) -c Nemu/src/Main.cpp -o obj/Main.o
 
 
 obj/FrameBuffer2D.o: src/Graphics/FrameBuffer2D.cpp

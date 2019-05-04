@@ -13,10 +13,10 @@
 namespace sgl
 {
 
-    ///
-    /// TODO: Complete implementation
-    ///
-    ///
+	///
+	/// TODO: Complete implementation
+	///
+	///
 
 	Renderer2D::Renderer2D(int width, int height)
 		: vertexArray()
@@ -34,34 +34,34 @@ namespace sgl
 		, indexCount(0)
 		, screnQuad(CreateScreenQuad(width, height))
 		, fxShader()
-    {
-        textures.reserve(MAX_TEXTURES);
+	{
+		textures.reserve(MAX_TEXTURES);
 		Setup();
-    }
+	}
 
-    void Renderer2D::Push(const glm::mat4& matrix, bool override)
-    {
-        if (override)
-            transformationStack.push_back(matrix);
-        else
-            transformationStack.push_back(transformationStack.back() * matrix);
+	void Renderer2D::Push(const glm::mat4& matrix, bool override)
+	{
+		if (override)
+			transformationStack.push_back(matrix);
+		else
+			transformationStack.push_back(transformationStack.back() * matrix);
 
-        transformationBack = &transformationStack.back();
+		transformationBack = &transformationStack.back();
 
-    }
+	}
 
-    void Renderer2D::Pop()
-    {
-        if (transformationStack.size() > 1)
-            transformationStack.pop_back();
+	void Renderer2D::Pop()
+	{
+		if (transformationStack.size() > 1)
+			transformationStack.pop_back();
 
-        transformationBack = &transformationStack.back();
-    }
+		transformationBack = &transformationStack.back();
+	}
 
-    void Renderer2D::SetCamera(const Camera2D& _camera)
-    {
-        camera = _camera;
-    }
+	void Renderer2D::SetCamera(const Camera2D& _camera)
+	{
+		camera = _camera;
+	}
 
 	// Testing post-effects (NOT final implementation)
 	void Renderer2D::SetPostEffectsShader(Shader* shader)
@@ -78,14 +78,14 @@ namespace sgl
 	{
 		const auto minBounds = renderable->GetMinBounds();
 		const auto maxBounds = renderable->GetMaxBounds();
-		const auto& uvs      = renderable->GetUVs();
-        Texture2D* texture   = renderable->GetTexture();
+		const auto& uvs = renderable->GetUVs();
+		Texture2D* texture = renderable->GetTexture();
 
-        float textureSlot = 0;
-        if (texture)
-            textureSlot = SubmitTexture(texture);
+		float textureSlot = 0;
+		if (texture)
+			textureSlot = SubmitTexture(texture);
 
-        *dataBuffer++ = { *transformationBack * minBounds, renderable->GetColor(), uvs[0], textureSlot };
+		*dataBuffer++ = { *transformationBack * minBounds, renderable->GetColor(), uvs[0], textureSlot };
 		*dataBuffer++ = { *transformationBack * glm::vec4(maxBounds.x, minBounds.y, 1, 1), renderable->GetColor(), uvs[1], textureSlot };
 		*dataBuffer++ = { *transformationBack * maxBounds, renderable->GetColor(), uvs[2], textureSlot };
 		*dataBuffer++ = { *transformationBack * glm::vec4(minBounds.x, maxBounds.y, 1, 1), renderable->GetColor(), uvs[3], textureSlot };
@@ -112,8 +112,8 @@ namespace sgl
 		DrawQuad(v1, v2, v3, v4, color);
 	}
 
-    void Renderer2D::Begin()
-    {
+	void Renderer2D::Begin()
+	{
 		if (renderTarget == RenderTarget::BUFFER) {
 			frameBuffer.Bind();
 			frameBuffer.Clear();
@@ -121,7 +121,7 @@ namespace sgl
 		vertexArray.Bind();
 		dataBuffer = (VertexData*)vertexArray.GetBuffer().GetInternalPointer();
 
-    }
+	}
 
 	void Renderer2D::End()
 	{
@@ -132,8 +132,8 @@ namespace sgl
 	{
 		shader->Bind();
 		shader->SetUniformMat4f("u_Projection", camera.GetViewMatrix());
-        for (int i = 0; i < textures.size(); i++)
-            textures[i]->Bind(i);
+		for (int i = 0; i < textures.size(); i++)
+			textures[i]->Bind(i);
 
 		vertexArray.Bind();
 		indexBuffer->Bind();
@@ -167,12 +167,12 @@ namespace sgl
 			SGL_CORE_WARN("Max textures exceeded!");
 			return textures.size();
 		}
-        if (texture->GetHandle() == 0) {
-            SGL_CORE_WARN("Invalid texture submitted!");
-            return textures.size();
-        }
+		if (texture->GetHandle() == 0) {
+			SGL_CORE_WARN("Invalid texture submitted!");
+			return textures.size();
+		}
 		textures.push_back(texture);
-        return textures.size();
+		return textures.size();
 	}
 
 	void Renderer2D::Setup()
@@ -185,7 +185,7 @@ namespace sgl
 		layout.Push<float>(2); // UV-Coords (Texture coordinates)
 		layout.Push<float>(1); // TID (Texture ID)
 
-        vertexArray.AddBuffer(vbo, layout);
+		vertexArray.AddBuffer(vbo, layout);
 
 		std::vector<unsigned int> indices(INDICES_COUNT);
 
@@ -202,8 +202,8 @@ namespace sgl
 		}
 		indexBuffer = std::unique_ptr<IndexBuffer>(new IndexBuffer(indices.data(), INDICES_COUNT));
 
-        transformationStack.push_back(glm::mat4(1)); // Push identity matrix as default
-        transformationBack = &transformationStack.back();
+		transformationStack.push_back(glm::mat4(1)); // Push identity matrix as default
+		transformationBack = &transformationStack.back();
 
 		shader = std::unique_ptr<Shader>(Shader::CreateFromString(Shader::Renderer2D));
 
