@@ -1,8 +1,2 @@
-# Sgl
-A Simple OpenGL Graphics / Game Engine
-##
-Demos: <br/>
-https://felixkorch.github.io/Sgl/emscripten/mousetest <br/>
-https://felixkorch.github.io/Sgl/emscripten/texture <br/>
-https://felixkorch.github.io/Sgl/emscripten/droptest <br/>
-https://felixkorch.github.io/Sgl/emscripten/nemu <br/>
+## Sgl - A Simple OpenGL Graphics / Game Engine
+#### The project is mainly focused on exploring the world of graphics programming and OpenGL in particular. It has basic 2D and 3D rendering, but is incomplete at the moment.
