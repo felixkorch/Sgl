@@ -8,10 +8,11 @@ if(!MSVC)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
 endif()
 
-add_subdirectory(deps/GLFW)
+# Run Conan to make CMake variables available 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 add_subdirectory(deps/Glad)
-add_subdirectory(deps/stb_image)
-add_subdirectory(deps/imgui)
 
 set(Sgl_SOURCE
     src/Application.cpp
@@ -31,20 +32,19 @@ set(Sgl_SOURCE
     src/Graphics/FrameBuffer2D.cpp
     src/Graphics/Camera2D.cpp
     src/Graphics/Group.cpp
+    src/Graphics/stb_image.cpp
     src/ImGui/ImGuiLayer.cpp
     src/ImGui/ImGuiRenderer.cpp
 )
 
-list(APPEND Sgl_LIBRARIES glfw ${GLFW_LIBRARIES} Glad stb_image imgui)
+list(APPEND Sgl_LIBRARIES Glad ${CONAN_LIBS})
 
 add_library(${PROJECT_NAME} ${Sgl_SOURCE})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/spdlog/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/glm>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/obj_loader/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/imgui>
+            ${CONAN_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME} ${Sgl_LIBRARIES})
@@ -55,5 +55,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 if(("${PROJECT_NAME}" STREQUAL "${CMAKE_PROJECT_NAME}"))
-    add_subdirectory(test)
+    add_subdirectory(examples)
 endif()
