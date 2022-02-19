@@ -12,8 +12,6 @@ endif()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_subdirectory(deps/Glad)
-
 set(Sgl_SOURCE
     src/Application.cpp
     src/Layer.cpp
@@ -43,7 +41,6 @@ add_library(${PROJECT_NAME} ${Sgl_SOURCE})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/deps/obj_loader/include>
             ${CONAN_INCLUDE_DIRS}
 )
 
