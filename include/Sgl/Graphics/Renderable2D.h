@@ -74,6 +74,7 @@ namespace sgl
         const glm::vec4& GetColor() { return color; }
         const glm::vec4 GetMinBounds();
         const glm::vec4 GetMaxBounds();
+		Rectangle& GetBounds();
 
         // Setters
         void SetPos(const glm::vec2& _pos);

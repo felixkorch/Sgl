@@ -59,6 +59,11 @@ namespace sgl
         return uvs;
     }
 
+    Rectangle& Renderable2D::GetBounds()
+    {
+        return bounds;
+    }
+
     const glm::vec4 Renderable2D::GetMinBounds()
     {
         return glm::vec4(bounds.MinBounds(), 1, 1);
