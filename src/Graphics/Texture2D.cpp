@@ -1,5 +1,6 @@
 #include "Sgl/OpenGL.h"
 #include "Sgl/Graphics/Texture2D.h"
+#include "Sgl/Log.h"
 #include <stb_image.h>
 #include <string>
 
@@ -15,8 +16,15 @@ namespace sgl
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, params.filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(params.wrap));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(params.wrap));
-		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format), width, height, 0,
-			GetTextureFormat(params.format), GL_UNSIGNED_BYTE, nullptr);
+
+		stbi_set_flip_vertically_on_load(1);
+		auto buffer = stbi_load("tiles.png", &width, &height, &bpp, STBI_rgb_alpha);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+		if (buffer)
+			stbi_image_free(buffer);
 		// Unbind the texture
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -36,8 +44,8 @@ namespace sgl
 		switch (format) {
 		case TextureFormat::RGBA:				return GL_RGBA;
 		case TextureFormat::RGB:				return GL_RGB;
-		case TextureFormat::LUMINANCE:			return GL_LUMINANCE;
-		case TextureFormat::LUMINANCE_ALPHA:	return GL_LUMINANCE_ALPHA;
+		//case TextureFormat::LUMINANCE:			return GL_LUMINANCE;
+		//case TextureFormat::LUMINANCE_ALPHA:	return GL_LUMINANCE_ALPHA;
 		}
 		return 0;
 	}
@@ -54,19 +62,20 @@ namespace sgl
 	{
 		width = _width;
 		height = _height;
-		glTexImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format), width, height, 0,
+		glTexSubImage2D(GL_TEXTURE_2D, 0, GetTextureFormat(params.format), width, height, 0,
 			GetTextureFormat(params.format), GL_UNSIGNED_BYTE, nullptr);
 	}
 
 	void Texture2D::LoadFromFile(const std::string& fp)
 	{
 		stbi_set_flip_vertically_on_load(1);
-		auto buffer = stbi_load(fp.c_str(), &width, &height, &bpp, 4);
-		if (buffer)
-			stbi_image_free(buffer);
+		auto buffer = stbi_load(fp.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
 
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GetTextureFormat(params.format),
             GL_UNSIGNED_BYTE, buffer);
+
+		if (buffer)
+			stbi_image_free(buffer);
 	}
 
 	void Texture2D::SetColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)

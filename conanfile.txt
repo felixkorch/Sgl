@@ -8,3 +8,6 @@
 
 [generators]
     cmake
+
+[options]
+    glad:gl_profile=core

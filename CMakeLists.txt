@@ -24,12 +24,11 @@ set(Sgl_SOURCE
     src/VertexArray.cpp
     src/BaseInput.cpp
     src/BaseWindow.cpp
-    src/Graphics/Renderer2D.cpp
-    src/Graphics/Renderable2D.cpp
+    src/Graphics/BatchRenderer.cpp
     src/Graphics/Texture2D.cpp
     src/Graphics/FrameBuffer2D.cpp
     src/Graphics/Camera2D.cpp
-    src/Graphics/Group.cpp
+    src/Graphics/Sprite.cpp
     src/Graphics/stb_image.cpp
     src/ImGui/ImGuiLayer.cpp
     src/ImGui/ImGuiRenderer.cpp
@@ -37,7 +36,7 @@ set(Sgl_SOURCE
 
 list(APPEND Sgl_LIBRARIES Glad ${CONAN_LIBS})
 
-add_library(${PROJECT_NAME} ${Sgl_SOURCE})
+add_library(${PROJECT_NAME} ${Sgl_SOURCE} "src/Graphics/TileSet.cpp" "src/Graphics/TileSet.h")
 target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>

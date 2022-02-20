@@ -2,6 +2,8 @@
 #include <memory>
 #include <stack>
 #include <numeric>
+#include <string>
+#include <iostream>
 
 #define SPRITE_C 0
 #define POSITION_C 1
@@ -13,8 +15,7 @@
 #define INITIAL_ENTITY_CAP 8
 
 struct SpriteComponent {
-	sgl::Texture2D* t;
-	sgl::Renderable2D r;
+	sgl::Sprite spr;
 };
 
 struct PositionComponent {
@@ -223,8 +224,12 @@ public:
 
 Entity CreateSnakeHead(ECS& ecs, int x, int y)
 {
-	SpriteComponent snakeHeadSprite = { nullptr, { glm::vec2(16, 16), glm::vec2(x, y), glm::vec4(0, 1, 0, 1) } };
-	PositionComponent snakeHeadPosition = { 0, 0 };
+	sgl::Sprite spr;
+	auto tiles = std::make_shared<sgl::Texture2D>(512, 512);
+	spr.FromTexture(tiles);
+
+	SpriteComponent snakeHeadSprite = { spr };
+	PositionComponent snakeHeadPosition = { x, y };
 	Entity snakeHead = ecs.Create();
 	ecs.AddComponentToEntity<SpriteComponent>(snakeHead, snakeHeadSprite);
 	ecs.AddComponentToEntity<PositionComponent>(snakeHead, snakeHeadPosition);
@@ -234,7 +239,7 @@ Entity CreateSnakeHead(ECS& ecs, int x, int y)
 
 class SnakeLayer : public sgl::Layer {
 private:
-	sgl::Renderer2D renderer;
+	sgl::BatchRenderer renderer;
 	ECS ecs;
 	float mouseX, mouseY;
 public:
@@ -243,7 +248,7 @@ public:
 		Layer("Snake Layer"),
 		renderer(512, 512)
 	{
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			Entity s2 = CreateSnakeHead(ecs, i * 32, 0);
 		}
 	}
@@ -252,8 +257,9 @@ public:
 	{
 		QueryResult* qr = ecs.QueryEntities(2, SPRITE_C, POSITION_C);
 		for (int i = 0; i < qr->count; i++) {
-			SpriteComponent* spr = ecs.GetComponentData<SpriteComponent>(qr->result[i]);
-			spr->r.Submit(&renderer);
+			SpriteComponent* sprite_component = ecs.GetComponentData<SpriteComponent>(qr->result[i]);
+			PositionComponent* pos_component = ecs.GetComponentData<PositionComponent>(qr->result[i]);
+			renderer.Submit(sprite_component->spr, glm::vec2(pos_component->x, pos_component->y));
 		}
 	}
 
@@ -261,10 +267,10 @@ public:
 	{
 		QueryResult* qr = ecs.QueryEntities(1, VELOCITY_C);
 		for (int i = 0; i < qr->count; i++) {
-			SpriteComponent* spr = ecs.GetComponentData<SpriteComponent>(qr->result[i]);
+			PositionComponent* pos = ecs.GetComponentData<PositionComponent>(qr->result[i]);
 			VelocityComponent* vel = ecs.GetComponentData<VelocityComponent>(qr->result[i]);
-			glm::vec2 currPos = spr->r.GetBounds().pos;
-			spr->r.SetPos(currPos.x, currPos.y += vel->y);
+			pos->x += vel->x;
+			pos->y += vel->y;
 		}
 	}
 
@@ -273,20 +279,7 @@ public:
 		QueryResult* qr = ecs.QueryEntities(1, POSITION_C);
 		for (int i = 0; i < qr->count; i++) {
 			const Entity ent = qr->result[i];
-			SpriteComponent* spr = ecs.GetComponentData<SpriteComponent>(ent);
-			if(spr->r.GetBounds().Contains(glm::vec2(mouseX, mouseY)))
-				ecs.AddComponentToEntity<VelocityComponent>(ent, { 0, 1 });
-		}
-	}
-
-	void System_Velocity()
-	{
-		QueryResult* qr = ecs.QueryEntities(1, VELOCITY_C);
-		for (int i = 0; i < qr->count; i++) {
-			SpriteComponent* spr = ecs.GetComponentData<SpriteComponent>(qr->result[i]);
-			VelocityComponent* vel = ecs.GetComponentData<VelocityComponent>(qr->result[i]);
-			glm::vec2 currPos = spr->r.GetBounds().pos;
-			spr->r.SetPos(currPos.x, currPos.y += vel->y);
+			ecs.AddComponentToEntity<VelocityComponent>(ent, { 0, 1 });
 		}
 	}
 
@@ -300,7 +293,6 @@ public:
 		System_Draw();
 
 		renderer.End();
-		renderer.Flush();
 	}
 
 	void OnEvent(sgl::Event& e) override
@@ -326,9 +318,9 @@ public:
 
 const sgl::WindowProperties props{
 		512,         // WindowWidth
-		512,        // WindowHeight
-		false,         // Resizable
-		"ECS", // Title
+		512,         // WindowHeight
+		false,       // Resizable
+		"ECS",		 // Title
 };
 
 class ECSApp : public sgl::Application {
